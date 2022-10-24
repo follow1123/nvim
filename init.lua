@@ -47,6 +47,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'mhinz/vim-startify'
 -- vim主题
 Plug 'morhetz/gruvbox'
+Plug 'scrooloose/nerdcommenter'
 vim.call('plug#end')
 -- 插件配置
 -- gruvbox 主题插件
@@ -56,3 +57,10 @@ vim.cmd[[
 	colorscheme gruvbox
 	let g:gruvbox_contrast_dark = 'hard'
 ]]
+-- 注释插件
+-- 注释的时候自动加个空格, 强迫症必配
+vim.cmd[[
+	let g:NERDSpaceDelims=1
+]]
+-- 注释插件按钮映射
+map('n', '<leader>e', '<Plug>NERDCommenterToggle', {noremap = true})
