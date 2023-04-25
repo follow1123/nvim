@@ -18,3 +18,10 @@ vim.o.incsearch = true
 vim.o.smartindent = true
 -- 搜索忽略大小写
 vim.o.ignorecase = true
+-- 禁止折行显示文本
+vim.o.wrap = false
+-- 光标移动的时候始终保持上下左右至少有 4 个空格的间隔
+vim.o.scrolloff = 4
+vim.o.sidescrolloff = 4
+-- 显示左侧图标指示列
+-- vim.wo.signcolumn = "yes" 
