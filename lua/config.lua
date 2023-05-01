@@ -28,3 +28,5 @@ vim.wo.signcolumn = "yes"
 -- 底部命令行行高，为0默认隐藏
 vim.o.cmdheight = 0
 -- vim.o.showcmd = false
+-- 支持鼠标
+vim.o.mouse = 'a'
