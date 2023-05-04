@@ -25,4 +25,3 @@ u.m('i', '<C-enter>', '<Esc>o', {noremap = true})
 u.m('n', '<leader>s', '<Esc>:w<Enter>', {noremap = true})
 -- 设置搜索后取消高亮
 u.m('n', '<leader>h', '<Esc>:nohlsearch<Enter>', {noremap = true})
--- u.m('n', '<leader><Esc>', '<Esc>:set nohlsearch<Enter><Esc>:set hlsearch<Enter>', {noremap = true})

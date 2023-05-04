@@ -24,7 +24,16 @@ vim.o.wrap = false
 vim.o.scrolloff = 4
 vim.o.sidescrolloff = 4
 -- 显示左侧图标指示列
-vim.wo.signcolumn = "yes" 
+vim.wo.signcolumn = "yes"
 -- 底部命令行行高，为0默认隐藏
-vim.o.cmdheight = 0
+--vim.o.cmdheight = 0
 -- vim.o.showcmd = false
+-- 支持鼠标
+vim.o.mouse = 'a'
+-- 去除回车后注释下一行
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    pattern = "*",
+    callback = function()
+        vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
+    end,
+})
