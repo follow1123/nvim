@@ -28,7 +28,7 @@ end
 function afterLoaded()
     require("nvim-tree").setup{
 		-- 自动关闭
-        auto_close = true,
+        -- auto_close = true,
         -- 不显示 git 状态图标
         git = {
             enable = false
