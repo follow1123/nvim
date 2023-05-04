@@ -5,6 +5,11 @@ local plugin = {}
 插件初始化
 ]]
 function plugin.init(use)
+	-- 彩色括号插件
+	use {
+		'p00f/nvim-ts-rainbow',
+		requires = {'nvim-treesitter/nvim-treesitter'}
+	}
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		setup = beforeLoaded,
@@ -16,9 +21,9 @@ end
 --[[
 插件加载前
 ]]
-function beforeLoaded() 
-    local u = require('util')
-    u.m('n', '<leader>l', 'gg=G', {noremap = true})
+function beforeLoaded()
+	local u = require('util')
+	u.m('n', '<leader>l', 'gg=G', {noremap = true})
 end
 
 --[[
@@ -27,7 +32,7 @@ end
 function afterLoaded()
 	require('nvim-treesitter.configs').setup {
 		-- A list of parser names, or "all" (the five listed parsers should always be installed)
-		ensure_installed = { "c", "lua", "vim", "vimdoc", "rust" },
+		ensure_installed = { "c", "cpp", "bash", "lua", "vim", "vimdoc", "rust" },
 
 		-- Install parsers synchronously (only applied to `ensure_installed`)
 		sync_install = false,
@@ -49,7 +54,7 @@ function afterLoaded()
 			-- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
 			-- the name of the parser)
 			-- list of language that will be disabled
-			disable = { "c", "rust" },
+			-- disable = { "c", "rust" },
 			-- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
 			disable = function(lang, buf)
 				local max_filesize = 100 * 1024 -- 100 KB
@@ -65,6 +70,19 @@ function afterLoaded()
 			-- Instead of true it can also be a list of languages
 			additional_vim_regex_highlighting = false,
 		},
+		-- 彩色括号配置
+		rainbow = {
+			enable = true,
+			extended_mode = true,
+			max_file_lines = nil,
+			colors = {
+				'#fac205',
+				'#558961',
+				'#1c4374',
+				'#bf794e',
+				'#ff77aa',
+			}
+		}
 	}
 end
 
