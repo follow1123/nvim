@@ -2,6 +2,7 @@
 return {
 	{
 		'nvim-treesitter/nvim-treesitter',
+		event = "VeryLazy",
 		build = ':TSUpdate',
 		config = function()
 			local u = require('util')
@@ -57,6 +58,7 @@ return {
 	},
 	{
 		'p00f/nvim-ts-rainbow',
+		event = "VeryLazy",
 		dependencies = {{
 			'nvim-treesitter/nvim-treesitter'
 		}}
