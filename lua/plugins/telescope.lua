@@ -3,10 +3,12 @@ return {
 	-- 搜索依赖插件
 	{
 		'nvim-lua/plenary.nvim',
+		enabled = false,
 		event = "VeryLazy",
 	},
 	{
 		'nvim-telescope/telescope.nvim',
+		enabled = false,
 		event = "VeryLazy",
 		version = '0.1.x',
 		dependencies = {{'nvim-lua/plenary.nvim'}},
