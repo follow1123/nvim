@@ -56,6 +56,7 @@ return {
 			}
 		end
 	},
+	-- 彩色括号插件
 	{
 		'p00f/nvim-ts-rainbow',
 		event = "VeryLazy",

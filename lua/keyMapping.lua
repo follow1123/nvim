@@ -26,5 +26,5 @@ u.m('n', '<leader>s', '<Esc>:w<Enter>', {noremap = true})
 -- 设置搜索后取消高亮
 u.m('n', '<leader>h', '<Esc>:nohlsearch<Enter>', {noremap = true})
 -- 可视模式下选择行上下移动
-u.m('v', 'J', ":m '>+1<CR>gv=gv'", {noremap = true})
-u.m('v', 'K', ":m '>-2<CR>gv=gv'", {noremap = true})
+u.m('v', 'J', ":m '>+1<CR>gv=gv'<Esc>", {noremap = true})
+u.m('v', 'K', ":m '>-2<CR>gv=gv'<Esc>", {noremap = true})
