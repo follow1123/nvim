@@ -4,9 +4,10 @@ return {
 	version = "*",
 	event = "VeryLazy",
 	config = function()
-		require('util').n('<C-\\>', ':ToggleTerm<CR>')
+		-- require('util').n('<C-\\>', ':ToggleTerm<CR>')
 		-- require('toggleterm').setup()
 		require('toggleterm').setup{
+			open_mapping = [[<C-\>]],
 			shell = 'pwsh',
 			-- direction = 'vertical' | 'horizontal' | 'tab' | 'float',
 			direction = 'float',
