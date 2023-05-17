@@ -7,5 +7,6 @@ return {
 	config = function()
 		 require('alpha')
 		 	.setup(require('alpha.themes.startify').config)
+		 	-- .setup(require('alpha.themes.dashboard').config)
 	end
 }
