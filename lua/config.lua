@@ -30,3 +30,5 @@ vim.wo.signcolumn = "yes"
 -- vim.o.showcmd = false
 -- 支持鼠标
 vim.o.mouse = 'a'
+
+-- vim.o.shell = 'pwsh'
