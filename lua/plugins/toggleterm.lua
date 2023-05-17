@@ -43,5 +43,24 @@ return {
 		end
 		-- leader+g打开lazygit
 		u.n("<leader>g", "<cmd>lua _lazygit_toggle()<CR>")
+		-- 自定义底部terminal配置
+		local bot_term = Terminal:new({
+			cmd = def_shell,
+			direction = 'horizontal',
+			on_open = function()
+				-- require('lualine').hide()
+				vim.o.cmdheight = 0
+			end,
+			on_close = function()
+				-- require('lualine').hide({unhide=true})
+				vim.o.cmdheight = 1
+			end,
+			hidden = true
+		})
+		function _bot_term_toggle()
+			bot_term:toggle()
+		end
+		-- alt+4打开lazygit
+		u.n("<A-4>", "<cmd>lua _bot_term_toggle()<CR>")
 	end
 }

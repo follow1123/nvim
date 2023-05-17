@@ -15,13 +15,13 @@ end
 
 -- visual模式下按键映射 
 function util.v(key, tarKey)
-	util.m('v', key, tarKey)
+	util.m('v', key, tarKey, nil)
 	return util
 end
 
 -- normal模式下按键映射 
 function util.n(key, tarKey)
-	util.m('n', key, tarKey)
+	util.m('n', key, tarKey, nil)
 	return util
 end
 
