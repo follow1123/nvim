@@ -4,28 +4,44 @@ return {
 	version = "*",
 	event = "VeryLazy",
 	config = function()
-		-- require('util').n('<C-\\>', ':ToggleTerm<CR>')
-		-- require('toggleterm').setup()
+		local u = require('util')
+		-- windwos默认使用powershell，linux默认使用zsh
+		local def_shell = 'zsh'
+		if (u.is_windows()) then
+			def_shell = 'pwsh'
+		end
+		-- 默认终端样式为浮动
+		local def_direction = 'float'
+		local def_float_opts = {
+			-- border = 'single' | 'double' | 'shadow' | 'curved' | ... other options supported by win open
+			border = 'curved',
+			-- 默认占终端长宽的90%
+			width = math.floor(vim.fn.winwidth('%') * 0.9),
+			height = math.floor(vim.fn.winheight('%') * 0.9),
+			winblend = 3
+			-- zindex = <value>,
+		}
+		-- 默认终端配置
 		require('toggleterm').setup{
 			open_mapping = [[<C-\>]],
-			shell = 'pwsh',
+			shell = def_shell,
 			-- direction = 'vertical' | 'horizontal' | 'tab' | 'float',
-			direction = 'float',
+			direction = def_direction,
 			auto_scroll = true, -- automatically scroll to the bottom on terminal output
-			-- This field is only relevant if direction is set to 'float'
-			float_opts = {
-				-- The border key is *almost* the same as 'nvim_open_win'
-				-- see :h nvim_open_win for details on borders however
-				-- the 'curved' border is a custom border type
-				-- not natively supported but implemented in this plugin.
-				-- border = 'single' | 'double' | 'shadow' | 'curved' | ... other options supported by win open
-				border = 'curved',
-				-- like `size`, width and height can be a number or function which is passed the current terminal
-				-- width = <value>,
-				-- height = <value>,
-				-- winblend = 3
-				-- zindex = <value>,
-			}
+			float_opts = def_float_opts
 		}
+		local Terminal  = require('toggleterm.terminal').Terminal
+		-- 自定义lazygit配置
+		local lazygit = Terminal:new({
+			cmd = "lazygit",
+			direction = def_direction,
+			float_opts = def_float_opts,
+			hidden = true
+		})
+		function _lazygit_toggle()
+			lazygit:toggle()
+		end
+		-- leader+g打开lazygit
+		u.n("<leader>g", "<cmd>lua _lazygit_toggle()<CR>")
 	end
 }
