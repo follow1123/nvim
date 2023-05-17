@@ -5,8 +5,8 @@ return {
 		event = "VeryLazy",
 		build = ':TSUpdate',
 		config = function()
-			local u = require('util')
-			u.m('n', '<C-A-l>', '=G', {noremap = true})
+			require('util')
+				.n('<C-A-l>', '=G')
 			require('nvim-treesitter.configs').setup {
 				-- A list of parser names, or "all" (the five listed parsers should always be installed)
 				ensure_installed = { "c", "cpp", "bash", "lua", "vim", "vimdoc", "rust" },

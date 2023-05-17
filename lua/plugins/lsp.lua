@@ -24,9 +24,10 @@ return {
 			-- Setup language servers.
 			local lspconfig = require('lspconfig')
 			local opts = { noremap = true, silent = true }
-			vim.keymap.set('n', '<space><F2>', vim.diagnostic.open_float, opts)
-			vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-			vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+			require('util')
+				.m('n', '<leader><F2>', vim.diagnostic.open_float, opts)
+				.m('n', '[d', vim.diagnostic.goto_prev, opts)
+				.m('n', ']d', vim.diagnostic.goto_next, opts)
 			-- vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 			require("mason-lspconfig").setup_handlers({
 				function (server_name)

@@ -2,6 +2,7 @@
 return {
 	'voldikss/vim-floaterm',
 	event = "VeryLazy",
+	enabled = false,
 	-- build = ':TSUpdate',
 	config = function()
 	end

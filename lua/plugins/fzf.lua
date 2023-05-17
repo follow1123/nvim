@@ -3,17 +3,19 @@ return {
 	{
 		'junegunn/fzf',
 		event = "VeryLazy",
+		enabled = false,
 		config = function()
 		end
 	},
 	{
 		'junegunn/fzf.vim',
 		event = "VeryLazy",
+		enabled = false,
 		config = function()
 			-- 默认打开文件树快捷键
-			local u = require('util')
-			u.m('n', '<A-f>', ':Rg<cr>', {noremap = true})
-			u.m('n', '<c-f>', ':FZF<cr>', {noremap = true})
+			require('util')
+				.m('n', '<A-f>', ':Rg<cr>', {noremap = true})
+				.m('n', '<c-f>', ':FZF<cr>', {noremap = true})
 			-- vim.g.fzf_preview_window = {'right,50%', 'ctrl-/'}
 			vim.api.nvim_command([[
 			function! RipgrepFzf(query, fullscreen)
