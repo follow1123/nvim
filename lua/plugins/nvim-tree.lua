@@ -5,7 +5,7 @@ return {
 	config = function()
 		-- 默认打开文件树快捷键
 		local u = require('util')
-		u.m('n', '<leader>1', ':NvimTreeToggle<CR>', {noremap = true})
+		u.m('n', '<A-1>', ':NvimTreeToggle<CR>', {noremap = true})
 		-- 插件配置
 		require("nvim-tree").setup{
 			-- 自动关闭

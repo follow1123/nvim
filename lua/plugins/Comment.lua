@@ -6,13 +6,13 @@ return {
 		require('Comment').setup{
 			toggler = {
 				-- normal 模式下注释快捷键
-				line = '<leader>e',
+				line = '<A-e>',
 				---Block-comment toggle keymap
 				-- block = 'gbc',
 			},
 			opleader = {
 				-- visual 模式下注释快捷键
-				line = '<leader>e',
+				line = '<A-e>',
 				---Block-comment keymap
 				-- block = 'gb',
 			},
