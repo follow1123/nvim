@@ -13,6 +13,8 @@ require('util')
 -- 设置窗口大小
 .n('<C-left>', '<C-w><')
 .n('<C-right>', '<C-w>>')
+.n('<C-up>', '<C-w>-')
+.n('<C-down>', '<C-w>+')
 -- 从系统切板粘贴
 .n('<leader>p', '"+p')
 -- normal模式下保存操作
@@ -20,11 +22,11 @@ require('util')
 -- 设置搜索后取消高亮
 .n('<leader>h', '<Esc>:nohlsearch<Enter>')
 -- 普通模式下上下移动文本
-.n('J', "V:m '>+1<CR>gv=gv'<Esc>")
-.n('K', "V:m '>-2<CR>gv=gv'<Esc>")
+.n('<A-j>', "V:m '>+1<CR>gv=gv'<Esc>")
+.n('<A-k>', "V:m '>-2<CR>gv=gv'<Esc>")
 
 -- 可视模式下选择行上下移动
-.v('J', ":m '>+1<CR>gv=gv'<Esc>")
-.v('K', ":m '>-2<CR>gv=gv'<Esc>")
+.v('<A-j>', ":m '>+1<CR>gv=gv'<Esc>")
+.v('<A-k>', ":m '>-2<CR>gv=gv'<Esc>")
 -- visual 模式下复制到系统剪切版
 .v('<leader>y', '"+y')

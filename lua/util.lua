@@ -2,7 +2,7 @@ local util = {}
 
 -- 封装按键映射方法
 function util.m(mode, key, tarKey, opts)
-	if (opts) then
+	if (not opts) then
 		opts = {
 			noremap = true,
 			silent = true,
