@@ -60,7 +60,7 @@ return {
 		function _bot_term_toggle()
 			bot_term:toggle()
 		end
-		-- alt+4打开lazygit
+		-- alt+4打开底部terminal
 		u.n("<A-4>", "<cmd>lua _bot_term_toggle()<CR>")
 	end
 }

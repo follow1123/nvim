@@ -1,32 +1,32 @@
 
 -- leader 键
 vim.g.mapleader = " "
-require('util')
+require("util")
 -- 切换到visual 块模式
-.n('<leader>v', '<C-v>')
+.n("<leader>v", "<C-v>")
 -- 向下粘贴一行
-.n('<leader>j', 'yyp')
+.n("<leader>j", "yyp")
 -- 向上粘贴一行
-.n('<leader>k', 'yyP')
+.n("<leader>k", "yyP")
 -- 删除一行
-.n('<A-d>', 'dd')
+.n("<A-d>", "dd")
 -- 设置窗口大小
-.n('<C-left>', '<C-w><')
-.n('<C-right>', '<C-w>>')
-.n('<C-up>', '<C-w>-')
-.n('<C-down>', '<C-w>+')
+.n("<C-left>", "<C-w><")
+.n("<C-right>", "<C-w>>")
+.n("<C-up>", "<C-w>-")
+.n("<C-down>", "<C-w>+")
 -- 从系统切板粘贴
-.n('<leader>p', '"+p')
+.n("<leader>p", "\"+p")
 -- normal模式下保存操作
-.n('<C-s>', '<Esc>:w<Enter>')
+.n("<C-s>", "<Esc>:w<Enter>")
 -- 设置搜索后取消高亮
-.n('<leader>h', '<Esc>:nohlsearch<Enter>')
+.n("<leader>h", "<Esc>:nohlsearch<Enter>")
 -- 普通模式下上下移动文本
-.n('<A-j>', "V:m '>+1<CR>gv=gv'<Esc>")
-.n('<A-k>', "V:m '>-2<CR>gv=gv'<Esc>")
-
+.n("<A-j>", "V:m '>+1<CR>gv=gv'<Esc>")
+.n("<A-k>", "V:m '>-2<CR>gv=gv'<Esc>")
+.n("<leader>l", "=G")
 -- 可视模式下选择行上下移动
-.v('<A-j>', ":m '>+1<CR>gv=gv'<Esc>")
-.v('<A-k>', ":m '>-2<CR>gv=gv'<Esc>")
+.v("<A-j>", ":m '>+1<CR>gv=gv'<Esc>")
+.v("<A-k>", ":m '>-2<CR>gv=gv'<Esc>")
 -- visual 模式下复制到系统剪切版
-.v('<leader>y', '"+y')
+.v("<leader>y", "\"+y")

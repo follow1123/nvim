@@ -31,4 +31,10 @@ vim.wo.signcolumn = "yes"
 -- 支持鼠标
 vim.o.mouse = 'a'
 
--- vim.o.shell = 'pwsh'
+-- 代码折叠相关
+-- 根据缩进折叠
+vim.o.foldmethod = "indent"
+-- 打开文件时自动折叠
+vim.o.foldenable = false
+-- 最大折叠深度
+vim.o.foldlevel = 99

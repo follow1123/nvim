@@ -1,65 +1,177 @@
 -- 自动补全插件
-local plugin = {}
-
-plugin[1] = { "hrsh7th/nvim-cmp", event = "VeryLazy" }
-plugin[2] = { "hrsh7th/cmp-buffer", event = "VeryLazy" }
-plugin[3] = { "hrsh7th/cmp-path", event = "VeryLazy" }
-plugin[4] = { "hrsh7th/cmp-cmdline", event = "VeryLazy" }
-plugin[5] = { "hrsh7th/cmp-nvim-lsp", event = "VeryLazy" }
-plugin[6] = { "hrsh7th/cmp-nvim-lua", event = "VeryLazy" }
+local plugin = {
+	-- 代码补全框架
+	{ "hrsh7th/nvim-cmp", event = "VeryLazy" },
+	-- 代码片段补全框架
+	{ "L3MON4D3/LuaSnip", event = "VeryLazy" },
+	{ "saadparwaiz1/cmp_luasnip", event = "VeryLazy" },
+	-- buffer补全
+	{ "hrsh7th/cmp-buffer", event = "VeryLazy" },
+	-- 文件路径补全
+	{ "hrsh7th/cmp-path", event = "VeryLazy" },
+	-- 命令模式补全
+	{ "hrsh7th/cmp-cmdline", event = "VeryLazy" },
+	-- lsp补全
+	{ "hrsh7th/cmp-nvim-lsp", event = "VeryLazy" },
+	-- { "hrsh7th/cmp-nvim-lua", event = "VeryLazy" },
+}
 
 plugin[1].config = function()
 	local cmp = require("cmp")
-	cmp.setup({
-		snippet = {
-			-- REQUIRED - you must specify a snippet engine
-			expand = function(args)
-				vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-				-- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-				-- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-				-- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-			end,
-		},
-		window = {
-			-- completion = cmp.config.window.bordered(),
-			-- documentation = cmp.config.window.bordered(),
-		},
-		mapping = cmp.mapping.preset.insert({
-			['<C-b>'] = cmp.mapping.scroll_docs(-4),
-			['<C-f>'] = cmp.mapping.scroll_docs(4),
-			['<C-Space>'] = cmp.mapping.complete(),
-			['<C-e>'] = cmp.mapping.abort(),
-			['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+	local luasnip = require("luasnip")
+	require("luasnip.loaders.from_vscode").lazy_load()
+	local check_backspace = function()
+		local col = vim.fn.col "." - 1
+		return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
+	end
+	local cmp_config = {}
+	-- 补全按键
+	cmp_config.mapping = cmp.mapping.preset.insert {
+		-- ctrl k下一个
+		["<C-k>"] = cmp.mapping.select_prev_item(),
+		-- ctrl k上一个
+		["<C-j>"] = cmp.mapping.select_next_item(),
+		-- ctrl b文件向下滚动
+		["<C-d>"] = cmp.mapping.scroll_docs(-4),
+		-- ctrl f文档向上滚动
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		["<C-p>"] = cmp.mapping.complete(),
+		-- ctrl e 取消 或者esc
+		["<C-e>"] = cmp.mapping.abort(),
+		-- tab 下一个
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			elseif luasnip.expandable() then
+				luasnip.expand()
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			elseif check_backspace() then
+				fallback()
+			else
+				fallback()
+			end
+		end, { "i", "s", }),
+		-- shift tab 上一个
+		["<S-Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end, { "i", "s",}),
+		-- enter 确认
+		['<CR>'] = cmp.mapping.confirm({
+			select = true ,
+			behavior = cmp.ConfirmBehavior.Replace
 		}),
-		sources = cmp.config.sources({
-			{ name = 'nvim_lsp' },
-			{ name = 'vsnip' }, -- For vsnip users.
-			-- { name = 'luasnip' }, -- For luasnip users.
-			-- { name = 'ultisnips' }, -- For ultisnips users.
-			-- { name = 'snippy' }, -- For snippy users.
-		}, {
-			{ name = 'buffer' },
-		})
-	})
+	}
+	-- 补全来源
+	cmp_config.sources = {
+		{ name = "nvim_lsp" },
+		{ name = "path" },
+		{ name = "luasnip" },
+		{ name = "cmp_tabnine" },
+		{ name = "nvim_lua" },
+		{ name = "buffer" },
+		{ name = "spell" },
+		{ name = "calc" },
+		{ name = "emoji" },
+		{ name = "treesitter" },
+		{ name = "crates" },
+	}
+	cmp_config.experimental = {
+		-- 虚拟文本提示
+		ghost_text = true,
+		native_menu = false,
+	}
 
-	-- Set configuration for specific filetype.
-	cmp.setup.filetype('gitcommit', {
-		sources = cmp.config.sources({
-			{ name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
-		}, {
-			{ name = 'buffer' },
-		})
-	})
+	-- 代码片段配置
+	cmp_config.snippet = {
+		expand = function(args)
+			require('luasnip').lsp_expand(args.body)
+		end,
+	}
+	cmp_config.formatting = {
+		fields = { "kind", "abbr", "menu" },
+		max_width = 0,
+		-- 补全类型图标
+		kind_icons = {
+			Class = " ",
+			Color = " ",
+			Constant = "ﲀ ",
+			Constructor = " ",
+			Enum = "練",
+			EnumMember = " ",
+			Event = " ",
+			Field = " ",
+			File = "",
+			Folder = " ",
+			Function = " ",
+			Interface = "ﰮ ",
+			Keyword = " ",
+			Method = " ",
+			Module = " ",
+			Operator = "",
+			Property = " ",
+			Reference = " ",
+			Snippet = " ",
+			Struct = " ",
+			Text = " ",
+			TypeParameter = " ",
+			Unit = "塞",
+			Value = " ",
+			Variable = " ",
+		},
+		-- 补全提示
+		source_names = {
+			nvim_lsp = "[LSP]",
+			treesitter = "[TS]",
+			emoji = "[Emoji]",
+			path = "[Path]",
+			calc = "[Calc]",
+			cmp_tabnine = "[Tabnine]",
+			vsnip = "[Snippet]",
+			luasnip = "[Snippet]",
+			buffer = "[Buffer]",
+			spell = "[Spell]",
+		},
+		duplicates = {
+			buffer = 1,
+			path = 1,
+			nvim_lsp = 0,
+			luasnip = 1,
+		},
+		duplicates_default = 0,
+		-- 补全提示文本格式化，[类型图标] [补全名称] [类型]
+		format = function(entry, vim_item)
+			local max_width = cmp_config.formatting.max_width
+			if max_width ~= 0 and #vim_item.abbr > max_width then
+				vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. "…"
+			end
+			vim_item.kind = cmp_config.formatting.kind_icons[vim_item.kind]
+			vim_item.menu = cmp_config.formatting.source_names[entry.source.name]
+			vim_item.dup = cmp_config.formatting.duplicates[entry.source.name]
+			or cmp_config.formatting.duplicates_default
+			return vim_item
+		end,
+	}
+	-- 边框样式 圆角边框
+	cmp_config.window = {
+		completion = cmp.config.window.bordered(),
+		documentation = cmp.config.window.bordered(),
+	}
 
-	-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+	-- buffer内搜索时补全
 	cmp.setup.cmdline({ '/', '?' }, {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = {
 			{ name = 'buffer' }
 		}
 	})
-
-	-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+	-- 命令模式补全
 	cmp.setup.cmdline(':', {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = cmp.config.sources({
@@ -69,15 +181,9 @@ plugin[1].config = function()
 		})
 	})
 
-	-- Set up lspconfig.
-	-- local capabilities = require('cmp_nvim_lsp').default_capabilities()
-	-- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-	-- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
-	-- 	capabilities = capabilities
-	-- }
+	cmp.setup(cmp_config)
+
 end
-
-
 
 
 return plugin
