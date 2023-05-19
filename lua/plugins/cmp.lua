@@ -1,10 +1,10 @@
 -- 自动补全插件
 local plugin = {
 	-- 代码补全框架
-	{ "hrsh7th/nvim-cmp", event = "VeryLazy" },
+	{ "hrsh7th/nvim-cmp" },
 	-- 代码片段补全框架
-	{ "L3MON4D3/LuaSnip", event = "VeryLazy" },
-	{ "saadparwaiz1/cmp_luasnip", event = "VeryLazy" },
+	{ "L3MON4D3/LuaSnip" },
+	{ "saadparwaiz1/cmp_luasnip" },
 	-- buffer补全
 	{ "hrsh7th/cmp-buffer", event = "VeryLazy" },
 	-- 文件路径补全
