@@ -16,8 +16,13 @@ return {
 						filetype = "NvimTree",
 						text = "File Explorer",
 						highlight = "Directory",
-						text_align = "left"
+						text_align = "center"
 					}
+				},
+				hover = {
+					enabled = true,
+					delay = 200,
+					reveal = {'close'}
 				}
 			}
 		}

@@ -2,24 +2,25 @@
 return {
 	-- 搜索依赖插件
 	{
-		'nvim-lua/plenary.nvim',
+		"nvim-lua/plenary.nvim",
 		-- enabled = false,
 		event = "VeryLazy",
 	},
 	{
-		'nvim-telescope/telescope.nvim',
+		"nvim-telescope/telescope.nvim",
 		-- enabled = false,
 		event = "VeryLazy",
-		version = '0.1.x',
-		dependencies = {{'nvim-lua/plenary.nvim'}},
+		version = "0.1.x",
+		dependencies = {{"nvim-lua/plenary.nvim"}},
 		config = function()
-			local builtin = require('telescope.builtin')
-			require('util')
-			.n('<C-f>', builtin.find_files)
-			.n('<leader>fg', builtin.live_grep)
-			.n('<leader>fb', builtin.buffers)
-			.n('<leader>fh', builtin.help_tags)
-			require('telescope').setup {
+			local builtin = require("telescope.builtin")
+			local actions = require("telescope.actions")
+			require("util")
+			.n("<C-f>", builtin.find_files)
+			.n("<leader>fg", builtin.live_grep)
+			.n("<leader>fb", builtin.buffers)
+			.n("<leader>fh", builtin.help_tags)
+			require("telescope").setup {
 				defaults = {
 					-- Default configuration for telescope goes here:
 					-- config_key = value,
@@ -28,7 +29,9 @@ return {
 							-- map actions.which_key to <C-h> (default: <C-/>)
 							-- actions.which_key shows the mappings for your picker,
 							-- e.g. git_{create, delete, ...}_branch for the git_branches picker
-							["<C-h>"] = "which_key"
+							-- ["<C-h>"] = "which_key",
+							["<C-j>"] = actions.move_selection_next,
+							["<C-k>"] = actions.move_selection_previous,
 						}
 					}
 				},

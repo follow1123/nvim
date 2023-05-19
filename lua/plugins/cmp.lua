@@ -31,10 +31,10 @@ plugin[1].config = function()
 		["<C-k>"] = cmp.mapping.select_prev_item(),
 		-- ctrl k上一个
 		["<C-j>"] = cmp.mapping.select_next_item(),
-		-- ctrl b文件向下滚动
-		["<C-d>"] = cmp.mapping.scroll_docs(-4),
-		-- ctrl f文档向上滚动
-		["<C-f>"] = cmp.mapping.scroll_docs(4),
+		-- ctrl d文档向上滚动
+		["<C-u>"] = cmp.mapping.scroll_docs(-4),
+		-- ctrl u文件向下滚动
+		["<C-d>"] = cmp.mapping.scroll_docs(4),
 		["<C-p>"] = cmp.mapping.complete(),
 		-- ctrl e 取消 或者esc
 		["<C-e>"] = cmp.mapping.abort(),
@@ -73,10 +73,8 @@ plugin[1].config = function()
 		{ name = "nvim_lsp" },
 		{ name = "path" },
 		{ name = "luasnip" },
-		{ name = "cmp_tabnine" },
 		{ name = "nvim_lua" },
 		{ name = "buffer" },
-		{ name = "spell" },
 		{ name = "calc" },
 		{ name = "emoji" },
 		{ name = "treesitter" },
@@ -85,10 +83,10 @@ plugin[1].config = function()
 	cmp_config.experimental = {
 		-- 虚拟文本提示
 		ghost_text = true,
-		native_menu = false,
+		-- native_menu = false,
 	}
 
-	-- 代码片段配置
+	-- 代码片段引擎配置
 	cmp_config.snippet = {
 		expand = function(args)
 			require('luasnip').lsp_expand(args.body)
@@ -132,11 +130,9 @@ plugin[1].config = function()
 			emoji = "[Emoji]",
 			path = "[Path]",
 			calc = "[Calc]",
-			cmp_tabnine = "[Tabnine]",
 			vsnip = "[Snippet]",
 			luasnip = "[Snippet]",
 			buffer = "[Buffer]",
-			spell = "[Spell]",
 		},
 		duplicates = {
 			buffer = 1,
@@ -182,7 +178,12 @@ plugin[1].config = function()
 	})
 
 	cmp.setup(cmp_config)
-
+	-- Set up lspconfig.
+	local capabilities = require('cmp_nvim_lsp').default_capabilities()
+	-- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+	require('lspconfig')['lua_ls'].setup {
+		capabilities = capabilities
+	}
 end
 
 

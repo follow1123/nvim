@@ -37,7 +37,6 @@ plugin[2].config = function()
 		["lua_ls"] = function ()
 			lspconfig.lua_ls.setup {
 				settings = {
-					capabilities = require('cmp_nvim_lsp').default_capabilities(),
 					Lua = {
 						diagnostics = {
 							globals = { "vim" }
