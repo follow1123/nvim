@@ -1,9 +1,10 @@
 -- 文件大纲插件
 return {
 	'simrat39/symbols-outline.nvim',
-	event = "VeryLazy",
+	keys = {
+		{ "<A-2>", ":SymbolsOutline<CR>", desc = "SymbolsOutline" },
+	},
 	config = function()
-		require("util").n("<A-2>", ":SymbolsOutline<CR>")
 		require("symbols-outline").setup{
 			highlight_hovered_item = true,
 			show_guides = true,

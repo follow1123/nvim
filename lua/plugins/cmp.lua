@@ -1,22 +1,25 @@
 -- 自动补全插件
 local plugin = {
 	-- 代码补全框架
-	{ "hrsh7th/nvim-cmp" },
-	-- 代码片段补全框架
-	{ "L3MON4D3/LuaSnip" },
-	{ "saadparwaiz1/cmp_luasnip" },
-	-- buffer补全
-	{ "hrsh7th/cmp-buffer", event = "VeryLazy" },
-	-- 文件路径补全
-	{ "hrsh7th/cmp-path", event = "VeryLazy" },
-	-- 命令模式补全
-	{ "hrsh7th/cmp-cmdline", event = "VeryLazy" },
-	-- lsp补全
-	{ "hrsh7th/cmp-nvim-lsp", event = "VeryLazy" },
-	-- { "hrsh7th/cmp-nvim-lua", event = "VeryLazy" },
+	"hrsh7th/nvim-cmp",
+	event = "InsertEnter",
+	dependencies = {
+		-- 代码片段补全框架
+		{ "L3MON4D3/LuaSnip" },
+		{ "saadparwaiz1/cmp_luasnip" },
+		-- buffer补全
+		{ "hrsh7th/cmp-buffer" },
+		-- 文件路径补全
+		{ "hrsh7th/cmp-path" },
+		-- 命令模式补全
+		{ "hrsh7th/cmp-cmdline" },
+		-- lsp补全
+		{ "hrsh7th/cmp-nvim-lsp" },
+		-- { "hrsh7th/cmp-nvim-lua", event = "VeryLazy" },
+	},
 }
 
-plugin[1].config = function()
+plugin.config = function()
 	local cmp = require("cmp")
 	local luasnip = require("luasnip")
 	require("luasnip.loaders.from_vscode").lazy_load()

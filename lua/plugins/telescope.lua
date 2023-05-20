@@ -1,41 +1,32 @@
 -- 搜索插件
 return {
-	-- 搜索依赖插件
-	{
-		"nvim-lua/plenary.nvim",
-		-- enabled = false,
-		event = "VeryLazy",
+	"nvim-telescope/telescope.nvim",
+	version = "0.1.x",
+	keys = {
+		{"<C-f>", ":Telescope find_files<CR>", desc = "find files" },
+		{"<A-f>", ":Telescope live_grep<CR>", desc = "live grep" },
+		{"<leader>b", ":Telescope buffers<CR>", desc = "buffers" },
 	},
-	{
-		"nvim-telescope/telescope.nvim",
-		-- enabled = false,
-		event = "VeryLazy",
-		version = "0.1.x",
-		dependencies = {{"nvim-lua/plenary.nvim"}},
-		config = function()
-			local builtin = require("telescope.builtin")
-			local actions = require("telescope.actions")
-			require("util")
-			.n("<C-f>", builtin.find_files)
-			.n("<leader>fg", builtin.live_grep)
-			.n("<leader>fb", builtin.buffers)
-			.n("<leader>fh", builtin.help_tags)
-			require("telescope").setup {
-				defaults = {
-					-- Default configuration for telescope goes here:
-					-- config_key = value,
-					mappings = {
-						i = {
-							-- map actions.which_key to <C-h> (default: <C-/>)
-							-- actions.which_key shows the mappings for your picker,
-							-- e.g. git_{create, delete, ...}_branch for the git_branches picker
-							-- ["<C-h>"] = "which_key",
-							["<C-j>"] = actions.move_selection_next,
-							["<C-k>"] = actions.move_selection_previous,
-						}
+	-- 搜索依赖插件
+	dependencies = {"nvim-lua/plenary.nvim"},
+	config = function()
+		-- local builtin = require("telescope.builtin")
+		local actions = require("telescope.actions")
+		require("telescope").setup {
+			defaults = {
+				-- Default configuration for telescope goes here:
+				-- config_key = value,
+				mappings = {
+					i = {
+						-- map actions.which_key to <C-h> (default: <C-/>)
+						-- actions.which_key shows the mappings for your picker,
+						-- e.g. git_{create, delete, ...}_branch for the git_branches picker
+						-- ["<C-h>"] = "which_key",
+						["<C-j>"] = actions.move_selection_next,
+						["<C-k>"] = actions.move_selection_previous,
 					}
-				},
-			}
-		end
-	}
+				}
+			},
+		}
+	end
 }

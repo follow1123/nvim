@@ -1,12 +1,13 @@
 -- 文件树插件
 return {
 	'kyazdani42/nvim-tree.lua',
-	event = "VeryLazy",
-	config = function()
+	keys = {
 		-- 默认打开文件树快捷键
-		require('util').n('<A-1>', ':NvimTreeToggle<CR>')
+		{ "<A-1>", ":NvimTreeToggle<CR>", desc = "NvimTreeToggle"},
 		-- 在文件树内定位当前文件
-		.n("<S-Tab>", ":NvimTreeFindFileToggle<CR>")
+		{ "<S-Tab>", ":NvimTreeFindFileToggle<CR>", desc = "NvimTreeFindFileToggle"},
+	},
+	config = function()
 		-- 插件配置
 		-- local api = require("nvim-tree.api")
 		require("nvim-tree").setup{

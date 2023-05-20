@@ -16,3 +16,5 @@ require("lazy").setup({
       border = "rounded"
     }
 })
+
+vim.api.nvim_command([[colorscheme darcula]])

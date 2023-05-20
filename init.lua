@@ -1,4 +1,4 @@
 require('config')
 require('autocmd')
-require('keyMapping')
-require('pluginConfig')
+require('key_mapping')
+require('plugin_init')
