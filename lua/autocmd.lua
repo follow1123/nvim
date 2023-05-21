@@ -18,3 +18,11 @@ if not require("util").is_windows() then
 		end,
 	})
 end
+
+-- if options.auto_save then
+    vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+        pattern = { "*" },
+        command = "silent! wall",
+        nested = true,
+    })
+-- end

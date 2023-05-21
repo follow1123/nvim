@@ -38,3 +38,5 @@ vim.o.foldmethod = "indent"
 vim.o.foldenable = false
 -- 最大折叠深度
 vim.o.foldlevel = 99
+
+vim.o.syntax = true

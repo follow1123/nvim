@@ -24,11 +24,14 @@ require("util")
 -- 普通模式下上下移动文本
 .n("<A-j>", "V:m '>+1<CR>gv=gv'<Esc>")
 .n("<A-k>", "V:m '>-2<CR>gv=gv'<Esc>")
-.n("<leader>l", "=G")
+-- 格式化
+-- .n("<leader>l", "=G")
+.n("<leader>l", ":lua vim.lsp.buf.format()<CR>")
 -- 可视模式下选择行上下移动
 .v("<A-j>", ":m '>+1<CR>gv=gv'<Esc>")
 .v("<A-k>", ":m '>-2<CR>gv=gv'<Esc>")
 -- visual 模式下复制到系统剪切版
 .v("<leader>y", "\"+y")
 -- insert 模式下快捷键
-.m("i", "<C-s>", "<Esc>:w<CR>a")
+-- 保存
+.i("<C-s>", "<Esc>:w<CR>a")

@@ -1,8 +1,8 @@
 -- lsp 配置
 local plugin = {
-	{ "williamboman/mason.nvim", build = ':MasonUpdate' },
-	{ "williamboman/mason-lspconfig.nvim" },
-	{ "neovim/nvim-lspconfig" },
+	{ "williamboman/mason.nvim", build = ":MasonUpdate", event = "VeryLazy" },
+	{ "williamboman/mason-lspconfig.nvim", event = "VeryLazy" },
+	{ "neovim/nvim-lspconfig", event = "VeryLazy" },
 }
 
 plugin[1].config = function()
@@ -18,17 +18,17 @@ plugin[1].config = function()
 end
 
 plugin[2].config = function()
-	require('mason-lspconfig').setup({
-		ensure_installed = { 'lua_ls', 'rust_analyzer' },
+	require("mason-lspconfig").setup({
+		ensure_installed = { "lua_ls", "rust_analyzer" },
 	})
 	-- Setup language servers.
-	local lspconfig = require('lspconfig')
+	local lspconfig = require("lspconfig")
 	local opts = { noremap = true, silent = true }
-	require('util')
-	.m('n', '<leader><F2>', vim.diagnostic.open_float, opts)
-	.m('n', '[d', vim.diagnostic.goto_prev, opts)
-	.m('n', ']d', vim.diagnostic.goto_next, opts)
-	-- vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+	require("util")
+	.m("n", "<leader><F2>", vim.diagnostic.open_float, opts)
+	.m("n", "[d", vim.diagnostic.goto_prev, opts)
+	.m("n", "]d", vim.diagnostic.goto_next, opts)
+	-- vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
 	require("mason-lspconfig").setup_handlers({
 		function (server_name)
 			require("lspconfig")[server_name].setup{}

@@ -25,6 +25,11 @@ function util.n(key, tarKey)
 	return util
 end
 
+-- insert模式下按键映射 
+function util.i(key, tarKey)
+	util.m('i', key, tarKey, nil)
+	return util
+end
 -- 判断是否为windwos系统
 function util.is_windows()
 	local has = vim.fn.has
