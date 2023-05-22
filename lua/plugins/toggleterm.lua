@@ -47,7 +47,12 @@ function _bot_term_toggle()
 		hidden = true
 	}):toggle()
 end
-
+require("cmd_panel").create{
+	"<leader>g",
+	_lazygit_toggle,
+	"open lazygit terminal",
+	"terminal"
+}
 local toggleterm_map = "<C-\\>"
 plugin.keys = {
 	{ "<C-\\>",    ":ToggleTerm<CR>",             desc = "toggle terminal" },

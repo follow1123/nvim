@@ -13,7 +13,7 @@ cmd.session = {
 		local list = persistence.list()
 		local sessions = list
 		local opts = {
-			prompt = "Select Sessions",
+			prompt = "select sessions",
 			format_item = function(item)
 				local tmp = item:reverse()
 				local pattern = "/"
@@ -28,6 +28,7 @@ cmd.session = {
 		}
 		local on_choice = function(choice)
 			if choice then
+				vim.cmd("%bdelete")
 				vim.cmd("silent! source " .. vim.fn.fnameescape(choice))
 			end
 		end
