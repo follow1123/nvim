@@ -19,10 +19,21 @@ if not require("util").is_windows() then
 	})
 end
 
--- if options.auto_save then
-    vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
-        pattern = { "*" },
-        command = "silent! wall",
-        nested = true,
-    })
--- end
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+	pattern = { "*" },
+	command = "silent! wall",
+	nested = true,
+})
+
+-- vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
+-- 	pattern = { "*" },
+	-- command = function ()
+		-- 	command = "lua print(123123)",
+		-- local tree = require("nvim-tree.api").tree
+		-- if tree.is_visible() then
+			-- tree.close()
+		-- end
+	-- end,
+-- 	nested = true,
+-- })
+

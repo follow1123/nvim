@@ -12,11 +12,11 @@ plugin.config = function()
 	}
 end
 
-vim.api.nvim_create_autocmd('UIEnter', {
-	callback = function()
-		-- require("persistence").load {
-			-- last = true
-		-- }
-	end
-})
+-- vim.api.nvim_create_autocmd('VimEnter', {
+-- 	callback = function()
+-- 		require("persistence").load {
+-- 			last = true
+-- 		}
+-- 	end
+-- })
 return plugin

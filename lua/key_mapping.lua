@@ -35,4 +35,4 @@ require("util")
 .v("<leader>y", "\"+y")
 -- insert 模式下快捷键
 -- 保存
-.i("<C-s>", "<Esc>:w<CR>a")
+.i("<C-s>", "<Esc>:w<CR>")

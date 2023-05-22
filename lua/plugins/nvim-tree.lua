@@ -10,7 +10,7 @@ end
 
 plugin.keys = {
 	-- 默认打开文件树快捷键
-	{ "<A-1>", ":NvimTreeToggle<CR>", desc = "NvimTreeToggle"},
+	{ "<A-1>", ":NvimTreeFindFileToggle<CR>", desc = "NvimTreeToggle"},
 	-- 在文件树内定位当前文件
 	{ "<S-Tab>", ":NvimTreeFindFileToggle<CR>", desc = "NvimTreeFindFileToggle"},
 	-- 定位到当前的工作目录
