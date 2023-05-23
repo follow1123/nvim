@@ -1,7 +1,7 @@
 
 -- leader 键
 vim.g.mapleader = " "
-require("util")
+require("utils")
 -- 切换到visual line模式
 .n("<leader>v", "V")
 -- 向下粘贴一行
@@ -27,7 +27,6 @@ require("util")
 -- 格式化
 -- .n("<leader>l", "=G")
 .n("<leader>l", ":lua vim.lsp.buf.format()<CR>")
-.n("<leader>s", ":lua cmd.session.select()<CR>")
 -- 可视模式下选择行上下移动
 .v("<A-j>", ":m '>+1<CR>gv=gv'<Esc>")
 .v("<A-k>", ":m '>-2<CR>gv=gv'<Esc>")

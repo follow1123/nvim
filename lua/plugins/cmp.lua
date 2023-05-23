@@ -15,7 +15,7 @@ local plugin = {
 		{ "hrsh7th/cmp-cmdline" },
 		-- lsp补全
 		{ "hrsh7th/cmp-nvim-lsp" },
-		-- { "hrsh7th/cmp-nvim-lua", event = "VeryLazy" },
+		{ "hrsh7th/cmp-nvim-lua", event = "VeryLazy" },
 	},
 }
 
@@ -66,7 +66,7 @@ plugin.config = function()
 			end
 		end, { "i", "s",}),
 		-- enter 确认
-		['<CR>'] = cmp.mapping.confirm({
+		["<CR>"] = cmp.mapping.confirm({
 			select = true ,
 			behavior = cmp.ConfirmBehavior.Replace
 		}),
@@ -92,7 +92,7 @@ plugin.config = function()
 	-- 代码片段引擎配置
 	cmp_config.snippet = {
 		expand = function(args)
-			require('luasnip').lsp_expand(args.body)
+			require("luasnip").lsp_expand(args.body)
 		end,
 	}
 	cmp_config.formatting = {
@@ -164,27 +164,27 @@ plugin.config = function()
 	}
 
 	-- buffer内搜索时补全
-	cmp.setup.cmdline({ '/', '?' }, {
+	cmp.setup.cmdline({ "/", "?" }, {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = {
-			{ name = 'buffer' }
+			{ name = "buffer" }
 		}
 	})
 	-- 命令模式补全
-	cmp.setup.cmdline(':', {
+	cmp.setup.cmdline(":", {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = cmp.config.sources({
-			{ name = 'path' }
+			{ name = "path" }
 		}, {
-			{ name = 'cmdline' }
+			{ name = "cmdline" }
 		})
 	})
 
 	cmp.setup(cmp_config)
 	-- Set up lspconfig.
-	local capabilities = require('cmp_nvim_lsp').default_capabilities()
-	-- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-	require('lspconfig')['lua_ls'].setup {
+	local capabilities = require("cmp_nvim_lsp").default_capabilities()
+	-- Replace <YOUR_LSP_SERVER> with each lsp server you"ve enabled.
+	require("lspconfig")["lua_ls"].setup {
 		capabilities = capabilities
 	}
 end

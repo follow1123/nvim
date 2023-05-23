@@ -15,25 +15,25 @@ end
 
 -- visual模式下按键映射 
 function util.v(key, tarKey)
-	util.m('v', key, tarKey, nil)
+	util.m("v", key, tarKey, nil)
 	return util
 end
 
 -- normal模式下按键映射 
 function util.n(key, tarKey)
-	util.m('n', key, tarKey, nil)
+	util.m("n", key, tarKey, nil)
 	return util
 end
 
 -- insert模式下按键映射 
 function util.i(key, tarKey)
-	util.m('i', key, tarKey, nil)
+	util.m("i", key, tarKey, nil)
 	return util
 end
 -- 判断是否为windwos系统
 function util.is_windows()
 	local has = vim.fn.has
-	if (has('win32') ~= 0 or has('win64') ~= 0) then
+	if (has("win32") ~= 0 or has("win64") ~= 0) then
 		return true
 	end
 	return false
@@ -42,7 +42,7 @@ end
 -- 判断是否为gui运行
 function util.is_gui()
 	local has = vim.fn.has
-	if (has('gui_running') ~= 0) then
+	if (has("gui_running") ~= 0) then
 		return true
 	end
 	return false

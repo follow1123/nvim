@@ -1,6 +1,8 @@
-require('config')
-require('autocmd')
-require('key_mapping')
-require('plugin_init')
-require('commands')
-require('cmd_panel')
+-- 全局变量，用于扩展插件的方法
+pg = {}
+
+require("options")
+require("autocmd")
+require("key_mapping")
+require("plugin_init")
+require("cmd_panel")

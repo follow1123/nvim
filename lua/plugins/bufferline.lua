@@ -6,7 +6,7 @@ return {
 		"kyazdani42/nvim-web-devicons",
 	}},
 	config = function()
-		require("util")
+		require("utils")
 		-- Alt+q关闭当前buffer
 		.n("<A-q>", ":bdelete!<CR>")
 		-- Ctrl+l下一个buffer

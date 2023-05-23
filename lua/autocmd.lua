@@ -6,7 +6,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
     end,
 })
 
-if not require("util").is_windows() then
+if not require("utils").is_windows() then
 	-- 离开插入模式后输入法自动切换为英文
 	vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 		pattern = { "*" },

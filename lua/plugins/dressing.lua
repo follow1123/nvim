@@ -5,7 +5,7 @@ local plugin = {
 
 
 plugin.config = function ()
-	require('dressing').setup({
+	require("dressing").setup({
   input = {
     -- Set to false to disable the vim.ui.input implementation
     enabled = true,
@@ -13,7 +13,7 @@ plugin.config = function ()
     -- Default prompt string
     default_prompt = "Input:",
 
-    -- Can be 'left', 'right', or 'center'
+    -- Can be "left", "right", or "center"
     title_pos = "left",
 
     -- When true, <Esc> will close the modal
@@ -25,7 +25,7 @@ plugin.config = function ()
     -- These are passed to nvim_open_win
     anchor = "SW",
     border = "rounded",
-    -- 'editor' and 'win' will default to being centered
+    -- "editor" and "win" will default to being centered
     relative = "cursor",
 
     -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
@@ -84,7 +84,7 @@ plugin.config = function ()
 
     -- Options for telescope selector
     -- These are passed into the telescope picker directly. Can be used like:
-    telescope = require('telescope.themes').get_dropdown(),
+    telescope = require("telescope.themes").get_dropdown(),
 
     -- Options for nui Menu
     nui = {
@@ -112,7 +112,7 @@ plugin.config = function ()
       -- These are passed to nvim_open_win
       anchor = "NW",
       border = "rounded",
-      -- 'editor' and 'win' will default to being centered
+      -- "editor" and "win" will default to being centered
       relative = "editor",
 
       buf_options = {},

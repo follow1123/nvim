@@ -1,5 +1,45 @@
 {
     "diagnostics.globals": [
-        "vim"
+        "vim",
+        "pg"
+    ],
+    "workspace.checkThirdParty": false,
+    "workspace.library": [
+        "C:\\Users\\YF\\AppData\\Local\\nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\lazy.nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\mason.nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\mason-lspconfig.nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\Comment.nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\gitsigns.nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\plenary.nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\telescope.nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\dressing.nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-nvim-lsp",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-cmdline",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-path",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-buffer",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp_luasnip",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\LuaSnip",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\nvim-cmp",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-nvim-lua",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\alpha-nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\nvim-lspconfig",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\nvim-treesitter",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\nvim-ts-rainbow",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\nvim-colorizer.lua",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\darcula",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\nvim-web-devicons",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\bufferline.nvim",
+        "C:\\Users\\YF\\space\\soft\\nvim\\nvim-win64\\share\\nvim\\runtime",
+        "C:\\Users\\YF\\space\\soft\\nvim\\nvim-win64\\share\\nvim\\runtime\\pack\\dist\\opt\\matchit",
+        "C:\\Users\\YF\\space\\soft\\nvim\\nvim-win64\\lib\\nvim",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\readme",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-nvim-lsp\\after",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-cmdline\\after",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-path\\after",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-buffer\\after",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp_luasnip\\after",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\cmp-nvim-lua\\after",
+        "C:\\Users\\YF\\AppData\\Local\\nvim-data\\lazy\\darcula\\after"
     ]
 }

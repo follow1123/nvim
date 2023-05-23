@@ -1,8 +1,8 @@
 -- lsp 配置
 local plugin = {
-	{ "williamboman/mason.nvim", build = ":MasonUpdate", event = "VeryLazy" },
+	{ "williamboman/mason.nvim",           build = ":MasonUpdate", event = "VeryLazy" },
 	{ "williamboman/mason-lspconfig.nvim", event = "VeryLazy" },
-	{ "neovim/nvim-lspconfig", event = "VeryLazy" },
+	{ "neovim/nvim-lspconfig",             event = "VeryLazy" },
 }
 
 plugin[1].config = function()
@@ -24,28 +24,38 @@ plugin[2].config = function()
 	-- Setup language servers.
 	local lspconfig = require("lspconfig")
 	local opts = { noremap = true, silent = true }
-	require("util")
-	.m("n", "<leader><F2>", vim.diagnostic.open_float, opts)
-	.m("n", "[d", vim.diagnostic.goto_prev, opts)
-	.m("n", "]d", vim.diagnostic.goto_next, opts)
+	require("utils")
+		.n("<leader><F2>", vim.diagnostic.open_float)
+		.n("[d", vim.diagnostic.goto_prev)
+		.n("]d", vim.diagnostic.goto_next)
+		.n("<CR>", vim.lsp.buf.code_action)
+		.n("<A-r>", vim.lsp.buf.rename)
 	-- vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
 	require("mason-lspconfig").setup_handlers({
-		function (server_name)
-			require("lspconfig")[server_name].setup{}
+		function(server_name)
+			require("lspconfig")[server_name].setup {}
 		end,
 		-- Next, you can provide targeted overrides for specific servers.
-		["lua_ls"] = function ()
+		["lua_ls"] = function()
 			lspconfig.lua_ls.setup {
 				settings = {
 					Lua = {
 						diagnostics = {
 							globals = { "vim" }
-						}
+						},
+						workspace = {
+							-- Make the server aware of Neovim runtime files
+							library = vim.api.nvim_get_runtime_file("", true),
+						},
+						-- Do not send telemetry data containing a randomized but unique identifier
+						telemetry = {
+							enable = false,
+						},
 					}
 				}
 			}
 		end,
-		["rust_analyzer"] = function ()
+		["rust_analyzer"] = function()
 			lspconfig.rust_analyzer.setup {
 				settings = {
 				}
@@ -58,9 +68,9 @@ plugin[3].config = function()
 	-- replace the lsp info symbol
 	local signs = {
 		{ name = "DiagnosticSignError", text = "" },
-		{ name = "DiagnosticSignWarn", text = "" },
-		{ name = "DiagnosticSignHint", text = "" },
-		{ name = "DiagnosticSignInfo", text = "" },
+		{ name = "DiagnosticSignWarn",  text = "" },
+		{ name = "DiagnosticSignHint",  text = "" },
+		{ name = "DiagnosticSignInfo",  text = "" },
 	}
 	for _, sign in ipairs(signs) do
 		vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })

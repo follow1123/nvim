@@ -1,20 +1,20 @@
 -- 注释插件
 return {
-	'numToStr/Comment.nvim',
+	"numToStr/Comment.nvim",
 	event = "VeryLazy",
 	config = function()
-		require('Comment').setup{
+		require("Comment").setup{
 			toggler = {
 				-- normal 模式下注释快捷键
-				line = '<A-e>',
+				line = "<A-e>",
 				---Block-comment toggle keymap
-				-- block = 'gbc',
+				-- block = "gbc",
 			},
 			opleader = {
 				-- visual 模式下注释快捷键
-				line = '<A-e>',
+				line = "<A-e>",
 				---Block-comment keymap
-				-- block = 'gb',
+				-- block = "gb",
 			},
 		}
 	end

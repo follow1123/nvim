@@ -1,7 +1,7 @@
 -- 缩进对齐线插件
 return {
-	'lukas-reineke/indent-blankline.nvim',
-	event = 'VeryLazy',
+	"lukas-reineke/indent-blankline.nvim",
+	event = "VeryLazy",
 	config = function()
 		vim.opt.list = true
 		require("indent_blankline").setup {

@@ -3,7 +3,7 @@ vim.o.number = true
 -- 设置相对行号
 vim.o.relativenumber = true
 -- 设置和剪贴板共用
--- vim.o.clipboard = 'unnamed'
+-- vim.o.clipboard = "unnamed"
 -- tab键相关
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
@@ -29,7 +29,7 @@ vim.wo.signcolumn = "yes"
 --vim.o.cmdheight = 0
 -- vim.o.showcmd = false
 -- 支持鼠标
-vim.o.mouse = 'a'
+vim.o.mouse = "a"
 
 -- 代码折叠相关
 -- 根据缩进折叠

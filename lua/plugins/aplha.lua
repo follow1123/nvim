@@ -1,14 +1,14 @@
 -- 起始页插件
 return {
-	'goolord/alpha-nvim',
+	"goolord/alpha-nvim",
 	-- enabled = false,
 	lazy = true,
 	-- event = "VeryLazy",
-	dependencies = {'kyazdani42/nvim-web-devicons'},
+	dependencies = {"kyazdani42/nvim-web-devicons"},
 	config = function()
-		local dashboard = require('alpha.themes.dashboard')
+		local dashboard = require("alpha.themes.dashboard")
 		local config_cmd = ":e ~/.config/nvim/init.lua <CR>"
-		if require("util").is_windows() then
+		if require("utils").is_windows() then
 			config_cmd = ":e ~/AppData/Local/nvim/init.lua <CR>"
 		end
 		dashboard.section.buttons.val = {
@@ -25,8 +25,8 @@ return {
 		dashboard.section.buttons.opts.hl = "Keyword"
 
 		dashboard.opts.opts.noautocmd = true
-		-- .setup(require('alpha.themes.startify').config)
-		require('alpha')
+		-- .setup(require("alpha.themes.startify").config)
+		require("alpha")
 		.setup(dashboard.opts)
 	end
 }

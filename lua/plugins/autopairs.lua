@@ -1,5 +1,5 @@
 return {
-	'windwp/nvim-autopairs',
+	"windwp/nvim-autopairs",
 	event = "InsertEnter",
 	config = function()
 		local status_ok, npairs = pcall(require, "nvim-autopairs")
