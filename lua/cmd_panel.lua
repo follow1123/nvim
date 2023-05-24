@@ -12,7 +12,7 @@ plugin.create = function(opts)
 	local tag = opts[1] or opts.tag
 	local desc = opts[2] or opts.desc
 	local callback = opts[3] or opts.callback
-	local info = format_commands(tag, desc)
+	local info = format_commands(tag, desc, "")
 	table.insert(cmd_info, info)
 	cmd_list[info] = callback
 end
@@ -47,8 +47,8 @@ end
 plugin.create_lazy = function(opts)
 	plugin.create_mapping(opts)
 	return {
-		opts[3] or opts.key,
 		opts[4] or opts.cmd,
+		opts[3] or opts.key,
 		opts[2] or opts.desc
 	}
 end

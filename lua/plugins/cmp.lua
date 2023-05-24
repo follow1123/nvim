@@ -15,7 +15,7 @@ local plugin = {
 		{ "hrsh7th/cmp-cmdline" },
 		-- lsp补全
 		{ "hrsh7th/cmp-nvim-lsp" },
-		{ "hrsh7th/cmp-nvim-lua", event = "VeryLazy" },
+		-- { "hrsh7th/cmp-nvim-lua", event = "VeryLazy" },
 	},
 }
 

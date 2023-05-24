@@ -50,10 +50,9 @@ pg.terminal.bot_term_toggle = function()
 end
 
 require("cmd_panel").create {
-	"<leader>g",
-	pg.terminal.lazygit_toggle,
+	"terminal",
 	"open lazygit terminal",
-	"terminal"
+	pg.terminal.lazygit_toggle,
 }
 local toggleterm_map = "<C-\\>"
 
