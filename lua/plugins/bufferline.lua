@@ -2,17 +2,17 @@
 return {
 	"akinsho/bufferline.nvim",
 	-- event = "VeryLazy",
-	dependencies = {{
+	dependencies = { {
 		"kyazdani42/nvim-web-devicons",
-	}},
+	} },
 	config = function()
 		require("utils")
 		-- Alt+q关闭当前buffer
-		.n("<A-q>", ":bdelete!<CR>")
+			.n("<A-q>", ":bdelete!<CR>")
 		-- Ctrl+l下一个buffer
-		.n("<C-l>", ":BufferLineCycleNext<CR>")
+			.n("<C-l>", ":BufferLineCycleNext<CR>")
 		-- Ctrl+h上一个buffer
-		.n("<C-h>", ":BufferLineCyclePrev<CR>")
+			.n("<C-h>", ":BufferLineCyclePrev<CR>")
 		require("bufferline").setup {
 			options = {
 				mode = "buffers",
@@ -38,6 +38,11 @@ return {
 						text_align = "center",
 						separator = true,
 					}
+				},
+			},
+			highlights = {
+				fill = {
+					bg = "#2b2b2b"
 				},
 			}
 		}

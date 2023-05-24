@@ -40,3 +40,7 @@ vim.o.foldenable = false
 vim.o.foldlevel = 99
 
 vim.o.syntax = true
+-- 分割水平新窗口默认在下边
+vim.o.splitbelow = true
+-- 分割垂直新窗口默认在右边
+vim.o.splitright = true

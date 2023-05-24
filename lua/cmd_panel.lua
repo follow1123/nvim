@@ -13,6 +13,9 @@ plugin.create = function(opts)
 	local desc = opts[2] or opts.desc
 	local callback = opts[3] or opts.callback
 	local info = format_commands(tag, desc, "")
+	if cmd_info[info] then
+		return
+	end
 	table.insert(cmd_info, info)
 	cmd_list[info] = callback
 end
@@ -34,6 +37,9 @@ plugin.create_mapping = function(opts)
 	local cmd = opts[4] or opts.cmd
 	local callback = opts[5] or opts.callback
 	local info = format_commands(tag, desc, key)
+	if cmd_info[info] then
+		return
+	end
 	table.insert(cmd_info, info)
 	if cmd then
 		cmd_list[info] = function()
