@@ -47,7 +47,7 @@ keys.map.base = {
 	},
 	{
 		desc = "copy from system clip",
-		mode = "n",
+		mode = "v",
 		key = "\"+y",
 		command = "<leader>y",
 	},

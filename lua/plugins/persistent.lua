@@ -1,11 +1,4 @@
 -- session 相关插件
--- vim.api.nvim_create_autocmd('VimEnter', {
--- 	callback = function()
--- 		require("persistence").load {
--- 			last = true
--- 		}
--- 	end
--- })
 return {
 	"folke/persistence.nvim",
 	module = "persistence",
