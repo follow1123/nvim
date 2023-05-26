@@ -1,19 +1,10 @@
 -- 文件树插件
-
--- 定位到当前的工作目录
-local function restore_nvim_tree()
-	local nvim_tree = require("nvim-tree")
-	nvim_tree.change_dir(vim.fn.getcwd())
-	-- nvim_tree.refresh()
-end
-
+local keys = require("key_mapping").map.nvim_tree
 return {
 	"kyazdani42/nvim-tree.lua",
 	keys = {
-		-- 在文件树内定位当前文件
-		{ "<A-1>",     ":NvimTreeFindFileToggle<CR>", desc = "NvimTreeFindFileToggle" },
-		-- 定位到当前的工作目录
-		{ "<leader>t", restore_nvim_tree,             desc = "local current working dir" },
+		{ keys[1].key, keys[1].command, desc = keys[1].desc },
+		{ keys[2].key, keys[2].command, desc = keys[2].desc },
 	},
 	config = function()
 		-- 插件配置

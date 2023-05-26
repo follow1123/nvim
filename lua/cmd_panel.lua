@@ -9,10 +9,29 @@ local format_commands = function(tag, desc, key)
 end
 -- 创建一个命令选项
 plugin.create = function(opts)
-	local tag = opts[1] or opts.tag
-	local desc = opts[2] or opts.desc
-	local callback = opts[3] or opts.callback
-	local info = format_commands(tag, desc, "")
+	local tag = opts.tag
+	local key = opts.key
+	local command = opts.command
+	local desc = opts.desc
+	local callback = opts.callback
+	-- key默认为空串
+	if not key then
+		key = ""
+	end
+	-- 默认使用回调，回调为空则执行命令，命令为空则提示
+	if not callback then
+		if command then
+			callback = function()
+				command = string.gsub(command, "<[a-zA-Z]+>", "")
+				vim.cmd(command)
+			end
+		else
+			callback = function()
+				vim.cmd(":echo 'command not found: " .. key .. "'")
+			end
+		end
+	end
+	local info = format_commands(tag, desc, key)
 	if cmd_info[info] then
 		return
 	end
@@ -30,35 +49,9 @@ plugin.select_cmd = function()
 	end)
 end
 
-plugin.create_mapping = function(opts)
-	local tag = opts[1] or opts.tag
-	local desc = opts[2] or opts.desc
-	local key = opts[3] or opts.key
-	local cmd = opts[4] or opts.cmd
-	local callback = opts[5] or opts.callback
-	local info = format_commands(tag, desc, key)
-	if cmd_info[info] then
-		return
-	end
-	table.insert(cmd_info, info)
-	if cmd then
-		cmd_list[info] = function()
-			vim.cmd(cmd)
-		end
-	else
-		cmd_list[info] = callback
-	end
-end
-
-plugin.create_lazy = function(opts)
-	plugin.create_mapping(opts)
-	return {
-		opts[4] or opts.cmd,
-		opts[3] or opts.key,
-		opts[2] or opts.desc
-	}
-end
-
-require("utils").n("<A-p>", ":lua require('cmd_panel').select_cmd()<CR>")
+vim.keymap.set("n", "<A-p>", ":lua require('cmd_panel').select_cmd()<CR>", {
+	noremap = true,
+	silent = true,
+})
 
 return plugin

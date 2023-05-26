@@ -6,13 +6,6 @@ return {
 		"kyazdani42/nvim-web-devicons",
 	} },
 	config = function()
-		require("utils")
-		-- Alt+q关闭当前buffer
-			.n("<A-q>", ":bdelete!<CR>")
-		-- Ctrl+l下一个buffer
-			.n("<C-l>", ":BufferLineCycleNext<CR>")
-		-- Ctrl+h上一个buffer
-			.n("<C-h>", ":BufferLineCyclePrev<CR>")
 		require("bufferline").setup {
 			options = {
 				mode = "buffers",
@@ -40,11 +33,11 @@ return {
 					}
 				},
 			},
-			highlights = {
-				fill = {
-					bg = "#2b2b2b"
-				},
-			}
+			-- highlights = {
+			-- 	fill = {
+			-- 		bg = "#2b2b2b"
+			-- 	},
+			-- }
 		}
 	end
 }

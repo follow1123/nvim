@@ -23,13 +23,6 @@ plugin[2].config = function()
 	})
 	-- Setup language servers.
 	local lspconfig = require("lspconfig")
-	local opts = { noremap = true, silent = true }
-	require("utils")
-		.n("<leader><F2>", vim.diagnostic.open_float)
-		.n("[d", vim.diagnostic.goto_prev)
-		.n("]d", vim.diagnostic.goto_next)
-		.n("<CR>", vim.lsp.buf.code_action)
-		.n("<A-r>", vim.lsp.buf.rename)
 	-- vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
 	require("mason-lspconfig").setup_handlers({
 		function(server_name)

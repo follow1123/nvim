@@ -8,7 +8,7 @@ return {
 	config = function()
 		local dashboard = require("alpha.themes.dashboard")
 		local config_cmd = ":e ~/.config/nvim/init.lua <CR>"
-		if require("utils").is_windows() then
+		if require("options").is_windows() then
 			config_cmd = ":e ~/AppData/Local/nvim/init.lua <CR>"
 		end
 		dashboard.section.buttons.val = {
