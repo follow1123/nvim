@@ -37,10 +37,10 @@ keys.map.base = {
 		desc = "window to up",
 		mode = "n",
 		key = "<C-up>",
-		command = "<C-w>-",
 	},
 	{
 		desc = "window to down",
+		command = "<C-w>-",
 		mode = "n",
 		key = "<C-down>",
 		command = "<C-w>+",
@@ -48,14 +48,14 @@ keys.map.base = {
 	{
 		desc = "copy from system clip",
 		mode = "v",
-		key = "\"+y",
-		command = "<leader>y",
+		key = "<leader>y",
+		command = "\"+y",
 	},
 	{
 		desc = "paste from system clip",
 		mode = "n",
-		key = "\"+p",
-		command = "<leader>p",
+		key = "<leader>p",
+		command = "\"+p",
 	},
 	{
 		desc = "save file normal mode",
