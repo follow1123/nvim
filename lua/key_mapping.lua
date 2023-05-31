@@ -37,10 +37,10 @@ keys.map.base = {
 		desc = "window to up",
 		mode = "n",
 		key = "<C-up>",
+		command = "<C-w>-",
 	},
 	{
 		desc = "window to down",
-		command = "<C-w>-",
 		mode = "n",
 		key = "<C-down>",
 		command = "<C-w>+",
@@ -54,6 +54,12 @@ keys.map.base = {
 	{
 		desc = "paste from system clip",
 		mode = "n",
+		key = "<leader>p",
+		command = "\"+p",
+	},
+	{
+		desc = "paste from system clip",
+		mode = "v",
 		key = "<leader>p",
 		command = "\"+p",
 	},
@@ -88,13 +94,6 @@ keys.map.base = {
 		key = "<A-k>",
 	},
 	{
-		desc = "format",
-		mode = "n",
-		key = "<leader>l",
-		-- command = "=G",
-		command = ":lua vim.lsp.buf.format()<CR>",
-	},
-	{
 		desc = "move row up visual mode",
 		mode = "v",
 		key = "<A-k>",
@@ -105,6 +104,18 @@ keys.map.base = {
 		mode = "v",
 		key = "<A-j>",
 		command = ":m '>+1<CR>gv=gv'<Esc>",
+	},
+	{
+		desc = "pagedown",
+		mode = "n",
+		key = "<C-d>",
+		command = "<C-d>zz",
+	},
+	{
+		desc = "pageup",
+		mode = "n",
+		key = "<C-u>",
+		command = "<C-u>zz",
 	},
 }
 
@@ -226,6 +237,13 @@ keys.map.nvim_tree = {
 }
 keys.map.lsp = {
 	{
+		desc = "format",
+		mode = "n",
+		key = "<leader>l",
+		-- command = "=G",
+		command = ":lua vim.lsp.buf.format()<CR>",
+	},
+	{
 		desc = "show diagnostic info",
 		key = "<leader><F2>",
 		command = ":lua vim.diagnostic.open_float()<CR>",
@@ -251,6 +269,11 @@ keys.map.lsp = {
 		desc = "rename variable",
 		key = "<A-r>",
 		command = ":lua vim.lsp.buf.rename()<CR>",
+	},
+	{
+		desc = "definition",
+		key = "gd",
+		command = ":lua vim.lsp.buf.definition()<CR>",
 	},
 }
 keys.map.bufferline = {
