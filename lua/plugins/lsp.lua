@@ -37,8 +37,13 @@ plugin[2].config = function()
 							globals = { "vim" }
 						},
 						workspace = {
+							-- 去除lsp提示
+							checkThirdParty = false,
 							-- Make the server aware of Neovim runtime files
 							library = vim.api.nvim_get_runtime_file("", true),
+						},
+						completion = {
+							callSnippet = "Replace",
 						},
 						-- Do not send telemetry data containing a randomized but unique identifier
 						telemetry = {
