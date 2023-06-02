@@ -226,7 +226,7 @@ keys.map.nvim_tree = {
 		mapping = false,
 		desc = "change tree dir to current dir",
 		key = "<leader>t",
-		command = ":lua require('nvim-tree').change_dir(vim.fn.getcwd())"
+		command = ":lua require('nvim-tree').change_dir(vim.fn.getcwd())<CR>"
 	},
 	{
 		mapping = false,
