@@ -78,7 +78,7 @@ keys.map.base = {
 	{
 		desc = "no higtlight search",
 		mode = "n",
-		key = "<leader>h",
+		key = "<leader>n",
 		command = "<Esc>:nohlsearch<CR>",
 	},
 	{

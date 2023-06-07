@@ -2,7 +2,7 @@
 return {
 	"goolord/alpha-nvim",
 	-- enabled = false,
-	lazy = true,
+	-- lazy = true,
 	-- event = "VeryLazy",
 	dependencies = {"kyazdani42/nvim-web-devicons"},
 	config = function()

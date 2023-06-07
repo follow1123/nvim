@@ -48,19 +48,19 @@ vim.api.nvim_create_autocmd({ "BufDelete" }, {
 })
 
  -- vim 启动后打开上一次的session,TODO 打开时主题有问题
-vim.api.nvim_create_autocmd({ "VimEnter" }, {
-	pattern = { "*" },
-	callback = function()
-		local buf_id = vim.api.nvim_get_current_buf()
-		local buf_name = vim.api.nvim_buf_get_name(buf_id)
-		-- print(buf_name == "")
-		if buf_name == "" then
-			require("persistence").load {
-				last = true
-			}
-		end
-	end
-})
+-- vim.api.nvim_create_autocmd({ "VimEnter" }, {
+-- 	pattern = { "*" },
+-- 	callback = function()
+-- 		local buf_id = vim.api.nvim_get_current_buf()
+-- 		local buf_name = vim.api.nvim_buf_get_name(buf_id)
+-- 		-- print(buf_name == "")
+-- 		if buf_name == "" then
+-- 			require("persistence").load {
+-- 				last = true
+-- 			}
+-- 		end
+-- 	end
+-- })
 -- 复制时高亮
 vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 	pattern = { "*" },
