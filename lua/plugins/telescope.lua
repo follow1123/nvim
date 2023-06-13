@@ -1,10 +1,14 @@
+local live_grep_key = "<C-A-f>"
+if require("options").is_gui() then
+	live_grep_key = "<C-f>"
+end
 -- 搜索插件
 return {
 	"nvim-telescope/telescope.nvim",
 	version = "0.1.x",
 	keys = {
-		{ "<leader>ff",      ":Telescope find_files<CR>", desc = "find files" },
-		{ "<A-f>",      ":Telescope live_grep<CR>",  desc = "live grep" },
+		{ "<A-f>",      ":Telescope find_files<CR>", desc = "find files" },
+		{ live_grep_key, ":Telescope live_grep<CR>", desc = "live grep"	},
 		{ "<leader>fb", ":Telescope buffers<CR>",    desc = "buffers" },
 		{ "<leader>fh", ":Telescope help_tags<CR>",  desc = "help tags" },
 	},

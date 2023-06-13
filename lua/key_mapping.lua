@@ -123,6 +123,18 @@ keys.map.base = {
 		key = "<C-Tab>",
 		command = "<C-^>",
 	},
+	{
+		desc = "search next and focus center",
+		mode = "n",
+		key = "n",
+		command = "nzz",
+	},
+	{
+		desc = "search prev and focus center",
+		mode = "n",
+		key = "N",
+		command = "Nzz",
+	},
 }
 
 keys.map.terminal = {
@@ -245,7 +257,7 @@ keys.map.lsp = {
 	{
 		desc = "format",
 		mode = "n",
-		key = "<leader>l",
+		key = "<A-l>",
 		-- command = "=G",
 		command = ":lua vim.lsp.buf.format()<CR>",
 	},
