@@ -47,6 +47,10 @@ options.init = function()
 	vim.o.splitright = true
 	-- leader 键
 	vim.g.mapleader = " "
+	-- gui模式设置字体
+	if options.is_gui() then
+		vim.cmd([[set guifont=JetBrainsMono\ NF:h12]])
+	end
 end
 
 -- 判断是否为windwos系统

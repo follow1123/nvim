@@ -159,8 +159,8 @@ plugin.config = function()
 	}
 	-- 边框样式 圆角边框
 	cmp_config.window = {
-		completion = cmp.config.window.bordered(),
-		documentation = cmp.config.window.bordered(),
+		-- completion = cmp.config.window.bordered(),
+		-- documentation = cmp.config.window.bordered(),
 	}
 
 	-- buffer内搜索时补全
