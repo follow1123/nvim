@@ -1,6 +1,7 @@
 -- 主题插件
 return {
 	"doums/darcula",
+	enabled = false;
 	-- lazy = true,
 	-- event = "VeryLazy",
 	config = function()
