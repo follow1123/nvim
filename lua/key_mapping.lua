@@ -117,6 +117,12 @@ keys.map.base = {
 		key = "<C-u>",
 		command = "<C-u>zz",
 	},
+	{
+		desc = "switch tags",
+		mode = "n",
+		key = "<C-Tab>",
+		command = "<C-^>",
+	},
 }
 
 keys.map.terminal = {

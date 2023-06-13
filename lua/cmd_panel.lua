@@ -49,7 +49,7 @@ plugin.select_cmd = function()
 	end)
 end
 
-vim.keymap.set("n", "<A-p>", ":lua require('cmd_panel').select_cmd()<CR>", {
+vim.keymap.set("n", "<C-S-p>", ":lua require('cmd_panel').select_cmd()<CR>", {
 	noremap = true,
 	silent = true,
 })

@@ -24,7 +24,7 @@ options.init = function()
 	vim.o.wrap = false
 	-- 光标移动的时候始终保持上下左右至少有 4 个空格的间隔
 	vim.o.scrolloff = 4
-	vim.o.sidescrolloff = 4
+	vim.o.sidescrolloff = 8
 	-- 显示左侧图标指示列
 	vim.wo.signcolumn = "yes"
 	-- 底部命令行行高，为0默认隐藏

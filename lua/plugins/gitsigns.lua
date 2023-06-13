@@ -67,7 +67,15 @@ return {
 
 				-- Actions
 				map("n", "<leader>hj", gs.next_hunk)
+				-- map("n", "<leader>hj", function ()
+					-- gs.next_hunk()
+					-- gs.preview_hunk()
+				-- end)
 				map("n", "<leader>hk", gs.prev_hunk)
+				-- map("n", "<leader>hk", function ()
+				-- 	gs.prev_hunk()
+				-- 	gs.preview_hunk()
+				-- end)
 				map("n", "<leader>hs", gs.stage_hunk)
 				map("n", "<leader>hr", gs.reset_hunk)
 				map("v", "<leader>hs", function() gs.stage_hunk {vim.fn.line("."), vim.fn.line("v")} end)
