@@ -19,7 +19,7 @@ end
 
 plugin[2].config = function()
 	require("mason-lspconfig").setup({
-		ensure_installed = { "lua_ls", "rust_analyzer" },
+		ensure_installed = { "lua_ls", "rust_analyzer", "clangd" },
 	})
 	-- Setup language servers.
 	local lspconfig = require("lspconfig")
@@ -55,6 +55,12 @@ plugin[2].config = function()
 		end,
 		["rust_analyzer"] = function()
 			lspconfig.rust_analyzer.setup {
+				settings = {
+				}
+			}
+		end,
+		["clangd"] = function()
+			lspconfig.clangd.setup {
 				settings = {
 				}
 			}

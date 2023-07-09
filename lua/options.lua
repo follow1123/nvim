@@ -51,6 +51,9 @@ options.init = function()
 	if options.is_gui() then
 		vim.cmd([[set guifont=JetBrainsMono\ NF:h12]])
 	end
+	-- 去掉没有文字的行左边会显示的～号，
+	vim.opt.fillchars = { eob = ' ' }
+	-- vim.wo.fillchars = 'eob: '
 end
 
 -- 判断是否为windwos系统
@@ -60,6 +63,10 @@ end
 -- 判断是否为gui运行
 options.is_gui = function()
 	return vim.fn.has("gui_running") == 1 and true or false
+end
+
+options.get_cur_file_name = function()
+	return vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
 end
 -- 浮动终端相关配置
 options.terminal = {
@@ -71,15 +78,15 @@ options.terminal = {
 		return math.floor(vim.o.lines * 0.9)
 	end,
 	def_direction = "float",
-	 }
+}
 options.terminal.def_float_opts = {
-		-- border = "single" | "double" | "shadow" | "curved" | ... other options supported by win open
-		border = "curved",
-		-- 默认占终端长宽的90%
-		width = options.terminal.get_width,
-		height = options.terminal.get_height,
-		winblend = 3
-	}
+	-- border = "single" | "double" | "shadow" | "curved" | ... other options supported by win open
+	border = "curved",
+	-- 默认占终端长宽的90%
+	width = options.terminal.get_width,
+	height = options.terminal.get_height,
+	winblend = 3
+}
 
 
 return options

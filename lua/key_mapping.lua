@@ -187,7 +187,30 @@ keys.map.terminal = {
 			}:toggle()
 		end
 	},
+	{
+		mapping = false,
+		key = "<leader>r",
+		desc = "run",
+		callback = function()
+			local o = require("options")
+			require("toggleterm.terminal").Terminal:new {
+				cmd = "bash " .. o.get_cur_file_name() .. " && read",
+				direction = "horizontal",
+				on_open = function(term)
+					vim.cmd("setlocal laststatus=0")
+					vim.cmd("setlocal cmdheight=0")
+					-- vim.cmd("startinsert!")
+				end,
+				on_close = function()
+					vim.cmd("setlocal laststatus=2")
+					vim.cmd("setlocal cmdheight=1")
+				end,
+				hidden = true
+			}:toggle()
+		end
+	},
 }
+
 keys.map.sessions = {
 	{
 		mapping = false,
