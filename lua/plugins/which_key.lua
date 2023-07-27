@@ -1,6 +1,7 @@
 return {
   "folke/which-key.nvim",
-  event = "VeryLazy",
+  enabled = false,
+  -- event = "VeryLazy",
   init = function()
     vim.o.timeout = true
     vim.o.timeoutlen = 100
