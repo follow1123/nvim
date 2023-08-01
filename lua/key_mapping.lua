@@ -194,7 +194,7 @@ keys.map.terminal = {
 		callback = function()
 			local o = require("options")
 			require("toggleterm.terminal").Terminal:new {
-				cmd = "bash " .. o.get_cur_file_name() .. " && read",
+				cmd = "bash " .. o.get_cur_file_name() .. " ; read",
 				direction = "horizontal",
 				on_open = function(term)
 					vim.cmd("setlocal laststatus=0")
