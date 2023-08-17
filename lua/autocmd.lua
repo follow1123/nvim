@@ -7,7 +7,23 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	end,
 })
 
-if not o.is_windows() then
+
+if o.is_windows() then
+	-- 进入insert模式后切换为中文输入法
+	vim.api.nvim_create_autocmd({"InsertLeave"}, {
+		pattern = { "*" },
+		callback = function()
+			vim.fn.system("im-select.exe 1033")
+		end,
+	})
+	-- 离开insert模式后切换为英文输入法
+	vim.api.nvim_create_autocmd({"InsertEnter"}, {
+		pattern = { "*" },
+		callback = function()
+			vim.fn.system("im-select.exe 2052")
+		end,
+	})
+else
 	-- 离开插入模式后输入法自动切换为英文
 	vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 		pattern = { "*" },
@@ -29,7 +45,10 @@ if not o.is_gui() then
 	-- vim退出后还原光标样式
 	vim.api.nvim_create_autocmd({ "VimLeave" }, {
 		pattern = { "*" },
-		command = "set guicursor=n-v-c-sm:ver25",
+		callback = function()
+			vim.api.nvim_command("set guicursor=n-v-c-sm:ver25")
+			vim.fn.system("im-select.exe 2052")
+		end,
 		nested = true,
 	})
 end

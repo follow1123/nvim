@@ -54,6 +54,10 @@ options.init = function()
 	-- 去掉没有文字的行左边会显示的～号，
 	vim.opt.fillchars = { eob = ' ' }
 	-- vim.wo.fillchars = 'eob: '
+	-- 设置 .lua 文件缩进为两个空格
+	vim.cmd([[
+	  autocmd FileType lua setlocal tabstop=2 shiftwidth=2 expandtab
+	]])
 end
 
 -- 判断是否为windwos系统
