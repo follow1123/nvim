@@ -1,8 +1,60 @@
+
+-- keys.map.lsp = {
+-- 	{
+-- 		desc = "format",
+-- 		mode = "n",
+-- 		key = "<A-l>",
+-- 		-- command = "=G",
+-- 		command = ":lua vim.lsp.buf.format()<CR>",
+-- 	},
+-- 	{
+-- 		desc = "show diagnostic info",
+-- 		key = "<leader><F2>",
+-- 		command = ":lua vim.diagnostic.open_float()<CR>",
+-- 	},
+-- 	{
+-- 		mapping = false,
+-- 		desc = "goto prev diagnostic line",
+-- 		-- key = "[d",
+-- 		command = ":lua vim.diagnostic.goto_prev()<CR>",
+-- 	},
+-- 	{
+-- 		mapping = false,
+-- 		desc = "goto next diagnostic line",
+-- 		-- key = "]d",
+-- 		command = ":lua vim.diagnostic.goto_next()<CR>",
+-- 	},
+-- 	{
+-- 		desc = "show code action panel",
+-- 		key = "<leader><CR>",
+-- 		command = ":lua vim.lsp.buf.code_action()<CR>",
+-- 	},
+-- 	{
+-- 		desc = "rename variable",
+-- 		key = "<A-r>",
+-- 		command = ":lua vim.lsp.buf.rename()<CR>",
+-- 	},
+-- 	{
+-- 		desc = "definition",
+-- 		key = "gd",
+-- 		command = ":lua vim.lsp.buf.definition()<CR>",
+-- 	},
+-- }
 -- lsp 配置
 local plugin = {
 	{ "williamboman/mason.nvim",           build = ":MasonUpdate", event = "VeryLazy" },
 	{ "williamboman/mason-lspconfig.nvim", event = "VeryLazy" },
-	{ "neovim/nvim-lspconfig",             event = "VeryLazy" },
+	{ 
+    "neovim/nvim-lspconfig",
+    -- keys = {
+    --   { "n", "<M-l>", ":lua vim.lsp.buf.format()<CR>", desc = "lsp format", silent = true }
+    --
+    -- },
+    dependencies = {
+      "folke/neodev.nvim"
+    },
+    event = "VeryLazy" 
+  },
 }
 
 plugin[1].config = function()
@@ -17,7 +69,12 @@ plugin[1].config = function()
 	})
 end
 
+local lua_lib = vim.api.nvim_get_runtime_file("", true)
+table.insert(lua_lib, "C:\\Users\\yf\\AppData\\Local\\nvim-data\\mason\\packages\\lua-language-server\\meta\\3rd\\luv\\library")
+
 plugin[2].config = function()
+
+  require("neodev").setup()
 	require("mason-lspconfig").setup({
 		ensure_installed = { "lua_ls", "rust_analyzer", "clangd" },
 	})
@@ -38,9 +95,9 @@ plugin[2].config = function()
 						},
 						workspace = {
 							-- 去除lsp提示
-							checkThirdParty = false,
+              checkThirdParty = false,
 							-- Make the server aware of Neovim runtime files
-							library = vim.api.nvim_get_runtime_file("", true),
+							library = lua_lib
 						},
 						completion = {
 							callSnippet = "Replace",

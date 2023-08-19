@@ -22,13 +22,13 @@ return {
   },
   { -- markdown
     "iamcco/markdown-preview.nvim",
+    enabled =  false,
     build = "cd app && npm install",
     -- event = "VeryLazy",
     -- ft = "md",
     config = function()
-      local o = require("options")
       vim.g.mkdp_browser = "surf"
-      if o.is_windows() then
+      if _G.IS_WINDOWS then
         vim.g.mkdp_browser = "firefox"
       end
       vim.g.mkdp_filetypes = { "markdown" }
@@ -43,7 +43,7 @@ return {
     config = function()
       local dashboard = require("alpha.themes.dashboard")
       local config_cmd = ":e ~/.config/nvim/init.lua <CR>"
-      if require("options").is_windows() then
+      if _G.IS_WINDOWS then
         config_cmd = ":e ~/AppData/Local/nvim/init.lua <CR>"
       end
       dashboard.section.buttons.val = {

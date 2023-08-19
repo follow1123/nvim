@@ -1,10 +1,13 @@
 -- 文件树插件
-local keys = require("key_mapping").map.nvim_tree
+local function change_tree_root()
+  require('nvim-tree').change_dir(vim.fn.getcwd())
+end
+
 return {
 	"kyazdani42/nvim-tree.lua",
 	keys = {
-		{ keys[1].key, keys[1].command, desc = keys[1].desc },
-		{ keys[2].key, keys[2].command, desc = keys[2].desc },
+		{ "<leader>t", change_tree_root, desc = "change tree dir to current dir", silent = true },
+		{ "<M-1>", ":NvimTreeFindFileToggle<CR>", desc = "find file in nvim tree", silent = true },
 	},
 	config = function()
 		-- 插件配置

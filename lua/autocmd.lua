@@ -1,4 +1,3 @@
-local o = require("options")
 -- 去除回车后注释下一行
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	pattern = "*",
@@ -8,7 +7,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 })
 
 
-if o.is_windows() then
+if _G.IS_WINDOWS then
 	-- 进入insert模式后切换为中文输入法
 	vim.api.nvim_create_autocmd({"InsertLeave"}, {
 		pattern = { "*" },
@@ -41,7 +40,7 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
 	command = "silent! wall",
 	nested = true,
 })
-if not o.is_gui() then
+if not _G.IS_GUI then
 	-- vim退出后还原光标样式
 	vim.api.nvim_create_autocmd({ "VimLeave" }, {
 		pattern = { "*" },

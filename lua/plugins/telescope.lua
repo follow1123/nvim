@@ -1,5 +1,5 @@
 local live_grep_key = "<C-A-f>"
-if require("options").is_gui() then
+if _G.IS_GUI then
 	live_grep_key = "<C-f>"
 end
 -- 搜索插件
