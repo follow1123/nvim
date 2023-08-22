@@ -13,14 +13,20 @@ return {
 		-- 插件配置
 		-- local api = require("nvim-tree.api")
 		require("nvim-tree").setup {
-			-- 不显示 git 状态图标
-			git = {
-				enable = false
-			},
-			-- 不显示以.开头的隐藏文件
-			filters = {
-				dotfiles = true,
-			},
-		}
-	end
+      sync_root_with_cwd = true,
+      respect_buf_cwd = true,
+      update_focused_file = {
+        enable = true,
+        update_root = true
+      },
+      -- 不显示 git 状态图标
+      git = {
+        enable = false
+      },
+      -- 不显示以.开头的隐藏文件
+      filters = {
+        dotfiles = true,
+      },
+    }
+  end
 }

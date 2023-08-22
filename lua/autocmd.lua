@@ -8,18 +8,18 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 
 
 if _G.IS_WINDOWS then
-	-- 进入insert模式后切换为中文输入法
+	-- -- 进入insert模式后切换为中文输入法
+	-- vim.api.nvim_create_autocmd({"InsertLeave"}, {
+	-- 	pattern = { "*" },
+	-- 	callback = function()
+	-- 		vim.fn.system("im-select.exe 1033")
+	-- 	end,
+	-- })
+	-- 离开insert模式后切换为英文输入法
 	vim.api.nvim_create_autocmd({"InsertLeave"}, {
 		pattern = { "*" },
 		callback = function()
-			vim.fn.system("im-select.exe 1033")
-		end,
-	})
-	-- 离开insert模式后切换为英文输入法
-	vim.api.nvim_create_autocmd({"InsertEnter"}, {
-		pattern = { "*" },
-		callback = function()
-			vim.fn.system("im-select.exe 2052")
+			vim.fn.system("im_select.exe 1")
 		end,
 	})
 else

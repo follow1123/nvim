@@ -75,7 +75,6 @@ return {
 						preview = true
 					}
 				end)
-				local aa = 10;
 				map("n", "<leader>hs", gs.stage_hunk)
 				map("n", "<leader>hr", gs.reset_hunk)
 				map("v", "<leader>hs", function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end)

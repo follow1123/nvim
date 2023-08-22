@@ -25,7 +25,7 @@ opt.foldlevel = 99                            -- 最大折叠深度
 opt.syntax = true                             -- 语法检测
 opt.splitbelow = true                         -- 分割水平新窗口默认在下边
 opt.splitright = true                         -- 分割垂直新窗口默认在右
-opt.guifont = "FiraMono Nerd Font Mono:h18"
+opt.guifont = "FiraMono Nerd Font Mono:h16"
 -- opt.shell = _G.IS_WINDOWS and "pwsh" or "zsh" -- 目前windows下设置后toggleterm插件就无法使用了
 -- vim.opt.fillchars = { eob = ' ' }          -- 去掉没有文字的行左边会显示的～号，
 -- vim.wo.fillchars = 'eob: '

@@ -47,6 +47,7 @@ return {
   },
   { -- bufferline
     "akinsho/bufferline.nvim",
+    enabled = false,
     event = "UIEnter",
     config = function ()
       require("bufferline").setup{

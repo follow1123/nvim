@@ -1,170 +1,113 @@
-
--- keys.map.lsp = {
--- 	{
--- 		desc = "format",
--- 		mode = "n",
--- 		key = "<A-l>",
--- 		-- command = "=G",
--- 		command = ":lua vim.lsp.buf.format()<CR>",
--- 	},
--- 	{
--- 		desc = "show diagnostic info",
--- 		key = "<leader><F2>",
--- 		command = ":lua vim.diagnostic.open_float()<CR>",
--- 	},
--- 	{
--- 		mapping = false,
--- 		desc = "goto prev diagnostic line",
--- 		-- key = "[d",
--- 		command = ":lua vim.diagnostic.goto_prev()<CR>",
--- 	},
--- 	{
--- 		mapping = false,
--- 		desc = "goto next diagnostic line",
--- 		-- key = "]d",
--- 		command = ":lua vim.diagnostic.goto_next()<CR>",
--- 	},
--- 	{
--- 		desc = "show code action panel",
--- 		key = "<leader><CR>",
--- 		command = ":lua vim.lsp.buf.code_action()<CR>",
--- 	},
--- 	{
--- 		desc = "rename variable",
--- 		key = "<A-r>",
--- 		command = ":lua vim.lsp.buf.rename()<CR>",
--- 	},
--- 	{
--- 		desc = "definition",
--- 		key = "gd",
--- 		command = ":lua vim.lsp.buf.definition()<CR>",
--- 	},
--- }
--- lsp 配置
-local plugin = {
-	{ "williamboman/mason.nvim",           build = ":MasonUpdate", event = "VeryLazy" },
-	{ "williamboman/mason-lspconfig.nvim", event = "VeryLazy" },
-	{ 
-    "neovim/nvim-lspconfig",
-    -- keys = {
-    --   { "n", "<M-l>", ":lua vim.lsp.buf.format()<CR>", desc = "lsp format", silent = true }
-    --
-    -- },
-    dependencies = {
-      "folke/neodev.nvim"
-    },
-    event = "VeryLazy" 
+return {
+  "neovim/nvim-lspconfig",
+  dependencies = {
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
+    "folke/neodev.nvim" -- neovim开发提示
   },
+  config = function()
+    -- lsp 配置
+    local servers = {
+      lua_ls = {
+        Lua = {
+          workspace = { checkThirdParty = false },
+          telemetry = { enable = false },
+        },
+      },
+      rust_analyzer = {
+
+      }
+    }
+    -- 按键映射
+    local on_attach = function(_, bufnr)
+      -- Enable completion triggered by <c-x><c-o>
+      local nmap = function(keys, func, desc)
+        if desc then
+          desc = 'LSP: ' .. desc
+        end
+
+        vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+      end
+
+      nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+      nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+      nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+      nmap('gi', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+      nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+      -- nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+      -- nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+      nmap('<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+      end, '[W]orkspace [L]ist Folders')
+      nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+      nmap('<M-r>', vim.lsp.buf.rename, '[R]e[n]ame')
+      nmap('<M-Enter>', vim.lsp.buf.code_action, '[C]ode [A]ction')
+      -- nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+      nmap('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
+      nmap("<M-l>", function()
+        vim.lsp.buf.format { async = true }
+      end, "[F]ormat code")
+    end
+
+    require("neodev").setup()
+    require("mason").setup({
+      ui = {
+        icons = {
+          package_installed = "✓",
+          package_pending = "➜",
+          package_uninstalled = "✗"
+        }
+      }
+    })
+    require("mason-lspconfig").setup({
+      ensure_installed = vim.tbl_keys(servers),
+      handlers = {
+        function(server_name) -- default handler (optional)
+          require("lspconfig")[server_name].setup {
+            settings = servers[server_name],
+            on_attach = on_attach,
+          }
+        end,
+      }
+    })
+    -- 修改默认提示符号
+    local signs = {
+      { name = "DiagnosticSignError", text = "" },
+      { name = "DiagnosticSignWarn", text = "" },
+      { name = "DiagnosticSignHint", text = "" },
+      { name = "DiagnosticSignInfo", text = "" },
+    }
+    for _, sign in ipairs(signs) do
+      vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+    end
+    -- set the style of lsp info
+    local config = {
+      -- disable virtual text
+      -- the message show after the current line.
+      virtual_text = true,
+      -- show signs
+      signs = {
+        active = signs,
+      },
+      update_in_insert = true,
+      underline = true,
+      severity_sort = true,
+      float = {
+        focusable = false,
+        style = "minimal",
+        border = "rounded",
+        source = "always",
+        header = "",
+        prefix = "",
+      },
+    }
+    vim.diagnostic.config(config)
+    -- set the popup window border
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+      border = "rounded",
+    })
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+      border = "rounded",
+    })
+  end
 }
-
-plugin[1].config = function()
-	require("mason").setup({
-		ui = {
-			icons = {
-				package_installed = "✓",
-				package_pending = "➜",
-				package_uninstalled = "✗"
-			}
-		}
-	})
-end
-
-local lua_lib = vim.api.nvim_get_runtime_file("", true)
-table.insert(lua_lib, "C:\\Users\\yf\\AppData\\Local\\nvim-data\\mason\\packages\\lua-language-server\\meta\\3rd\\luv\\library")
-
-plugin[2].config = function()
-
-  require("neodev").setup()
-	require("mason-lspconfig").setup({
-		ensure_installed = { "lua_ls", "rust_analyzer", "clangd" },
-	})
-	-- Setup language servers.
-	local lspconfig = require("lspconfig")
-	-- vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
-	require("mason-lspconfig").setup_handlers({
-		function(server_name)
-			require("lspconfig")[server_name].setup {}
-		end,
-		-- Next, you can provide targeted overrides for specific servers.
-		["lua_ls"] = function()
-			lspconfig.lua_ls.setup {
-				settings = {
-					Lua = {
-						diagnostics = {
-							globals = { "vim" }
-						},
-						workspace = {
-							-- 去除lsp提示
-              checkThirdParty = false,
-							-- Make the server aware of Neovim runtime files
-							library = lua_lib
-						},
-						completion = {
-							callSnippet = "Replace",
-						},
-						-- Do not send telemetry data containing a randomized but unique identifier
-						telemetry = {
-							enable = false,
-						},
-					}
-				}
-			}
-		end,
-		["rust_analyzer"] = function()
-			lspconfig.rust_analyzer.setup {
-				settings = {
-				}
-			}
-		end,
-		["clangd"] = function()
-			lspconfig.clangd.setup {
-				settings = {
-				}
-			}
-		end,
-	})
-end
-
-plugin[3].config = function()
-	-- replace the lsp info symbol
-	local signs = {
-		{ name = "DiagnosticSignError", text = "" },
-		{ name = "DiagnosticSignWarn",  text = "" },
-		{ name = "DiagnosticSignHint",  text = "" },
-		{ name = "DiagnosticSignInfo",  text = "" },
-	}
-	for _, sign in ipairs(signs) do
-		vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-	end
-	-- set the style of lsp info
-	local config = {
-		-- disable virtual text
-		-- the message show after the current line.
-		virtual_text = false,
-		-- show signs
-		signs = {
-			active = signs,
-		},
-		update_in_insert = true,
-		underline = true,
-		severity_sort = true,
-		float = {
-			focusable = false,
-			style = "minimal",
-			border = "rounded",
-			source = "always",
-			header = "",
-			prefix = "",
-		},
-	}
-	vim.diagnostic.config(config)
-	-- set the popup window border
-	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-		border = "rounded",
-	})
-	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-		border = "rounded",
-	})
-end
-
-return plugin
