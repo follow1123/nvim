@@ -4,7 +4,7 @@
 local opt = vim.o
 opt.number = true                             -- 行号
 opt.relativenumber = true                     -- 设置相对行号
--- vim.o.clipboard = "unnamed"                  -- 设置和剪贴板共用
+-- vim.o.clipboard = "unnamed"                -- 设置和剪贴板共用
 opt.tabstop = 4	                              -- tab键相关
 opt.shiftwidth = 4
 opt.smartindent = true                        -- 智能缩进
@@ -16,8 +16,8 @@ opt.ignorecase = true	                        -- 搜索忽略大小写
 opt.wrap = false	                            -- 禁止折行显示文本
 opt.scrolloff = 4                             -- 光标移动的时候始终保持上下左右至少有 4 个空格的间隔
 opt.sidescrolloff = 8                         -- 光标所有移动时保持离边框8个字符时开始横向滚动
-vim.wo.signcolumn = "yes"                       -- 显示左侧图标指示列
---vim.o.cmdheight = 0                           -- 底部命令行行高，为0默认隐藏
+vim.wo.signcolumn = "yes"                     -- 显示左侧图标指示列
+--vim.o.cmdheight = 0                         -- 底部命令行行高，为0默认隐藏
 opt.mouse = "a"                               -- 支持鼠标
 opt.foldmethod = "indent"                     -- 根据缩进折叠
 opt.foldenable = false                        -- 打开文件时自动折叠
@@ -25,8 +25,8 @@ opt.foldlevel = 99                            -- 最大折叠深度
 opt.syntax = true                             -- 语法检测
 opt.splitbelow = true                         -- 分割水平新窗口默认在下边
 opt.splitright = true                         -- 分割垂直新窗口默认在右
-opt.guifont = "FiraMono Nerd Font Mono:h16"
--- opt.shell = _G.IS_WINDOWS and "pwsh" or "zsh" -- 目前windows下设置后toggleterm插件就无法使用了
+opt.guifont = "FiraMono Nerd Font Mono:h14"
+opt.shell = _G.IS_WINDOWS and "cmd" or "zsh"  -- 目前windows下设置后toggleterm插件就无法使用了
 -- vim.opt.fillchars = { eob = ' ' }          -- 去掉没有文字的行左边会显示的～号，
 -- vim.wo.fillchars = 'eob: '
 
@@ -40,7 +40,7 @@ vim.cmd([[
 -- #        按键映射         #
 -- ###########################
 
-vim.g.mapleader = " "                           -- leader 键
+vim.g.mapleader = " "                                                   -- leader 键
 
 local opts = { noremap = true, silent = true }
 
@@ -58,10 +58,10 @@ keymap("n", "<C-M-s>", ":e ~/AppData/Local/nvim/init.lua <cr>", opts)   -- 打�
 keymap("v", "<", "<gv", opts)                                           -- visual模式下tab        
 keymap("v", ">", ">gv", opts)
 
--- keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)                    -- terminal模式下正常跳转窗口
-keymap("t", "<Esc>", "<C-\\><C-N>", term_opts)
-keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
-keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
+keymap("t", "<Esc>", "<C-\\><C-N>", term_opts)                          -- terminal模式下使用Esc键退出insert模式
+-- keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)                 -- terminal模式下正常跳转窗口
+-- keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
+-- keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)                 
 -- keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
 
 keymap("n", "<leader>v", "V", opts)                                     -- 修改进入visual line模式的快捷键
@@ -94,3 +94,16 @@ keymap("n", "<C-Tab>", "<C-^>", opts)                                   -- 切�
 
 keymap("n", "n", "nzz", opts)                                           -- 搜索时保持光标居中
 keymap("n", "N", "Nzz", opts)
+
+
+-- ###########################
+-- #        command定义      #
+-- ###########################
+
+-- 打开设置
+vim.cmd("command! Setting :e ~/AppData/Local/nvim/init.lua")
+
+-- 格式化
+vim.cmd("command! Format lua vim.lsp.buf.format()")
+
+
