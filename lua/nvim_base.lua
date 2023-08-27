@@ -53,12 +53,12 @@ keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
-keymap("n", "<C-M-s>", ":e ~/AppData/Local/nvim/init.lua <cr>", opts)   -- 打开配置文件
+keymap("n", "<C-M-s>", ":e " .. _G.CONFIG_PATH .. "/init.lua <cr>", opts)   -- 打开配置文件
 
 keymap("v", "<", "<gv", opts)                                           -- visual模式下tab        
 keymap("v", ">", ">gv", opts)
 
-keymap("t", "<Esc>", "<C-\\><C-N>", term_opts)                          -- terminal模式下使用Esc键退出insert模式
+-- keymap("t", "<Esc>", "<C-\\><C-N>", term_opts)                       -- terminal模式下使用Esc键退出insert模式
 -- keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)                 -- terminal模式下正常跳转窗口
 -- keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
 -- keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)                 
@@ -101,9 +101,16 @@ keymap("n", "N", "Nzz", opts)
 -- ###########################
 
 -- 打开设置
-vim.cmd("command! Setting :e ~/AppData/Local/nvim/init.lua")
+vim.cmd("command! Setting :e " .. _G.CONFIG_PATH .. "/init.lua")
 
 -- 格式化
 vim.cmd("command! Format lua vim.lsp.buf.format()")
+
+-- 打开终端
+if _G.IS_WINDOWS then
+  vim.cmd("command! TermOpen term pwsh")
+else
+  vim.cmd("command! TermOpen term zsh")
+end
 
 
