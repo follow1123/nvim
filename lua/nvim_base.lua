@@ -48,6 +48,9 @@ local term_opts = { silent = true }
 
 local keymap = vim.api.nvim_set_keymap
 
+keymap("n", "<C-f>", "<Nop>", opts)                                     -- 禁用翻页
+keymap("n", "<C-b>", "<Nop>", opts)
+
 keymap("n", "<C-h>", "<C-w>h", opts)                                    -- 切换窗口
 keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
@@ -94,6 +97,8 @@ keymap("n", "<C-Tab>", "<C-^>", opts)                                   -- 切�
 
 keymap("n", "n", "nzz", opts)                                           -- 搜索时保持光标居中
 keymap("n", "N", "Nzz", opts)
+
+keymap("n", "<M-q>", ":bdelete!<cr>", opts)
 
 
 -- ###########################

@@ -122,6 +122,7 @@ return {
 
       require("barbecue").setup({
         create_autocmd = false, -- prevent barbecue from updating itself automatically
+        exclude_filetypes = { "netrw", "toggleterm", "" }, -- "" 内置终端没有filetype属性
       })
 
       vim.api.nvim_create_autocmd({
