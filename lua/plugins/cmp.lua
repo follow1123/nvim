@@ -4,16 +4,10 @@ return {
   "hrsh7th/nvim-cmp",
   event = "InsertEnter",
   dependencies = {
-    {
-      "saadparwaiz1/cmp_luasnip",
-      dependencies = {
-        -- 代码片段补全框架
-        "L3MON4D3/LuaSnip",
-        dependencies = {
-          "rafamadriz/friendly-snippets",
-        }
-      }
-    },
+    -- 代码片段补全框架
+    "L3MON4D3/LuaSnip",
+    "rafamadriz/friendly-snippets",
+    "saadparwaiz1/cmp_luasnip",
     -- buffer补全
     "hrsh7th/cmp-buffer",
     -- 文件路径补全
@@ -24,6 +18,7 @@ return {
     "hrsh7th/cmp-nvim-lsp",
   },
   config = function()
+    -- vim.api.nvim_create_autocmd
     local cmp = require("cmp")
     local luasnip = require("luasnip")
     require("luasnip.loaders.from_vscode").lazy_load()
@@ -87,17 +82,12 @@ return {
         ["<CR>"] = cmp.mapping.confirm(confirm_opts),
       },
       -- 补全来源
-      sources = {
-        { name = "nvim_lsp" },
-        { name = "path" },
-        { name = "luasnip" },
-        { name = "nvim_lua" },
-        { name = "buffer" },
-        { name = "calc" },
-        { name = "emoji" },
-        { name = "treesitter" },
-        { name = "crates" },
-      },
+      sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' }, -- For luasnip users.
+        { name = 'buffer' },
+        { name = 'path' },
+      }),
       experimental = {
         -- 虚拟文本提示
         ghost_text = true,
@@ -145,11 +135,7 @@ return {
       -- 补全提示
       source_names = {
         nvim_lsp = "[LSP]",
-        treesitter = "[TS]",
-        emoji = "[Emoji]",
         path = "[Path]",
-        calc = "[Calc]",
-        vsnip = "[Snippet]",
         luasnip = "[Snippet]",
         buffer = "[Buffer]",
       },
@@ -191,11 +177,5 @@ return {
     })
 
     cmp.setup(cmp_config)
-    -- Set up lspconfig.
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
-    -- Replace <YOUR_LSP_SERVER> with each lsp server you"ve enabled.
-    require("lspconfig")["lua_ls"].setup {
-      capabilities = capabilities
-    }
   end
 }

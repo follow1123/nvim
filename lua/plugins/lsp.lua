@@ -1,16 +1,23 @@
 return {
   "neovim/nvim-lspconfig",
+  events = "VeryLazy",
   dependencies = {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     "folke/neodev.nvim" -- neovim开发提示
   },
   config = function()
+    -- 设置lua lsp默认的lib位置
+		local lua_lib = vim.api.nvim_get_runtime_file("", true)
+    table.insert(lua_lib, "${3rd}/luassert/library")
+    table.insert(lua_lib, "${3rd}/luv/library")
     -- lsp 配置
     local servers = {
       lua_ls = {
         Lua = {
-          workspace = { checkThirdParty = false },
+          workspace = {
+            library = lua_lib
+          },
           telemetry = { enable = false },
         },
       },
@@ -47,9 +54,24 @@ return {
       nmap("<M-l>", function()
         vim.lsp.buf.format { async = true }
       end, "[F]ormat code")
+
+      -- 诊断相关快捷键
+      nmap("<leader>dp", vim.diagnostic.open_float, "open diagnostic float window")
+      nmap("<leader>dj", vim.diagnostic.goto_next, "goto next diagnostic")
+      nmap("<leader>dk", vim.diagnostic.goto_prev, "goto previous diagnostic")
+
+      local telescope = require("telescope.builtin")
+
+      nmap("<leader>dl", function () -- 列出当前buffer所有的诊断信息
+        telescope.diagnostics({
+          bufnr = 0
+        })
+      end, "list all diagnostics in current buffer")
+      nmap("<leader>dL", require("telescope.builtin").diagnostics, "list all diagnostics in workspace") -- 列出当前工作区所有的诊断信息
     end
 
     require("neodev").setup()
+
     require("mason").setup({
       ui = {
         icons = {
@@ -59,6 +81,7 @@ return {
         }
       }
     })
+
     require("mason-lspconfig").setup({
       ensure_installed = vim.tbl_keys(servers),
       handlers = {
@@ -66,6 +89,7 @@ return {
           require("lspconfig")[server_name].setup {
             settings = servers[server_name],
             on_attach = on_attach,
+            capabilities = require('cmp_nvim_lsp').default_capabilities() -- lsp相关补全
           }
         end,
       }
@@ -84,7 +108,7 @@ return {
     local config = {
       -- disable virtual text
       -- the message show after the current line.
-      virtual_text = true,
+      virtual_text = false,
       -- show signs
       signs = {
         active = signs,
