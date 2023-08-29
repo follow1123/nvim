@@ -1,10 +1,10 @@
 -- 自动补全插件
 return {
-	-- 代码补全框架
-	"hrsh7th/nvim-cmp",
-	event = "InsertEnter",
-	dependencies = {
-		{
+  -- 代码补全框架
+  "hrsh7th/nvim-cmp",
+  event = "InsertEnter",
+  dependencies = {
+    {
       "saadparwaiz1/cmp_luasnip",
       dependencies = {
         -- 代码片段补全框架
@@ -14,16 +14,16 @@ return {
         }
       }
     },
-		-- buffer补全
-		"hrsh7th/cmp-buffer",
-		-- 文件路径补全
-		"hrsh7th/cmp-path",
-		-- 命令模式补全
-		"hrsh7th/cmp-cmdline",
-		-- lsp补全
-		"hrsh7th/cmp-nvim-lsp",
-	},
-  config = function ()
+    -- buffer补全
+    "hrsh7th/cmp-buffer",
+    -- 文件路径补全
+    "hrsh7th/cmp-path",
+    -- 命令模式补全
+    "hrsh7th/cmp-cmdline",
+    -- lsp补全
+    "hrsh7th/cmp-nvim-lsp",
+  },
+  config = function()
     local cmp = require("cmp")
     local luasnip = require("luasnip")
     require("luasnip.loaders.from_vscode").lazy_load()
@@ -31,74 +31,86 @@ return {
       local col = vim.fn.col "." - 1
       return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
     end
-    local cmp_config = {}
-    -- 补全按键
-    cmp_config.mapping = cmp.mapping.preset.insert {
-      -- ctrl k下一个
-      ["<C-k>"] = cmp.mapping.select_prev_item(),
-      -- ctrl k上一个
-      ["<C-j>"] = cmp.mapping.select_next_item(),
-      -- ctrl d文档向上滚动
-      ["<C-u>"] = cmp.mapping.scroll_docs(-4),
-      -- ctrl u文件向下滚动
-      ["<C-d>"] = cmp.mapping.scroll_docs(4),
-      ["<C-p>"] = cmp.mapping.complete(),
-      -- ctrl e 取消 或者esc
-      ["<C-e>"] = cmp.mapping.abort(),
-      -- tab 下一个
-      ["<Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        elseif luasnip.expandable() then
-          luasnip.expand()
-        elseif luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
-        elseif check_backspace() then
-          fallback()
-        else
-          fallback()
-        end
-      end, { "i", "s", }),
-      -- shift tab 上一个
-      ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-          luasnip.jump(-1)
-        else
-          fallback()
-        end
-      end, { "i", "s",}),
-      -- enter 确认
-      ["<CR>"] = cmp.mapping.confirm({
-        select = true ,
-        behavior = cmp.ConfirmBehavior.Replace
-      }),
+    -- 确认补全是的配置
+    local confirm_opts = {
+      select = true,                         -- 没有选中补全项时，默认选择第一个
+      behavior = cmp.ConfirmBehavior.Insert, -- 补全时插入文本不替换后面的文本
     }
-    -- 补全来源
-    cmp_config.sources = {
-      { name = "nvim_lsp" },
-      { name = "path" },
-      { name = "luasnip" },
-      { name = "nvim_lua" },
-      { name = "buffer" },
-      { name = "calc" },
-      { name = "emoji" },
-      { name = "treesitter" },
-      { name = "crates" },
+    -- 补全选择时默认配置
+    local select_item_opts = {
+      behavior = cmp.SelectBehavior.Select -- 选择时默认不补全，只显示虚拟文本
     }
-    cmp_config.experimental = {
-      -- 虚拟文本提示
-      ghost_text = true,
-      -- native_menu = false,
+    -- 补全配置
+    local cmp_config = {
+      -- 补全按键
+      mapping = cmp.mapping.preset.insert {
+        -- ctrl j上一个
+        ["<C-j>"] = cmp.mapping(cmp.mapping.select_next_item(select_item_opts), { "i", "c" }),
+        -- ctrl k下一个
+        ["<C-k>"] = cmp.mapping(cmp.mapping.select_prev_item(select_item_opts),  { "i", "c" }),
+        -- ctrl d文档向上滚动
+        ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+        -- ctrl u文件向下滚动
+        ["<C-d>"] = cmp.mapping.scroll_docs(4),
+        -- ["<C-n>"] = cmp.mapping({
+        --   i = cmp.config.disable,
+        --   c = cmp.config.disable
+        -- }),
+        -- 补全中断时开始补全
+        ["<C-p>"] = cmp.mapping.complete(),
+        -- ctrl e取消
+        ["<C-e>"] = cmp.mapping.abort(),
+        -- tab
+        ["<Tab>"] = cmp.mapping(function(fallback)
+          if luasnip.expandable() then -- 如果是代码片段则直接展开
+            luasnip.expand()
+          elseif cmp.visible() then -- 如果不是代码片段，并且正在选择补全的时候直接确认第一个
+            cmp.mapping.confirm(confirm_opts)()
+          elseif luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
+          elseif check_backspace() then
+            fallback()
+          else
+            fallback()
+          end
+        end,
+        { "i", "s" }),
+        -- shift tab
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+          if luasnip.jumpable(-1) then
+            luasnip.jump(-1)
+          else
+            fallback()
+          end
+        end, { "i", "s" }),
+        -- enter 确认
+        ["<CR>"] = cmp.mapping.confirm(confirm_opts),
+      },
+      -- 补全来源
+      sources = {
+        { name = "nvim_lsp" },
+        { name = "path" },
+        { name = "luasnip" },
+        { name = "nvim_lua" },
+        { name = "buffer" },
+        { name = "calc" },
+        { name = "emoji" },
+        { name = "treesitter" },
+        { name = "crates" },
+      },
+      experimental = {
+        -- 虚拟文本提示
+        ghost_text = true,
+      },
+      -- 代码片段引擎配置
+      snippet = {
+        expand = function(args)
+          require("luasnip").lsp_expand(args.body)
+        end,
+      },
     }
 
-    -- 代码片段引擎配置
-    cmp_config.snippet = {
-      expand = function(args)
-        require("luasnip").lsp_expand(args.body)
-      end,
-    }
+    -- 补全提示显示相关
     cmp_config.formatting = {
       fields = { "kind", "abbr", "menu" },
       max_width = 0,
@@ -157,16 +169,10 @@ return {
         vim_item.kind = cmp_config.formatting.kind_icons[vim_item.kind]
         vim_item.menu = cmp_config.formatting.source_names[entry.source.name]
         vim_item.dup = cmp_config.formatting.duplicates[entry.source.name]
-        or cmp_config.formatting.duplicates_default
+            or cmp_config.formatting.duplicates_default
         return vim_item
       end,
     }
-    -- 边框样式 圆角边框
-    cmp_config.window = {
-      -- completion = cmp.config.window.bordered(),
-      -- documentation = cmp.config.window.bordered(),
-    }
-
     -- buffer内搜索时补全
     cmp.setup.cmdline({ "/", "?" }, {
       mapping = cmp.mapping.preset.cmdline(),
