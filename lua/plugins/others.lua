@@ -5,7 +5,7 @@ return {
     event = "VeryLazy",
     init = function()
       vim.o.timeout = true
-      vim.o.timeoutlen = 1800
+      vim.o.timeoutlen = 1200
     end,
     opts = {
       -- your configuration comes here
@@ -195,4 +195,11 @@ return {
       })
     end
   },
+  { -- vim.ui 图形化插件
+    "stevearc/dressing.nvim",
+    event = "VeryLazy",
+    config = function()
+      require('dressing').setup()
+    end
+  }
 }
