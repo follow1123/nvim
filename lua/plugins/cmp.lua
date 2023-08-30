@@ -98,6 +98,9 @@ return {
           require("luasnip").lsp_expand(args.body)
         end,
       },
+      completion = { -- 补全默认选中第一个
+        completeopt = 'menu,menuone,noinsert'
+      }
     }
 
     -- 补全提示显示相关
