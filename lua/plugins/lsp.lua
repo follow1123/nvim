@@ -60,13 +60,9 @@ return {
       nmap("<leader>dp", vim.diagnostic.open_float, "open diagnostic float window")
       nmap("<leader>dj", vim.diagnostic.goto_next, "goto next diagnostic")
       nmap("<leader>dk", vim.diagnostic.goto_prev, "goto previous diagnostic")
-
-      -- nmap("<leader>dl", function () -- 列出当前buffer所有的诊断信息
-      --   require("telescope.builtin").diagnostics({
-      --     bufnr = 0
-      --   })
-      -- end, "list all diagnostics in current buffer")
-      -- nmap("<leader>dL", require("telescope.builtin").diagnostics, "list all diagnostics in workspace") -- 列出当前工作区所有的诊断信息
+      -- 列出当前buffer所有的诊断信息
+      nmap("<leader>dl", "<cmd>lua require('telescope.builtin').diagnostics({ bufnr = 0 })<cr>", "list all diagnostics in current buffer")
+      nmap("<leader>dL", "<cmd>lua require('telescope.builtin').diagnostics()<cr>", "list all diagnostics in workspace") -- 列出当前工作区所有的诊断信息
     end
 
     require("neodev").setup()
