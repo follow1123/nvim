@@ -18,7 +18,6 @@ return {
       { "<leader>/t", ":Telescope colorscheme<CR>",                        desc = "list colorscheme" },
       { "<leader>/k", ":Telescope keymaps<CR>",                            desc = "list keymaps" },
       { "<leader>/a", ":Telescope autocommands<CR>",                       desc = "list autocommands" },
-      { "<leader>pf", "<cmd>lua _G.select_projects()<cr>", desc = "list projects" },
     },
     -- 搜索依赖插件
     dependencies = { "nvim-lua/plenary.nvim" },

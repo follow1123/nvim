@@ -2,7 +2,8 @@ return {
   { -- which key
     "folke/which-key.nvim",
     -- enabled = false,
-    event = "VeryLazy",
+    event = "InsertEnter",
+    keys = "<space>",
     init = function()
       vim.o.timeout = true
       vim.o.timeoutlen = 1200
@@ -15,16 +16,22 @@ return {
   },
   { -- markdown
     "iamcco/markdown-preview.nvim",
-    enabled =  false,
     build = "cd app && npm install",
-    -- event = "VeryLazy",
-    -- ft = "md",
+    ft = "markdown",
     config = function()
-      vim.g.mkdp_browser = "surf"
-      if _G.IS_WINDOWS then
-        vim.g.mkdp_browser = "firefox"
-      end
+      -- vim.api.nvim_command([[
+      --   function OpenMarkdownPreview (url)
+      --     execute "silent ! chrome --new-window " . a:url
+      --   endfunction
+      -- ]])
+      --
+      vim.g.mkdp_browser = "chrome"
       vim.g.mkdp_filetypes = { "markdown" }
+      -- 设置预览markdown快捷键
+      vim.api.nvim_buf_set_keymap(0, "n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", {
+        noremap = true,
+        silent = true
+      })
     end
   },
   { -- 起始页
@@ -32,7 +39,7 @@ return {
     enabled = false,
     -- lazy = true,
     -- event = "VeryLazy",
-    dependencies = {"kyazdani42/nvim-web-devicons"},
+    dependencies = { "kyazdani42/nvim-web-devicons" },
     config = function()
       local dashboard = require("alpha.themes.dashboard")
       local config_cmd = ":e ~/.config/nvim/init.lua <CR>"
@@ -55,7 +62,7 @@ return {
       dashboard.opts.opts.noautocmd = true
       -- .setup(require("alpha.themes.startify").config)
       require("alpha")
-      .setup(dashboard.opts)
+          .setup(dashboard.opts)
     end
   },
   { -- 括号自动匹配
@@ -99,11 +106,11 @@ return {
   },
   { -- 启动时光标回复到原来的位置
     "ethanholz/nvim-lastplace",
-    config = function ()
+    config = function()
       require("nvim-lastplace").setup {
-          lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
-          lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
-          lastplace_open_folds = true
+        lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
+        lastplace_ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" },
+        lastplace_open_folds = true
       }
     end
   },
@@ -116,12 +123,12 @@ return {
       "SmiteshP/nvim-navic",
       --"nvim-tree/nvim-web-devicons", -- optional dependency
     },
-    config = function ()
+    config = function()
       -- triggers CursorHold event faster
       vim.opt.updatetime = 200
 
       require("barbecue").setup({
-        create_autocmd = false, -- prevent barbecue from updating itself automatically
+        create_autocmd = false,                            -- prevent barbecue from updating itself automatically
         exclude_filetypes = { "netrw", "toggleterm", "" }, -- "" 内置终端没有filetype属性
       })
 
@@ -143,7 +150,7 @@ return {
   },
   { -- 显示相同单词
     "RRethy/vim-illuminate",
-    -- enabled = false,
+    event = "VeryLazy",
     config = function()
       -- default configuration
       require('illuminate').configure({
@@ -200,6 +207,17 @@ return {
     event = "VeryLazy",
     config = function()
       require('dressing').setup()
+    end
+  },
+  { -- 注释插件
+    "numToStr/Comment.nvim",
+    keys = {
+      { "<M-e>", "<cmd>normal gcc<cr>", desc = "comment code in normal mode" },
+      { "<M-e>", "<cmd>normal gcc<cr>", desc = "comment code in visual mode", mode = "v" }
+    },
+    -- event = "VeryLazy",
+    config = function()
+      require("Comment").setup()
     end
   }
 }

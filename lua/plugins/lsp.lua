@@ -1,6 +1,7 @@
 return {
   "neovim/nvim-lspconfig",
-  events = "VeryLazy",
+  ft = { "lua", "rust", "ps1" },
+  -- events = "VeryLazy",
   dependencies = {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
@@ -60,14 +61,12 @@ return {
       nmap("<leader>dj", vim.diagnostic.goto_next, "goto next diagnostic")
       nmap("<leader>dk", vim.diagnostic.goto_prev, "goto previous diagnostic")
 
-      local telescope = require("telescope.builtin")
-
-      nmap("<leader>dl", function () -- 列出当前buffer所有的诊断信息
-        telescope.diagnostics({
-          bufnr = 0
-        })
-      end, "list all diagnostics in current buffer")
-      nmap("<leader>dL", require("telescope.builtin").diagnostics, "list all diagnostics in workspace") -- 列出当前工作区所有的诊断信息
+      -- nmap("<leader>dl", function () -- 列出当前buffer所有的诊断信息
+      --   require("telescope.builtin").diagnostics({
+      --     bufnr = 0
+      --   })
+      -- end, "list all diagnostics in current buffer")
+      -- nmap("<leader>dL", require("telescope.builtin").diagnostics, "list all diagnostics in workspace") -- 列出当前工作区所有的诊断信息
     end
 
     require("neodev").setup()

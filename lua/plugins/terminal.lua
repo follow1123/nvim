@@ -15,10 +15,10 @@ end
 -- 设置内置终端下默认的快捷键
 local function set_term_keymapping()
   local opts = { noremap = true }
-  vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
-  vim.api.nvim_buf_set_keymap(0, 't', '<C-j>', [[<Right>]], opts)
-  vim.api.nvim_buf_set_keymap(0, 't', '<C-n>', [[<Down>]], opts)
-  vim.api.nvim_buf_set_keymap(0, 't', '<C-p>', [[<Up>]], opts)
+  vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<C-\><C-n>]], opts)
+  vim.api.nvim_buf_set_keymap(0, "t", "<C-j>", [[<Right>]], opts)
+  vim.api.nvim_buf_set_keymap(0, "t", "<C-n>", [[<Down>]], opts)
+  vim.api.nvim_buf_set_keymap(0, "t", "<C-p>", [[<Up>]], opts)
 end
 -- 打开一个lazygit浮动终端
 local function open_lazygit_term()

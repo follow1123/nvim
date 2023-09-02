@@ -130,7 +130,7 @@ return {
   },
   { -- 颜色显示
     "norcalli/nvim-colorizer.lua",
-    event = "VeryLazy",
+    event = "InsertEnter",
     config = function()
       require("colorizer").setup {
         "*"; -- Highlight all files, but customize some others.

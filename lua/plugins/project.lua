@@ -66,14 +66,11 @@ end
 --   end
 -- end
 -- 由于project.nvim插件实现的telescope扩展不规范，需要使用这种方式修改自定义按键
-_G.select_projects = function()
+local function select_projects()
   local state = require("telescope.actions.state")
   local actions = require("telescope.actions")
   require('telescope').extensions.projects.projects{
-    attach_mappings = function(prompt_bufnr, map) -- telescope配置按键映射方法
-      -- map("i", "<M-d>", function ()
-      --   
-      -- end)
+    attach_mappings = function(prompt_bufnr, _) -- telescope配置按键映射方法
       actions.select_default:replace(function () -- telescope修改选择默认方法
         -- 获取选项的值
         local selected_entry = state.get_selected_entry(prompt_bufnr)
@@ -105,7 +102,9 @@ end
 return {
   { -- 项目管理
     "ahmedkhalf/project.nvim",
-    events = "VeryLazy",
+    keys = {
+      { "<leader>pf", select_projects, desc = "list projects" },
+    },
     config = function()
       require("project_nvim").setup {
         manual_mode = true, -- 手动管理项目的目录

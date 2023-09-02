@@ -39,9 +39,9 @@ return {
   -- 彩色括号插件
   {
     'p00f/nvim-ts-rainbow',
-    event = "VeryLazy",
-    dependencies = { {
+    ft = { "lua", "c", "rust", "ps1" },
+    dependencies = {
       'nvim-treesitter/nvim-treesitter'
-    } }
+    }
   }
 }
