@@ -1,7 +1,7 @@
 -- ###########################
 -- #        基础配置         #
 -- ###########################
-local opt = vim.o
+local opt = vim.opt
 opt.number = true                             -- 行号
 opt.relativenumber = true                     -- 设置相对行号
 -- vim.o.clipboard = "unnamed"                -- 设置和剪贴板共用
@@ -22,18 +22,13 @@ opt.mouse = "a"                               -- 支持鼠标
 opt.foldmethod = "indent"                     -- 根据缩进折叠
 opt.foldenable = false                        -- 打开文件时自动折叠
 opt.foldlevel = 99                            -- 最大折叠深度
-opt.syntax = true                             -- 语法检测
+opt.syntax = "on"                             -- 语法检测
 opt.splitbelow = true                         -- 分割水平新窗口默认在下边
 opt.splitright = true                         -- 分割垂直新窗口默认在右
 opt.guifont = "JetBrainsMono Nerd Font:h14"
 opt.shell = _G.IS_WINDOWS and "cmd" or "zsh"  -- 目前windows下设置后toggleterm插件就无法使用了
 -- vim.opt.fillchars = { eob = ' ' }          -- 去掉没有文字的行左边会显示的～号，
 -- vim.wo.fillchars = 'eob: '
-
--- 设置 .lua 文件缩进为两个空格
-vim.cmd([[
-  autocmd FileType lua setlocal tabstop=2 shiftwidth=2 expandtab
-]])
 
 
 -- ###########################
@@ -56,7 +51,7 @@ keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
-keymap("n", "<C-M-s>", ":e " .. _G.CONFIG_PATH .. "/init.lua <cr>", opts)   -- 打开配置文件
+keymap("n", "<C-M-s>", "<cmd>e " .. _G.CONFIG_PATH .. "/init.lua <cr>", opts)   -- 打开配置文件
 
 keymap("v", "<", "<gv", opts)                                           -- visual模式下tab        
 keymap("v", ">", ">gv", opts)
@@ -100,11 +95,32 @@ keymap("n", "N", "Nzz", opts)
 
 keymap("n", "<M-q>", ":bdelete!<cr>", opts)
 
+vim.keymap.set("n", "<leader>cr", function ()
+  local lang_table = _G.LANGUAGE[vim.bo.filetype]
+  if lang_table ~= nil then
+    lang_table.run_code_on_cursor()
+  else
+    print("no run code config, FileType: " .. vim.bo.filetype)
+  end
+end, {
+  desc = "run code on curcor",
+  noremap = true,
+  silent = true,
+})
 
+-- print(123)
 -- ###########################
 -- #        command定义      #
 -- ###########################
 
+vim.api.nvim_create_user_command("RunCode", function ()
+  local lang_table = _G.LANGUAGE[vim.bo.filetype]
+  if lang_table ~= nil then
+    lang_table.run_code_on_cursor()
+  else
+    print("no run code config, FileType: " .. vim.bo.filetype)
+  end
+end, { desc = "run code on cursor" })
 -- 打开设置
 vim.cmd("command! Setting :e " .. _G.CONFIG_PATH .. "/init.lua")
 
