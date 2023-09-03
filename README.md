@@ -50,3 +50,17 @@
 * [ahmedkhalf/project.nvim](https://github.com/ahmedkhalf/project.nvim)
 * [folke/persistence.nvim](https://github.com/folke/persistence.nvim))))
 
+
+### Others
+
+* [folke/which-key.nvim](https://github.com/folke/which-key.nvim)
+* [iamcco/markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
+* [goolord/alpha-nvim](https://github.com/goolord/alpha-nvim))
+* [windwp/nvim-autopairs](https://github.com/windwp/nvim-autopairs)
+* [ethanholz/nvim-lastplace](https://github.com/ethanholz/nvim-lastplace))
+* [utilyre/barbecue.nvim](https://github.com/utilyre/barbecue.nvim)
+* [RRethy/vim-illuminate](https://github.com/RRethy/vim-illuminate))
+* [stevearc/dressing.nvim](https://github.com/stevearc/dressing.nvim)
+* [numToStr/Comment.nvim](https://github.com/numToStr/Comment.nvim))
+
+
