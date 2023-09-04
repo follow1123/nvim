@@ -6,7 +6,7 @@ return {
     keys = "<space>",
     init = function()
       vim.o.timeout = true
-      vim.o.timeoutlen = 1200
+      vim.o.timeoutlen = 700
     end,
     opts = {
       -- your configuration comes here
