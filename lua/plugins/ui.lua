@@ -4,6 +4,18 @@ return {
     "LunarVim/Colorschemes",
     config = function()
       vim.cmd("colorscheme darkplus")
+      -- diff设置
+      -- diff颜色加深版
+      -- Add #536232 Change #1c7ca1 Delete #771b1b
+      vim.api.nvim_set_hl(0, "DiffAdd", { fg = "", bg = "#414733" })
+      vim.api.nvim_set_hl(0, "DiffChange", { fg = "", bg = "#215e76" })
+      vim.api.nvim_set_hl(0, "DiffDelete", { fg = "", bg = "#552222" })
+      vim.api.nvim_set_hl(0, "DiffText", { fg = "", bg = "#414733" })
+
+      -- gitsign内置颜色配置
+      vim.api.nvim_set_hl(0, "GitSignsAddInline", { fg = "", bg = "#536232" })
+      vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { fg = "", bg = "#771b1b" })
+      vim.api.nvim_set_hl(0, "GitSignsChangeInline", { fg = "", bg = "#1c7ca1" })
     end
   },
   { -- 状态栏插件

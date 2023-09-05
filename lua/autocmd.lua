@@ -21,6 +21,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
 if _G.IS_WINDOWS then
 	vim.api.nvim_create_autocmd({ "InsertLeave", "VimEnter" }, {
 		pattern = "*",
+    nested = true, -- 允许嵌套
 		callback = function()
 			vim.fn.system("im_select.exe 1")
 		end,

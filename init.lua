@@ -9,11 +9,6 @@ _G.CONFIG_PATH = vim.fn.stdpath("config")
 
 _G.LANGUAGE = { }
 
-
-_G.is_lua_config = function ()
- return vim.fn.expand('%:p'):find(_G.CONFIG_PATH, 1, true)
-end
-
 require("funcs")
 require("nvim_base")
 require("plugin_init")
