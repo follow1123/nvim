@@ -73,10 +73,7 @@ vim.g.netrw_winsize = 20                       -- 设置文件管理器打开时
 vim.g.netrw_banner = 0                        -- 不显示顶部的信息
 vim.g.netrw_browse_split = 4                  -- 默认在上一个窗口打开文件(同一个窗口)
 vim.g.netrw_altv = 1
--- vim.g.netrw_hide= 0
 vim.g.netrw_preview = 1
-
-
 
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -96,10 +93,10 @@ vim.cmd("colorscheme slate") -- 默认主题
 
 -- 默认主题颜色设置
 vim.api.nvim_set_hl(0, "Normal", { bg = "#1e1e1e" }) -- 背景颜色
-vim.api.nvim_set_hl(0, "StatusLine", { fg = "#bbbbbb", bg = "#04324f" }) -- 底部状态栏颜色
+vim.api.nvim_set_hl(0, "StatusLine", { fg = "#e9e9e9", bg = "#04324f" }) -- 底部状态栏颜色
 vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#282828" }) -- 模式状态颜色
 vim.api.nvim_set_hl(0, "Visual", { fg = "NONE", bg = "#264f78" }) -- visual模式选中文本的颜色
-vim.api.nvim_set_hl(0, "ModeMsg", { bg = "#e29f84" }) -- 切换模式时左下角显示的颜色
+vim.api.nvim_set_hl(0, "ModeMsg", { fg = "#e9e9e9", bold = true }) -- 切换模式时左下角显示的颜色
 vim.api.nvim_set_hl(0, "VertSplit", { bg = "NONE" }) -- 垂直分屏时分割线的背景颜色
 vim.api.nvim_set_hl(0, "MatchParen", { -- 光标在括号上时高亮另一对括号
   bg = "NONE",
@@ -119,6 +116,13 @@ vim.api.nvim_set_hl(0, "DiffDelete", { fg = "", bg = "#552222" }) -- diff删除
 vim.api.nvim_set_hl(0, "DiffText", { fg = "", bg = "#414733" }) -- diff文本
 vim.api.nvim_set_hl(0, "FoldColumn", { fg = "", bg = "#1e1e1e" }) -- diff模式最左侧显示的折叠栏的颜色
 
+-- 补全相关颜色
+vim.api.nvim_set_hl(0, "Pmenu", { fg = "#cccccc", bg = "#252526" })
+vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#042e48" } )
+vim.api.nvim_set_hl(0, "PmenuSBar", { bg = "#252525" } )
+vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#808080" } )
+
+
 -- ###########################
 -- #   按键映射(keybinging)  #
 -- ###########################
@@ -130,6 +134,13 @@ local opts_keymap = { noremap = true, silent = true } -- keymap默认配置
 local term_opts = { silent = true } -- terminal默认配置
 
 local keymap = vim.api.nvim_set_keymap
+
+
+keymap("i", "<C-j>", "<C-n>", opts_keymap) -- 修改补全弹窗的快捷键
+keymap("i", "<C-k>", "<C-p>", opts_keymap)
+
+keymap("i", "<C-n>", "<Nop>", opts_keymap) -- 进入insert模式下禁用
+keymap("i", "<C-p>", "<Nop>", opts_keymap)
 
 keymap("n", "<C-f>", "<Nop>", opts_keymap) -- 禁用翻页
 keymap("n", "<C-b>", "<Nop>", opts_keymap)
@@ -324,23 +335,75 @@ vim.api.nvim_create_autocmd("FileType", {
   end
 })
 
+
+-- 创建diff选择时状态颜色信息的namespace
+local diff_select_ns = vim.api.nvim_create_namespace("DiffSelect")
+vim.api.nvim_set_hl(diff_select_ns, "StatusLineNC", { fg = "Yellow", bg = "#613214", })
+
+
+vim.keymap.set("n", "<leader>dg", function ()
+  local cur_bufnr = vim.fn.bufnr()
+  local buf_statusline = {}
+  local options = "statusline"
+  -- 获取当前屏幕上现实的所有winnr
+  for _, winnr in ipairs(vim.api.nvim_list_wins()) do
+    -- 根据winnr获取对应的buffer
+    local cur_buffer = vim.fn.getbufinfo(vim.fn.winbufnr(winnr))[1]
+    if cur_buffer.bufnr ~= cur_bufnr then
+      -- 临时存储其他buffer的状态信息
+      table.insert(buf_statusline, {
+        bufnr = cur_buffer.bufnr,
+        name = cur_buffer.name,
+        statusline = vim.api.nvim_get_option_value(options, { buf = cur_bufnr }),
+        windows = cur_buffer.windows
+      })
+      -- 设置diff选择时的状态栏颜色和信息
+      local cur_win_width = vim.fn.winwidth(vim.fn.bufwinnr(vim.fn.bufnr()))
+      vim.api.nvim_set_option_value(options, string.rep(" ", (cur_win_width - #buf_statusline) / 2) .. #buf_statusline , { buf = cur_buffer.bufnr})
+      for _, nr in ipairs(cur_buffer.windows) do
+        vim.api.nvim_win_set_hl_ns(nr, diff_select_ns)
+      end
+    end
+  end
+  -- 由于设置状态信息再监听输入时会阻塞，导致无法设置状态栏的信息，所以需要延时监听当前的输入
+  vim.defer_fn(function ()
+    local num = tonumber(vim.fn.nr2char(vim.fn.getchar()))
+    if num and num > 0 and  num <= #buf_statusline then
+      local selected_buf = buf_statusline[num]
+      vim.cmd("diffget " .. selected_buf.bufnr)
+    else
+      print("please input a number on statusline")
+    end
+    -- 还原状态栏颜色和信息
+    for _, v in ipairs(buf_statusline) do
+      vim.api.nvim_set_option_value(options, v.statusline, { buf = v.bufnr })
+      for _, nr in ipairs(v.windows) do
+        vim.api.nvim_win_set_hl_ns(nr, 0)
+      end
+    end
+  end, 500)
+end, {noremap = true, silent = true})
+
+
+
 -- diff模式设置快捷键
--- vim.api.nvim_create_autocmd({ "WinEnter", "VimEnter", "WinLeave" }, {
---   pattern = "*",
---   callback = function()
---     if not vim.o.diff then
---       vim.api.nvim_buf_del_keymap(0, "n", "<leader>dj")
---       vim.api.nvim_buf_del_keymap(0, "n", "<leader>dk")
---       vim.api.nvim_buf_del_keymap(0, "n", "<leader>dJ")
---       vim.api.nvim_buf_del_keymap(0, "n", "<leader>dK")
---
---       for _,v in pairs(vim.api.nvim_get_keymap("n")) do if v.lhs == "<M-e>" then print(vim.inspect(v)) end end
---     else
---       local diff_opts = { noremap = true, silent = true }
---       vim.api.nvim_buf_set_keymap(0, "n", "<leader>dj", "<cmd>echo 123<cr>", diff_opts)
---       vim.api.nvim_buf_set_keymap(0, "n", "<leader>dk", "<cmd>echo 456<cr>", diff_opts)
---       vim.api.nvim_buf_set_keymap(0, "n", "<leader>dJ", "<cmd>echo 789<cr>", diff_opts)
---       vim.api.nvim_buf_set_keymap(0, "n", "<leader>dK", "<cmd>echo 1123<cr>", diff_opts)
---     end
---   end
--- })
+vim.api.nvim_create_autocmd({ "WinEnter", "VimEnter", "WinLeave" }, {
+  pattern = "*",
+  callback = function()
+    if not vim.o.diff then
+      -- vim.api.nvim_buf_del_keymap(0, "n", "<leader>dj")
+      -- vim.api.nvim_buf_del_keymap(0, "n", "<leader>dk")
+      -- vim.api.nvim_buf_del_keymap(0, "n", "<leader>dJ")
+      -- vim.api.nvim_buf_del_keymap(0, "n", "<leader>dK")
+
+      -- for _,v in pairs(vim.api.nvim_get_keymap("n")) do if v.lhs == "<M-e>" then print(vim.inspect(v)) end end
+      return
+    else
+      local diff_opts = { noremap = true, silent = true }
+      vim.api.nvim_buf_set_keymap(0, "n", "<leader>dj", "]c", diff_opts)
+      vim.api.nvim_buf_set_keymap(0, "n", "<leader>dk", "[c", diff_opts)
+      -- vim.api.nvim_buf_set_keymap(0, "n", "<leader>dJ", "<cmd>echo 789<cr>", diff_opts)
+      -- vim.api.nvim_buf_set_keymap(0, "n", "<leader>dK", "<cmd>echo 1123<cr>", diff_opts)
+    end
+  end
+})
