@@ -27,6 +27,7 @@ opt.splitbelow = true                         -- 分割水平新窗口默认在�
 opt.splitright = true                         -- 分割垂直新窗口默认在右
 opt.guifont = "JetBrainsMono Nerd Font:h14"
 opt.shell = _G.IS_WINDOWS and "cmd" or "zsh"  -- 目前windows下设置后toggleterm插件就无法使用了
+vim.opt.undofile = true                       -- 启用保存undofile的功能
 -- vim.opt.fillchars = { eob = ' ' }          -- 去掉没有文字的行左边会显示的～号，
 -- vim.wo.fillchars = 'eob: '
 
@@ -95,32 +96,28 @@ keymap("n", "N", "Nzz", opts)
 
 keymap("n", "<M-q>", ":bdelete!<cr>", opts)
 
-vim.keymap.set("n", "<leader>cr", function ()
-  local lang_table = _G.LANGUAGE[vim.bo.filetype]
-  if lang_table ~= nil then
+vim.keymap.set("n", "<leader>r", function()
+  local lang_table = _G.language[vim.bo.filetype]
+  if lang_table and type(lang_table.run_code_on_cursor) == "function" then
     lang_table.run_code_on_cursor()
   else
-    print("no run code config, FileType: " .. vim.bo.filetype)
+    vim.notify("not implement the run code function, define a function on _G.language." .. vim.bo.filetype .. ".run_code_on_cursor function", vim.log.levels.WARN)
   end
-end, {
-  desc = "run code on curcor",
-  noremap = true,
-  silent = true,
-})
+end, vim.tbl_extend("force", opts, { desc = "run code on cursor" }))
 
--- print(123)
+vim.keymap.set("v", "<leader>r", function()
+  local lang_table = _G.language[vim.bo.filetype]
+  if lang_table and type(lang_table.run_selected_code) == "function" then
+    lang_table.run_selected_code()
+  else
+    vim.notify("not implement the run code function, define a function on _G.language." .. vim.bo.filetype .. ".run_selected_code function", vim.log.levels.WARN)
+  end
+end, vim.tbl_extend("force", opts, { desc = "run selected code" }))
+
 -- ###########################
 -- #        command定义      #
 -- ###########################
 
-vim.api.nvim_create_user_command("RunCode", function ()
-  local lang_table = _G.LANGUAGE[vim.bo.filetype]
-  if lang_table ~= nil then
-    lang_table.run_code_on_cursor()
-  else
-    print("no run code config, FileType: " .. vim.bo.filetype)
-  end
-end, { desc = "run code on cursor" })
 -- 打开设置
 vim.cmd("command! Setting :e " .. _G.CONFIG_PATH .. "/init.lua")
 

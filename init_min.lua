@@ -8,8 +8,6 @@
 -- #    变量定义(variable)   #
 -- ###########################
 
--- 全局变量
-
 --判断使用为windows
 _G.IS_WINDOWS = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1) and true or false
 -- 判断是否为linux
@@ -19,9 +17,44 @@ _G.IS_GUI = vim.fn.has("gui_running") == 1 and true or false
 
 _G.CONFIG_PATH = vim.fn.stdpath("config")
 
+_G.language = { }
 
+_G.util = {
+  -- 在visual模式选中文本后获取对应选中的区域处理
+  handle_selected_region_content = function(callback)
+    vim.api.nvim_input("<Esc>")
+    vim.schedule(function ()
+      -- 获取visual模式选择的行和列信息
+      local start_line = vim.fn.line("'<")
+      local end_line = vim.fn.line("'>")
+      local start_col = vim.fn.col("'<")
+      local end_col = vim.fn.col("'>")
+      local region_contents = {}
+      -- 获取选择的所有行
+      local selected_lines = vim.fn.getline(start_line, end_line)
+      -- 根据起始列和结束列位置截取第一行和最后一行
+      for i, v in ipairs(selected_lines) do
+        local line = v
+        if i == 1 then line = string.sub(line, start_col) end
+        if i == vim.tbl_count(selected_lines) then line = string.sub(line, 1, (start_line == end_line and end_col - start_col + 1 or end_col)) end
+        table.insert(region_contents, i, line)
+      end
+      -- 获取选择的区域后执行回调方法
+      if type(callback) == "function" then
+        callback(region_contents)
+      end
+    end)
+  end,
+  -- 监听下一个输入的字符
+  handle_input_char = function(callback)
+    vim.schedule(function ()
+      if type(callback) == "function" then
+        callback(vim.fn.nr2char(vim.fn.getchar()))
+      end
+    end)
+  end
 
--- 本地变量
+}
 
 -- ###########################
 -- #    函数定义(function)   #
@@ -32,58 +65,35 @@ _G.CONFIG_PATH = vim.fn.stdpath("config")
 -- #    基础配置(options)    #
 -- ###########################
 
-local opt = vim.opt
 
-opt.number = true                            -- 行号
-opt.relativenumber = true                    -- 设置相对行号
+vim.opt.number = true                            -- 行号
+vim.opt.relativenumber = true                    -- 设置相对行号
 -- vim.o.clipboard = "unnamed"                -- 设置和剪贴板共用
-opt.tabstop = 4                              -- tab宽度
-opt.shiftwidth = 4                           -- shift宽度
-opt.smartindent = true                       -- 智能缩进
-opt.termguicolors = true                     -- 开启终端颜色
-opt.cursorline = true                        -- 启用游标
-opt.incsearch = true                         -- 增量搜索
-opt.smartindent = true                       -- 智能匹配
-opt.ignorecase = true                        -- 搜索忽略大小写
-opt.wrap = false                             -- 禁止折行显示文本
-opt.scrolloff = 4                            -- 光标移动的时候始终保持上下左右至少有 4 个空格的间隔
-opt.sidescrolloff = 8                        -- 光标所有移动时保持离边框8个字符时开始横向滚动
+vim.opt.tabstop = 4                              -- tab宽度
+vim.opt.shiftwidth = 4                           -- shift宽度
+vim.opt.smartindent = true                       -- 智能缩进
+vim.opt.termguicolors = true                     -- 开启终端颜色
+vim.opt.cursorline = true                        -- 启用游标
+vim.opt.incsearch = true                         -- 增量搜索
+vim.opt.smartindent = true                       -- 智能匹配
+vim.opt.ignorecase = true                        -- 搜索忽略大小写
+vim.opt.wrap = false                             -- 禁止折行显示文本
+vim.opt.scrolloff = 4                            -- 光标移动的时候始终保持上下左右至少有 4 个空格的间隔
+vim.opt.sidescrolloff = 8                        -- 光标所有移动时保持离边框8个字符时开始横向滚动
 -- vim.wo.signcolumn = "yes"                     -- 显示左侧图标指示列
-opt.mouse = "a"                              -- 支持鼠标
-opt.foldmethod = "indent"                    -- 根据缩进折叠
-opt.foldenable = false                       -- 打开文件时自动折叠
-opt.foldlevel = 99                           -- 最大折叠深度
-opt.syntax = "on"                            -- 语法检测
-opt.splitbelow = true                        -- 分割水平新窗口默认在下边
-opt.splitright = true                        -- 分割垂直新窗口默认在右
+vim.opt.mouse = "a"                              -- 支持鼠标
+vim.opt.foldmethod = "indent"                    -- 根据缩进折叠
+vim.opt.foldenable = false                       -- 打开文件时自动折叠
+vim.opt.foldlevel = 99                           -- 最大折叠深度
+vim.opt.syntax = "on"                            -- 语法检测
+vim.opt.splitbelow = true                        -- 分割水平新窗口默认在下边
+vim.opt.splitright = true                        -- 分割垂直新窗口默认在右
 -- opt.guifont = "JetBrainsMono:h14"
-opt.shell = _G.IS_WINDOWS and "cmd" or "zsh" -- 目前windows下设置后toggleterm插件就无法使用了
-opt.fillchars = { eob = ' ' }                -- 去掉没有文字的行左边会显示的～号，
-opt.undofile = true                          -- 启用保存undofile的功能
-
-opt.path:append("**/*")                      -- 添加find查找所有子目录路径
-opt.wildmenu = true                          -- 搜索显示补全
-
--- ###########################
--- #       目录树(netrw)     #
--- ###########################
-
-vim.g.netrw_liststyle = 3                     -- 设置文件管理模式为tree模式
-vim.g.netrw_winsize = 20                       -- 设置文件管理器打开时默认的宽度
-vim.g.netrw_banner = 0                        -- 不显示顶部的信息
-vim.g.netrw_browse_split = 4                  -- 默认在上一个窗口打开文件(同一个窗口)
-vim.g.netrw_altv = 1
-vim.g.netrw_preview = 1
-
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "netrw",
-  callback = function()
-    local netrw_keymap_opt = { noremap = true, silent = true }
-    vim.api.nvim_buf_set_keymap(0, "n", "<C-l>", "<C-w>l", netrw_keymap_opt) -- 设置ctrl+l移动窗口
-  end
-})
-
+vim.opt.shell = _G.IS_WINDOWS and "cmd" or "zsh" -- 目前windows下设置后toggleterm插件就无法使用了
+vim.opt.fillchars = { eob = ' ' }                -- 去掉没有文字的行左边会显示的～号，
+vim.opt.undofile = true                          -- 启用保存undofile的功能
+vim.opt.path:append("**/*")                      -- 添加find查找所有子目录路径
+vim.opt.wildmenu = true                          -- 搜索显示补全
 
 -- ###########################
 -- #      主题颜色(theme)    #
@@ -107,22 +117,6 @@ vim.api.nvim_set_hl(0, "MatchParen", { -- 光标在括号上时高亮另一对�
   italic = true,
 })
 
--- diff设置
--- diff颜色加深版
--- Add #536232 Change #1c7ca1 Delete #771b1b
-vim.api.nvim_set_hl(0, "DiffAdd", { fg = "", bg = "#414733" }) -- diff新增
-vim.api.nvim_set_hl(0, "DiffChange", { fg = "", bg = "#215e76" }) -- diff修改
-vim.api.nvim_set_hl(0, "DiffDelete", { fg = "", bg = "#552222" }) -- diff删除
-vim.api.nvim_set_hl(0, "DiffText", { fg = "", bg = "#414733" }) -- diff文本
-vim.api.nvim_set_hl(0, "FoldColumn", { fg = "", bg = "#1e1e1e" }) -- diff模式最左侧显示的折叠栏的颜色
-
--- 补全相关颜色
-vim.api.nvim_set_hl(0, "Pmenu", { fg = "#cccccc", bg = "#252526" })
-vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#042e48" } )
-vim.api.nvim_set_hl(0, "PmenuSBar", { bg = "#252525" } )
-vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#808080" } )
-
-
 -- ###########################
 -- #   按键映射(keybinging)  #
 -- ###########################
@@ -130,87 +124,73 @@ vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#808080" } )
 vim.g.mapleader = " " -- leader键<space>
 
 local opts_keymap = { noremap = true, silent = true } -- keymap默认配置
-
 local term_opts = { silent = true } -- terminal默认配置
 
-local keymap = vim.api.nvim_set_keymap
+vim.api.nvim_set_keymap("t", "<Esc>", [[<C-\><C-N>]], term_opts)                       -- terminal模式下使用Esc键退出insert模式
 
+vim.api.nvim_set_keymap("n", "<C-f>", "<Nop>", opts_keymap) -- 禁用翻页
+vim.api.nvim_set_keymap("n", "<C-b>", "<Nop>", opts_keymap)
 
-keymap("i", "<C-j>", "<C-n>", opts_keymap) -- 修改补全弹窗的快捷键
-keymap("i", "<C-k>", "<C-p>", opts_keymap)
+vim.api.nvim_set_keymap("n", "<C-h>", "<C-w>h", opts_keymap) -- 切换窗口
+vim.api.nvim_set_keymap("n", "<C-j>", "<C-w>j", opts_keymap)
+vim.api.nvim_set_keymap("n", "<C-k>", "<C-w>k", opts_keymap)
+vim.api.nvim_set_keymap("n", "<C-l>", "<C-w>l", opts_keymap)
 
-keymap("i", "<C-n>", "<Nop>", opts_keymap) -- 进入insert模式下禁用
-keymap("i", "<C-p>", "<Nop>", opts_keymap)
+vim.api.nvim_set_keymap("v", "<", "<gv", opts_keymap)                                                 -- visual模式下tab
+vim.api.nvim_set_keymap("v", ">", ">gv", opts_keymap)
 
-keymap("n", "<C-f>", "<Nop>", opts_keymap) -- 禁用翻页
-keymap("n", "<C-b>", "<Nop>", opts_keymap)
+vim.api.nvim_set_keymap("n", "<C-left>", "<C-w><", opts_keymap) -- 减少窗口宽度
+vim.api.nvim_set_keymap("n", "<C-right>", "<C-w>>", opts_keymap) -- 增加窗口宽度
+vim.api.nvim_set_keymap("n", "<C-up>", "<C-w>+", opts_keymap) -- 增加窗口高度
+vim.api.nvim_set_keymap("n", "<C-down>", "<C-w>-", opts_keymap) -- 减少窗口高度
 
-keymap("n", "<C-h>", "<C-w>h", opts_keymap) -- 切换窗口
-keymap("n", "<C-j>", "<C-w>j", opts_keymap)
-keymap("n", "<C-k>", "<C-w>k", opts_keymap)
-keymap("n", "<C-l>", "<C-w>l", opts_keymap)
+vim.api.nvim_set_keymap("v", "<M-y>", "\"+y", opts_keymap) -- 从系统剪贴板复制粘贴
+vim.api.nvim_set_keymap("n", "<M-p>", "\"+p", opts_keymap) -- normal模式从系统剪贴板粘贴
+vim.api.nvim_set_keymap("v", "<M-p>", "\"+p", opts_keymap) -- visual模式从系统剪贴板粘贴
 
-keymap("n", "<C-M-s>", "<cmd>e " .. _G.CONFIG_PATH .. "/init.lua <cr>", opts_keymap) -- 打开配置文件
+vim.api.nvim_set_keymap("n", "<M-j>", "V:m '>+1<CR>gv=gv'<Esc><Esc>", opts_keymap) -- 上下移动选中的行
+vim.api.nvim_set_keymap("n", "<M-k>", "V:m '>-2<CR>gv=gv'<Esc><Esc>", opts_keymap)
+vim.api.nvim_set_keymap("v", "<M-j>", ":m '>-2<CR>gv=gv'<Esc>", opts_keymap)
+vim.api.nvim_set_keymap("v", "<M-k>", ":m '>+1<CR>gv=gv'<Esc>", opts_keymap)
 
-keymap("v", "<", "<gv", opts_keymap)                                                 -- visual模式下tab
-keymap("v", ">", ">gv", opts_keymap)
+vim.api.nvim_set_keymap("n", "<C-d>", "<C-d>zz", opts_keymap) -- 翻页时保持光标居中
+vim.api.nvim_set_keymap("n", "<C-u>", "<C-u>zz", opts_keymap)
 
-keymap("t", "<Esc>", [[<C-\><C-N>]], term_opts)                       -- terminal模式下使用Esc键退出insert模式
--- keymap("t", "<C-j>", [[<C-\><C-N><C-w>j]], term_opts)                 -- terminal模式下正常跳转窗口
--- keymap("t", "<C-k>", [[<C-\><C-N><C-w>k]], term_opts)
--- keymap("t", "<C-h>", [[<C-\><C-N><C-w>h]], term_opts)
--- keymap("t", "<C-l>", [[<C-\><C-N><C-w>l]], term_opts)
+vim.api.nvim_set_keymap("n", "n", "nzz", opts_keymap)         -- 搜索时保持光标居中
+vim.api.nvim_set_keymap("n", "N", "Nzz", opts_keymap)
 
-keymap("n", "<leader>v", "V", opts_keymap)     -- 修改进入visual line模式的快捷键
+vim.api.nvim_set_keymap("n", "<C-s>", ":w<CR>", opts_keymap) -- Ctrl+s保存
+vim.api.nvim_set_keymap("i", "<C-s>", "<ESC>:w<CR>", opts_keymap) -- 保存
 
-keymap("n", "<C-left>", "<C-w><", opts_keymap) -- 减少窗口宽度
-keymap("n", "<C-right>", "<C-w>>", opts_keymap) -- 增加窗口宽度
-keymap("n", "<C-up>", "<C-w>+", opts_keymap) -- 增加窗口高度
-keymap("n", "<C-down>", "<C-w>-", opts_keymap) -- 减少窗口高度
+vim.api.nvim_set_keymap("n", "<C-Tab>", "<C-^>", opts_keymap) -- 切换两个buffer
 
-keymap("v", "<M-y>", "\"+y", opts_keymap) -- 从系统剪贴板复制粘贴
-keymap("n", "<M-p>", "\"+p", opts_keymap) -- normal模式从系统剪贴板粘贴
-keymap("v", "<M-p>", "\"+p", opts_keymap) -- visual模式从系统剪贴板粘贴
+vim.api.nvim_set_keymap("n", "<leader>v", "V", opts_keymap)     -- 修改进入visual line模式的快捷键
 
+vim.api.nvim_set_keymap("n", "<leader>n", "<Esc>:nohlsearch<CR>", opts_keymap)     -- 取消高亮
 
-keymap("n", "<C-s>", ":w<CR>", opts_keymap) -- Ctrl+s保存
-keymap("i", "<C-s>", "<ESC>:w<CR>", opts_keymap) -- 保存
+vim.api.nvim_set_keymap("n", "<M-q>", ":bdelete!<cr>", opts_keymap)
 
-keymap("n", "<leader>n", "<Esc>:nohlsearch<CR>", opts_keymap)     -- 取消高亮
-
-keymap("n", "<M-j>", "V:m '>+1<CR>gv=gv'<Esc><Esc>", opts_keymap) -- 上下移动选中的行
-keymap("n", "<M-k>", "V:m '>-2<CR>gv=gv'<Esc><Esc>", opts_keymap)
-keymap("v", "<M-j>", ":m '>-2<CR>gv=gv'<Esc>", opts_keymap)
-keymap("v", "<M-k>", ":m '>+1<CR>gv=gv'<Esc>", opts_keymap)
-
-
-keymap("n", "<C-d>", "<C-d>zz", opts_keymap) -- 翻页时保持光标居中
-keymap("n", "<C-u>", "<C-u>zz", opts_keymap)
-
-keymap("n", "<C-Tab>", "<C-^>", opts_keymap) -- 切换两个buffer
-
-keymap("n", "n", "nzz", opts_keymap)         -- 搜索时保持光标居中
-keymap("n", "N", "Nzz", opts_keymap)
-
-keymap("n", "<M-q>", ":bdelete!<cr>", opts_keymap)
-
-keymap("n", "<M-1>", ":Lex!<cr>", opts_keymap)
+vim.api.nvim_set_keymap("n", "<C-M-s>", "<cmd>e " .. _G.CONFIG_PATH .. "/init.lua <cr>", opts_keymap) -- 打开配置文件
 
 vim.keymap.set("n", "<M-1>", function() vim.cmd(":Lex") end, opts_keymap)
 
-vim.keymap.set("n", "<leader>cr", function()
-  if vim.bo.filetype == "lua" then
-    -- 获取当前光标所在行的文本
-    local cur_code = vim.fn.getline('.'):match("^%s*(.-)%s*$")
-    if cur_code == "" then
-      vim.notify("no code on cursor")
-    else
-      vim.cmd("lua " .. cur_code)
-    end
+vim.keymap.set("n", "<leader>r", function()
+  local lang_table = _G.language[vim.bo.filetype]
+  if lang_table and type(lang_table.run_code_on_cursor) == "function" then
+    lang_table.run_code_on_cursor()
   else
-    print("no run code config, FileType: " .. vim.bo.filetype)
+    vim.notify("not implement the run code function, define a function on _G.language." .. vim.bo.filetype .. ".run_code_on_cursor function", vim.log.levels.WARN)
   end
-end, { desc = "run code on curcor", noremap = true, silent = true, })
+end, vim.tbl_extend("force", opts_keymap, { desc = "run code on cursor" }))
+
+vim.keymap.set("v", "<leader>r", function()
+  local lang_table = _G.language[vim.bo.filetype]
+  if lang_table and type(lang_table.run_selected_code) == "function" then
+    lang_table.run_selected_code()
+  else
+    vim.notify("not implement the run code function, define a function on _G.language." .. vim.bo.filetype .. ".run_selected_code function", vim.log.levels.WARN)
+  end
+end, vim.tbl_extend("force", opts_keymap, { desc = "run selected code" }))
 
 -- ###########################
 -- #    命令定义(command)    #
@@ -324,6 +304,77 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+
+-- ###########################
+-- #    补全(completion)     #
+-- ###########################
+
+-- 补全相关颜色
+vim.api.nvim_set_hl(0, "Pmenu", { fg = "#cccccc", bg = "#252526" })
+vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#042e48" } )
+vim.api.nvim_set_hl(0, "PmenuSBar", { bg = "#252525" } )
+vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#808080" } )
+
+vim.api.nvim_set_keymap("i", "<C-j>", "<C-n>", opts_keymap) -- 修改补全弹窗的快捷键
+vim.api.nvim_set_keymap("i", "<C-k>", "<C-p>", opts_keymap)
+vim.api.nvim_set_keymap("i", "<C-n>", "<Nop>", opts_keymap) -- 进入insert模式下禁用
+vim.api.nvim_set_keymap("i", "<C-p>", "<Nop>", opts_keymap)
+
+
+-- ###########################
+-- #       目录树(netrw)     #
+-- ###########################
+
+vim.g.netrw_liststyle = 3                     -- 设置文件管理模式为tree模式
+vim.g.netrw_winsize = 20                       -- 设置文件管理器打开时默认的宽度
+vim.g.netrw_banner = 0                        -- 不显示顶部的信息
+vim.g.netrw_browse_split = 4                  -- 默认在上一个窗口打开文件(同一个窗口)
+vim.g.netrw_altv = 1
+vim.g.netrw_preview = 1
+
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  callback = function()
+    local netrw_keymap_opt = { noremap = true, silent = true }
+    vim.api.nvim_buf_set_keymap(0, "n", "<C-l>", "<C-w>l", netrw_keymap_opt) -- 设置ctrl+l移动窗口
+  end
+})
+
+
+require("diff")
+
+-- ###########################
+-- #          lua            #
+-- ###########################
+
+--[[
+在vim内执行lua代码，实现方式默认调用lua命令
+
+单行直接执行
+多行每行后面拼接\n后使用 lua << EOF codes EOF格式执行
+]]
+local function run_lua_code(codes)
+  if vim.fn.empty(codes) == 1 then
+    vim.notify('no code on cursor', vim.log.levels.WARN)
+  elseif type(codes) == "table" then
+    vim.cmd("lua << EOF\n" .. table.concat(codes, "\n") .. "\nEOF")
+  elseif type(codes) == "string" then
+    vim.cmd("lua " .. codes)
+  end
+end
+
+_G.language.lua = {
+  run_code_on_cursor = function ()
+    run_lua_code(vim.trim(vim.api.nvim_get_current_line()))
+  end,
+  run_selected_code = function ()
+    _G.util.handle_selected_region_content(function (content)
+      run_lua_code(vim.tbl_map(vim.trim, content))
+    end)
+  end
+}
+
 -- lua 文件单独配置
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "lua",
@@ -332,78 +383,5 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
     vim.opt_local.expandtab = true
-  end
-})
-
-
--- 创建diff选择时状态颜色信息的namespace
-local diff_select_ns = vim.api.nvim_create_namespace("DiffSelect")
-vim.api.nvim_set_hl(diff_select_ns, "StatusLineNC", { fg = "Yellow", bg = "#613214", })
-
-
-vim.keymap.set("n", "<leader>dg", function ()
-  local cur_bufnr = vim.fn.bufnr()
-  local buf_statusline = {}
-  local options = "statusline"
-  -- 获取当前屏幕上现实的所有winnr
-  for _, winnr in ipairs(vim.api.nvim_list_wins()) do
-    -- 根据winnr获取对应的buffer
-    local cur_buffer = vim.fn.getbufinfo(vim.fn.winbufnr(winnr))[1]
-    if cur_buffer.bufnr ~= cur_bufnr then
-      -- 临时存储其他buffer的状态信息
-      table.insert(buf_statusline, {
-        bufnr = cur_buffer.bufnr,
-        name = cur_buffer.name,
-        statusline = vim.api.nvim_get_option_value(options, { buf = cur_bufnr }),
-        windows = cur_buffer.windows
-      })
-      -- 设置diff选择时的状态栏颜色和信息
-      local cur_win_width = vim.fn.winwidth(vim.fn.bufwinnr(vim.fn.bufnr()))
-      vim.api.nvim_set_option_value(options, string.rep(" ", (cur_win_width - #buf_statusline) / 2) .. #buf_statusline , { buf = cur_buffer.bufnr})
-      for _, nr in ipairs(cur_buffer.windows) do
-        vim.api.nvim_win_set_hl_ns(nr, diff_select_ns)
-      end
-    end
-  end
-  -- 由于设置状态信息再监听输入时会阻塞，导致无法设置状态栏的信息，所以需要延时监听当前的输入
-  vim.defer_fn(function ()
-    local num = tonumber(vim.fn.nr2char(vim.fn.getchar()))
-    if num and num > 0 and  num <= #buf_statusline then
-      local selected_buf = buf_statusline[num]
-      vim.cmd("diffget " .. selected_buf.bufnr)
-    else
-      print("please input a number on statusline")
-    end
-    -- 还原状态栏颜色和信息
-    for _, v in ipairs(buf_statusline) do
-      vim.api.nvim_set_option_value(options, v.statusline, { buf = v.bufnr })
-      for _, nr in ipairs(v.windows) do
-        vim.api.nvim_win_set_hl_ns(nr, 0)
-      end
-    end
-  end, 500)
-end, {noremap = true, silent = true})
-
-
-
--- diff模式设置快捷键
-vim.api.nvim_create_autocmd({ "WinEnter", "VimEnter", "WinLeave" }, {
-  pattern = "*",
-  callback = function()
-    if not vim.o.diff then
-      -- vim.api.nvim_buf_del_keymap(0, "n", "<leader>dj")
-      -- vim.api.nvim_buf_del_keymap(0, "n", "<leader>dk")
-      -- vim.api.nvim_buf_del_keymap(0, "n", "<leader>dJ")
-      -- vim.api.nvim_buf_del_keymap(0, "n", "<leader>dK")
-
-      -- for _,v in pairs(vim.api.nvim_get_keymap("n")) do if v.lhs == "<M-e>" then print(vim.inspect(v)) end end
-      return
-    else
-      local diff_opts = { noremap = true, silent = true }
-      vim.api.nvim_buf_set_keymap(0, "n", "<leader>dj", "]c", diff_opts)
-      vim.api.nvim_buf_set_keymap(0, "n", "<leader>dk", "[c", diff_opts)
-      -- vim.api.nvim_buf_set_keymap(0, "n", "<leader>dJ", "<cmd>echo 789<cr>", diff_opts)
-      -- vim.api.nvim_buf_set_keymap(0, "n", "<leader>dK", "<cmd>echo 1123<cr>", diff_opts)
-    end
   end
 })
