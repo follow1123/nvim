@@ -2,8 +2,13 @@
 return {
   { -- 主题
     "LunarVim/Colorschemes",
+    priority = 999,
     config = function()
       vim.cmd("colorscheme darkplus")
+
+      vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#1e1e1e" })
+      -- vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#569cd6", bg = "#1e1e1e" })
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e1e1e" })
       -- diff设置
       -- diff颜色加深版
       -- Add #536232 Change #1c7ca1 Delete #771b1b
@@ -11,6 +16,16 @@ return {
       vim.api.nvim_set_hl(0, "DiffChange", { fg = "", bg = "#215e76" })
       vim.api.nvim_set_hl(0, "DiffDelete", { fg = "", bg = "#552222" })
       vim.api.nvim_set_hl(0, "DiffText", { fg = "", bg = "#414733" })
+
+      -- 光标在括号上时高亮另一对括号
+      vim.api.nvim_set_hl(0, "MatchParen", {
+        bg = "NONE",
+        fg = "Yellow",
+        sp = "Yellow",
+        underline = true,
+        bold = true,
+        italic = true,
+      })
 
       -- gitsign内置颜色配置
       vim.api.nvim_set_hl(0, "GitSignsAddInline", { fg = "", bg = "#536232" })
@@ -20,6 +35,7 @@ return {
   },
   { -- 状态栏插件
     "nvim-lualine/lualine.nvim",
+    priority = 998,
     dependencies = {"kyazdani42/nvim-web-devicons", opt = true},
     config = function()
       require("lualine").setup {
@@ -35,10 +51,13 @@ return {
           refresh = {statusline = 1000, tabline = 1000, winbar = 1000}
         },
         sections = {
-          lualine_a = {"mode"},
-          lualine_b = {"branch", "diff", "diagnostics"},
-          lualine_c = {"filename"},
-          lualine_x = {"encoding", "fileformat", "filetype"},
+          lualine_a = { "mode" },
+          lualine_b = {"diff", "diagnostics"},
+          lualine_c = { "filetype", "filename", },
+          lualine_x = { {
+            "branch",
+            icon = { "", color = {fg = "#f44d27"}}
+          }, "encoding" },
           lualine_y = {"progress"},
           lualine_z = {"location"}
         },
@@ -57,40 +76,11 @@ return {
       }
     end
   },
-  { -- bufferline
-    "akinsho/bufferline.nvim",
-    enabled = false,
-    event = "UIEnter",
-    config = function ()
-      require("bufferline").setup{
-        options = {
-          middle_mouse_command = "bdelete! %d",
-          show_buffer_close_icons = false,
-          separator_style = "thin",
-          indicator = {
-            icon = ' ',
-            style = 'icon',
-          },
-          offsets = {
-              {
-                filetype = "NvimTree",
-                text = "File Explorer",
-                text_align = "center",
-                separator = true
-              }
-          },
-
-        }
-      }
-    end
-  },
   { -- 图标
       "kyazdani42/nvim-web-devicons",
+      module = true,
       config = function()
-          require"nvim-web-devicons".setup {
-              -- your personnal icons can go here (to override)
-              -- you can specify color or cterm_color instead of specifying both of them
-              -- DevIcon will be appended to `name`
+          require("nvim-web-devicons").setup {
               override = {
                   zsh = {
                       icon = "",
@@ -99,19 +89,9 @@ return {
                       name = "Zsh"
                   }
               },
-              -- globally enable different highlight colors per icon (default to true)
-              -- if set to false all icons will have the default icon"s color
               color_icons = true,
-              -- globally enable default icons (default to false)
-              -- will get overriden by `get_icons` option
               default = true,
-              -- globally enable "strict" selection of icons - icon will be looked up in
-              -- different tables, first by filename, and if not found by extension; this
-              -- prevents cases when file doesn"t have any extension but still gets some icon
-              -- because its name happened to match some extension (default to false)
               strict = true,
-              -- same as `override` but specifically for overrides by filename
-              -- takes effect when `strict` is true
               override_by_filename = {
                   [".gitignore"] = {
                       icon = "",
@@ -119,8 +99,6 @@ return {
                       name = "Gitignore"
                   }
               },
-              -- same as `override` but specifically for overrides by extension
-              -- takes effect when `strict` is true
               override_by_extension = {
                   ["log"] = {icon = "", color = "#81e043", name = "Log"}
               }
@@ -129,12 +107,13 @@ return {
   },
   { -- 缩进线
     "lukas-reineke/indent-blankline.nvim",
-    enabled = true,
-    -- event = "VeryLazy",
     config = function()
       vim.opt.list = true
+      -- vim.opt.listchars:append "space:⋅"
+      vim.opt.listchars:append "eol:↴"
+      vim.api.nvim_set_hl(0, "NonText", { fg = "#3e3e3e"})
       require("indent_blankline").setup {
-        -- for example, context is off by default, use this to turn it on
+        space_char_blankline = " ",
         show_current_context = true,
         show_current_context_start = true,
       }
@@ -144,11 +123,7 @@ return {
     "norcalli/nvim-colorizer.lua",
     event = "InsertEnter",
     config = function()
-      require("colorizer").setup {
-        "*"; -- Highlight all files, but customize some others.
-        -- "!vim"; -- Exclude vim from highlighting.
-        -- Exclusion Only makes sense if "*" is specified!
-      }
+      require("colorizer").setup { "*" }
     end
   }
 }

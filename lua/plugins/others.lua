@@ -1,80 +1,58 @@
+local keymap_uitl = require("utils.keymap")
+local lazy_map = keymap_uitl.lazy_map
+local nmap = keymap_uitl.nmap
 return {
   { -- which key
     "folke/which-key.nvim",
-    -- enabled = false,
     event = "InsertEnter",
     keys = "<space>",
-    init = function()
+    config = function()
       vim.o.timeout = true
       vim.o.timeoutlen = 700
+      local wk = require("which-key")
+      wk.register({
+        ["<leader>"] = {
+          name = "Base custom keymap",
+          b = "Buffer",
+          c = "Code",
+          d = "Diff",
+          f = "File",
+          g = "Git",
+          h = "Help",
+          l = "LSP",
+          p = "Project",
+          w = "Window",
+        },
+        ["["] = "Next Options",
+        ["]"] = "Previous Options",
+      })
+      wk.setup {
+        window = {
+          border = "single",
+        }
+      }
+      vim.api.nvim_set_hl(0, "WhichKeyFloat", { bg = "#1e1e1e" })
     end,
-    opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-    }
   },
   { -- markdown
     "iamcco/markdown-preview.nvim",
     build = "cd app && npm install",
     ft = "markdown",
     config = function()
-      -- vim.api.nvim_command([[
-      --   function OpenMarkdownPreview (url)
-      --     execute "silent ! chrome --new-window " . a:url
-      --   endfunction
-      -- ]])
-      --
       vim.g.mkdp_browser = "chrome"
       vim.g.mkdp_filetypes = { "markdown" }
       -- 设置预览markdown快捷键
-      vim.api.nvim_buf_set_keymap(0, "n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", {
-        noremap = true,
-        silent = true
+      nmap("<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", {
+        desc = "markdown: Markdown preview toggle",
+        buffer = true
       })
-    end
-  },
-  { -- 起始页
-    "goolord/alpha-nvim",
-    enabled = false,
-    -- lazy = true,
-    -- event = "VeryLazy",
-    dependencies = { "kyazdani42/nvim-web-devicons" },
-    config = function()
-      local dashboard = require("alpha.themes.dashboard")
-      local config_cmd = ":e ~/.config/nvim/init.lua <CR>"
-      if _G.IS_WINDOWS then
-        config_cmd = ":e ~/AppData/Local/nvim/init.lua <CR>"
-      end
-      dashboard.section.buttons.val = {
-        dashboard.button("1", "  New file", ":ene <BAR> startinsert <CR>"),
-        dashboard.button("2", "  Find file", ":Telescope find_files <CR>"),
-        dashboard.button("3", "  Recently used files", ":Telescope oldfiles <CR>"),
-        dashboard.button("4", "  Find text", ":Telescope live_grep <CR>"),
-        dashboard.button("5", "  Find project", ":Telescope projects <CR>"),
-        dashboard.button("s", "  Configuration", config_cmd),
-        dashboard.button("q", "  Quit Neovim", ":qa<CR>"),
-      }
-      dashboard.section.footer.opts.hl = "Type"
-      dashboard.section.header.opts.hl = "Include"
-      dashboard.section.buttons.opts.hl = "Keyword"
-
-      dashboard.opts.opts.noautocmd = true
-      -- .setup(require("alpha.themes.startify").config)
-      require("alpha")
-          .setup(dashboard.opts)
     end
   },
   { -- 括号自动匹配
     "windwp/nvim-autopairs",
     event = "InsertEnter",
     config = function()
-      local status_ok, npairs = pcall(require, "nvim-autopairs")
-      if not status_ok then
-        vim.notify("autopairs not found!")
-        return
-      end
-
+      local npairs = require("nvim-autopairs")
       npairs.setup {
         check_ts = true,
         ts_config = {
@@ -95,16 +73,9 @@ return {
           highlight_grey = "LineNr",
         },
       }
-
-      -- local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-      -- local cmp_status_ok, cmp = pcall(require, "cmp")
-      -- if not cmp_status_ok then
-      -- 	return
-      -- end
-      -- cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })
     end
   },
-  { -- 启动时光标回复到原来的位置
+  { -- 启动时光标恢复到原来的位置
     "ethanholz/nvim-lastplace",
     config = function()
       require("nvim-lastplace").setup {
@@ -114,17 +85,12 @@ return {
       }
     end
   },
-  { -- 代码位置
+  { -- 代码导航
     "utilyre/barbecue.nvim",
     event = "VeryLazy",
     name = "barbecue",
-    version = "*",
-    dependencies = {
-      "SmiteshP/nvim-navic",
-      --"nvim-tree/nvim-web-devicons", -- optional dependency
-    },
+    dependencies = { "SmiteshP/nvim-navic", },
     config = function()
-      -- triggers CursorHold event faster
       vim.opt.updatetime = 200
 
       require("barbecue").setup({
@@ -150,74 +116,88 @@ return {
   },
   { -- 显示相同单词
     "RRethy/vim-illuminate",
-    event = "VeryLazy",
+    keys = { "h", "j", "k", "l" },
     config = function()
       -- default configuration
       require('illuminate').configure({
-        -- providers: provider used to get references in the buffer, ordered by priority
-        providers = {
-          'lsp',
-          'treesitter',
-          'regex',
-        },
-        -- delay: delay in milliseconds
+        providers = { 'lsp', 'treesitter', 'regex', },
         delay = 100,
-        -- filetype_overrides: filetype specific overrides.
-        -- The keys are strings to represent the filetype while the values are tables that
-        -- supports the same keys passed to .configure except for filetypes_denylist and filetypes_allowlist
         filetype_overrides = {},
-        -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
-        filetypes_denylist = {
-          'dirvish',
-          'fugitive',
-          'NvimTree',
-        },
-        -- filetypes_allowlist: filetypes to illuminate, this is overridden by filetypes_denylist
+        filetypes_denylist = { 'dirvish', 'fugitive', 'NvimTree', },
         filetypes_allowlist = {},
-        -- modes_denylist: modes to not illuminate, this overrides modes_allowlist
-        -- See `:help mode()` for possible values
         modes_denylist = {},
-        -- modes_allowlist: modes to illuminate, this is overridden by modes_denylist
-        -- See `:help mode()` for possible values
         modes_allowlist = {},
-        -- providers_regex_syntax_denylist: syntax to not illuminate, this overrides providers_regex_syntax_allowlist
-        -- Only applies to the 'regex' provider
-        -- Use :echom synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
         providers_regex_syntax_denylist = {},
-        -- providers_regex_syntax_allowlist: syntax to illuminate, this is overridden by providers_regex_syntax_denylist
-        -- Only applies to the 'regex' provider
-        -- Use :echom synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
         providers_regex_syntax_allowlist = {},
-        -- under_cursor: whether or not to illuminate under the cursor
         under_cursor = true,
-        -- large_file_cutoff: number of lines at which to use large_file_config
-        -- The `under_cursor` option is disabled when this cutoff is hit
         large_file_cutoff = nil,
-        -- large_file_config: config to use for large files (based on large_file_cutoff).
-        -- Supports the same keys passed to .configure
-        -- If nil, vim-illuminate will be disabled for large files.
         large_file_overrides = nil,
-        -- min_count_to_highlight: minimum number of matches required to perform highlighting
         min_count_to_highlight = 1,
       })
     end
   },
   { -- vim.ui 图形化插件
     "stevearc/dressing.nvim",
-    event = "VeryLazy",
+    -- lazy = true,
+    -- init = function () -- 监听vim.ui下面的函数调用是加载插件
+      -- local function lazy_input(...)
+      --   require("dressing")
+      --   return vim.ui.input(...)
+      -- end
+      -- local function lazy_select(...)
+      --   require("dressing")
+      --   return vim.ui.select(...)
+      -- end
+      -- vim.ui.input = lazy_input
+      -- vim.ui.select = lazy_select
+    -- end,
     config = function()
-      require('dressing').setup()
+      require("dressing").setup{
+        select = {
+          -- Options for nui Menu
+          nui = {
+            position = "50%",
+            size = nil,
+            -- relative = "editor",
+            border = {
+              style = "rounded",
+            },
+            buf_options = {
+              swapfile = false,
+              filetype = "DressingSelect",
+            },
+            win_options = {
+              winblend = 10,
+            },
+            max_width = 80,
+            max_height = 40,
+            min_width = 40,
+            min_height = 10,
+          },
+          get_config = function(opts)
+            if opts.kind == 'codeaction' then
+              return {
+                backend = 'nui',
+                nui = {
+                  relative = "cursor",
+                  max_width = 40,
+                }
+              }
+            end
+          end
+        }
+      }
     end
   },
   { -- 注释插件
     "numToStr/Comment.nvim",
     keys = {
-      { "<M-e>", "<cmd>normal gcc<cr>", desc = "comment code in normal mode" },
-      { "<M-e>", "<cmd>normal gcc<cr>", desc = "comment code in visual mode", mode = "v" }
+      lazy_map("n", "<M-e>", "<cmd>normal gcc<cr>", "comment: Comment code in normal mode"),
+      lazy_map("v","<M-e>", "<cmd>normal gcc<cr>", "comment: Comment code in visual mode"),
     },
-    -- event = "VeryLazy",
     config = function()
       require("Comment").setup()
     end
   }
 }
+

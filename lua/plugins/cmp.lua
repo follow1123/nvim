@@ -2,7 +2,7 @@
 return {
   -- 代码补全框架
   "hrsh7th/nvim-cmp",
-  event = "InsertEnter",
+  event = { "InsertEnter", "CmdlineEnter" },
   dependencies = {
     -- 代码片段补全框架
     "L3MON4D3/LuaSnip",
@@ -18,7 +18,6 @@ return {
     "hrsh7th/cmp-nvim-lsp",
   },
   config = function()
-    -- vim.api.nvim_create_autocmd
     local cmp = require("cmp")
     local luasnip = require("luasnip")
     require("luasnip.loaders.from_vscode").lazy_load()
@@ -39,18 +38,14 @@ return {
     local cmp_config = {
       -- 补全按键
       mapping = cmp.mapping.preset.insert {
-        -- ctrl j上一个
-        ["<C-j>"] = cmp.mapping(cmp.mapping.select_next_item(select_item_opts), { "i", "c" }),
-        -- ctrl k下一个
-        ["<C-k>"] = cmp.mapping(cmp.mapping.select_prev_item(select_item_opts),  { "i", "c" }),
+        -- ctrl j下一个
+        ["<C-j>"] = cmp.mapping.select_next_item(select_item_opts),
+        -- ctrl 上一个
+        ["<C-k>"] = cmp.mapping.select_prev_item(select_item_opts),
         -- ctrl d文档向上滚动
         ["<C-u>"] = cmp.mapping.scroll_docs(-4),
         -- ctrl u文件向下滚动
         ["<C-d>"] = cmp.mapping.scroll_docs(4),
-        -- ["<C-n>"] = cmp.mapping({
-        --   i = cmp.config.disable,
-        --   c = cmp.config.disable
-        -- }),
         -- 补全中断时开始补全
         ["<C-p>"] = cmp.mapping.complete(),
         -- ctrl e取消
@@ -99,6 +94,7 @@ return {
         end,
       },
       completion = { -- 补全默认选中第一个
+        -- completeopt = 'menu,menuone,noinsert,noselect'
         completeopt = 'menu,menuone,noinsert'
       }
     }
@@ -179,6 +175,11 @@ return {
       })
     })
 
+
     cmp.setup(cmp_config)
+
+
+    -- 清理当前snip的跳转列表
+    vim.cmd("command! SnipClean :lua  require('luasnip').unlink_current()")
   end
 }

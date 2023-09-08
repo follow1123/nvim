@@ -84,9 +84,9 @@ return {
   "akinsho/toggleterm.nvim",
   keys = {
     { toggleterm_mapping, ":ToggleTerm<CR>", desc = "toggle terminal" },
-    { "<leader>g",        open_lazygit_term, desc = "open a lazygit float terminal" },
-    { "<leader>l",        open_lf_term,      desc = "open a lf float terminal" },
     { "<M-4>",            open_bottom_term,  desc = "open a bottom terminal" },
+    { "<M-6>",        open_lazygit_term, desc = "open a lazygit float terminal" },
+    { "<M-7>",        open_lf_term,      desc = "open a lf float terminal" },
   },
   config = function()
     -- 默认终端配置
@@ -99,7 +99,7 @@ return {
         border = "curved", -- border = "single" | "double" | "shadow" | "curved" |
         width = get_width, -- 默认占终端长宽的90%
         height = get_height,
-        winblend = 3
+        winblend = 0
       },
       on_open = function() -- 开打时设置Esc键退出insert模式
         local opts = { noremap = true }

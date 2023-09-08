@@ -13,11 +13,23 @@ require("lazy").setup({
 		import = "plugins"
 	},
 	ui = {
-		border = "rounded"
+		border = "single"
 	},
 	change_detection = {
-		-- automatically check for config file changes and reload the ui
-		enabled = true,
-		notify = false, -- get a notification when changes are found
+		notify = false,
 	},
+  performance = {
+    rtp = {
+      disabled_plugins = { -- 禁用内置插件
+        -- "gzip",
+        -- "matchit",
+        -- "matchparen",
+        "netrwPlugin",
+        -- "tarPlugin",
+        "tohtml",
+        "tutor",
+        -- "zipPlugin",
+      },
+    }
+  }
 })

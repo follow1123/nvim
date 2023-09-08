@@ -135,5 +135,5 @@ return {
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
       border = "single",
     })
-  end
+    vim.lsp.handlers["textDocument/codeAction"] = vim.lsp.with()
 }

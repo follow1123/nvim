@@ -7,17 +7,17 @@ return {
       { "<A-f>",      ":Telescope find_files<CR>",                         desc = "find files" },
       { "<C-f>",      ":Telescope current_buffer_fuzzy_find<CR>",          desc = "find in current buffer" },
       { "<leader>ff", ":Telescope live_grep<CR>",                          desc = "live grep" },
-      { "<leader>fb", ":Telescope buffers<CR>",                            desc = "buffers" },
-      { "<leader>fh", ":Telescope help_tags<CR>",                          desc = "help tags" },
+      { "<leader>bb", ":Telescope buffers<CR>",                            desc = "buffers" },
+      { "<leader>hf", ":Telescope help_tags<CR>",                          desc = "help tags" },
 
       -- vim内置帮助相关
-      { "<leader>/c", ":Telescope commands<CR>",                           desc = "list commands" },
-      { "<leader>/h", ":Telescope highlights<CR>",                         desc = "list highlights" },
-      { "<leader>/r", ":Telescope registers<CR>",                          desc = "list registers" },
-      { "<leader>/f", ":Telescope filetypes<CR>",                          desc = "list filetypes" },
-      { "<leader>/t", ":Telescope colorscheme<CR>",                        desc = "list colorscheme" },
-      { "<leader>/k", ":Telescope keymaps<CR>",                            desc = "list keymaps" },
-      { "<leader>/a", ":Telescope autocommands<CR>",                       desc = "list autocommands" },
+      { "<leader>hc", ":Telescope commands<CR>",                           desc = "list commands" },
+      { "<leader>hh", ":Telescope highlights<CR>",                         desc = "list highlights" },
+      { "<leader>hr", ":Telescope registers<CR>",                          desc = "list registers" },
+      { "<leader>hf", ":Telescope filetypes<CR>",                          desc = "list filetypes" },
+      { "<leader>ht", ":Telescope colorscheme<CR>",                        desc = "list colorscheme" },
+      { "<leader>hk", ":Telescope keymaps<CR>",                            desc = "list keymaps" },
+      { "<leader>ha", ":Telescope autocommands<CR>",                       desc = "list autocommands" },
     },
     -- 搜索依赖插件
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -92,7 +92,7 @@ return {
                 end
               }
             }
-          }
+          },
         },
         extensions = {
           file_browser = {
