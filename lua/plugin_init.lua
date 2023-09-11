@@ -33,3 +33,4 @@ require("lazy").setup({
     }
   }
 })
+vim.api.nvim_set_hl(0, "LazyProp", {bg = "#4b4b4b"})

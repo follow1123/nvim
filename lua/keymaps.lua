@@ -75,6 +75,38 @@ nmap("<C-u>", "<C-u>zz", "base: Scroll up and page center")
 nmap("n", "nzz", "base: Search next and page center")
 nmap("N", "Nzz", "base: Search previous and page center")
 
-nmap("<M-q>", ":bdelete!<cr>", "base: Close window or buffer")
+-- 快捷关闭窗口或Buffer
+-- 如果当前窗口的buffer是共享的，则只关闭当前窗口，否则直接关闭当前的buffer
+-- 如果当前buffer是最后一个listed的buffer则提示使用:q方式关闭
+nmap("<M-q>", function ()
+  local cur_bufnr = vim.api.nvim_get_current_buf()
+  local listed_buf = vim.fn.getbufinfo({buflisted = 1})
+  local is_listed_buf = false
+  for _, buf in ipairs(listed_buf) do
+    if buf.bufnr == cur_bufnr then
+      --  如果当前窗口是listed的buffer，并且是Command Line窗口，或有共享当前buffer的窗口，则使用wincmd c关闭窗口
+      if #buf.windows > 1 or string.match(buf.name, "Command Line") then
+        vim.cmd("wincmd c")
+        return
+      else
+        is_listed_buf = true
+        break
+      end
+    end
+  end
+  -- 判断是否为listed的buffer
+  if is_listed_buf then
+    -- 判断listed的buffer的数量是否大于1
+    if #listed_buf > 1 then
+      vim.cmd("bdelete!")
+    else
+      -- 否则提示使用:q方式关闭
+      vim.notify("is last buffer, use :q to exit vim", vim.log.levels.WARN)
+    end
+  -- 不是listed的buffer则使用关闭窗口的方式关闭
+  else
+    vim.cmd("wincmd c")
+  end
+end, "base: Close window or buffer")
 -- 打开配置文件
 nmap("<C-M-s>", "<cmd>e " .. _G.CONFIG_PATH .. "/init.lua <cr>", "base: Open setting file")

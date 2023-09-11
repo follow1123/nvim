@@ -55,17 +55,6 @@ if not _G.IS_GUI then
 	})
 end
 
--- 打开终端时设置默认快捷键
-vim.api.nvim_create_autocmd("TermOpen", {
-  pattern = "*",
-  callback = function()
-    local opts = { noremap = true, silent = true }
-    vim.api.nvim_buf_set_keymap(0, 't', '<esc>', [[<C-\><C-n>]], opts)
-    vim.api.nvim_buf_set_keymap(0, 't', '<C-j>', [[<Right>]], opts)
-    vim.api.nvim_buf_set_keymap(0, 't', '<C-n>', [[<Down>]], opts)
-    vim.api.nvim_buf_set_keymap(0, 't', '<C-p>', [[<Up>]], opts)
-  end
-})
 
 -- 复制时高亮
 vim.api.nvim_create_autocmd("TextYankPost", {
