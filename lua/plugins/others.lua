@@ -114,43 +114,28 @@ return {
       })
     end
   },
-  { -- 显示相同单词
+  { -- 显示相关符号
     "RRethy/vim-illuminate",
     keys = { "h", "j", "k", "l" },
     config = function()
       -- default configuration
-      require('illuminate').configure({
-        providers = { 'lsp', 'treesitter', 'regex', },
+      require("illuminate").configure({
+        providers = { "lsp", "treesitter", "regex", },
         delay = 100,
-        filetype_overrides = {},
-        filetypes_denylist = { 'dirvish', 'fugitive', 'NvimTree', },
-        filetypes_allowlist = {},
-        modes_denylist = {},
-        modes_allowlist = {},
-        providers_regex_syntax_denylist = {},
-        providers_regex_syntax_allowlist = {},
-        under_cursor = true,
+        filetypes_denylist = { "dirvish", "fugitive", "NvimTree", "TelescopePrompt"},
         large_file_cutoff = nil,
         large_file_overrides = nil,
         min_count_to_highlight = 1,
+        under_cursor = false,
       })
+      -- 设置光标所在符号位置颜色
+      vim.api.nvim_set_hl(0, "IlluminatedWordRead", {bg = "#4b4b4b"}) -- 符号引用处的颜色
+      vim.api.nvim_set_hl(0, "IlluminatedWordWrite", {underline = true, bg = "#264f78" }) -- 符号声明或定义处的颜色
     end
   },
   { -- vim.ui 图形化插件
     "stevearc/dressing.nvim",
-    -- lazy = true,
-    -- init = function () -- 监听vim.ui下面的函数调用是加载插件
-      -- local function lazy_input(...)
-      --   require("dressing")
-      --   return vim.ui.input(...)
-      -- end
-      -- local function lazy_select(...)
-      --   require("dressing")
-      --   return vim.ui.select(...)
-      -- end
-      -- vim.ui.input = lazy_input
-      -- vim.ui.select = lazy_select
-    -- end,
+    module = true,
     config = function()
       require("dressing").setup{
         select = {
