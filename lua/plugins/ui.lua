@@ -7,6 +7,7 @@ return {
       vim.cmd("colorscheme darkplus")
 
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#1e1e1e" })
+      vim.api.nvim_set_hl(0, "CursorLine", { bg = "#323232" })
       -- vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#569cd6", bg = "#1e1e1e" })
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e1e1e" })
       -- diff设置
@@ -53,7 +54,11 @@ return {
         sections = {
           lualine_a = { "mode" },
           lualine_b = {"diff", "diagnostics"},
-          lualine_c = { "filetype", "filename", },
+          lualine_c = {
+            "filetype",
+            -- 设置文件绝对路径，并缩短路径显示
+            { "filename", path = 3, shorting_target = 100 },
+          },
           lualine_x = { {
             "branch",
             icon = { "", color = {fg = "#f44d27"}}
@@ -112,12 +117,17 @@ return {
       -- vim.opt.listchars:append "space:⋅"
       vim.opt.listchars:append "eol:↴"
       vim.opt.listchars:append "trail: "
-      vim.api.nvim_set_hl(0, "NonText", { fg = "#3e3e3e"})
       require("indent_blankline").setup {
         space_char_blankline = " ",
         show_current_context = true,
         show_current_context_start = true,
       }
+
+      vim.api.nvim_set_hl(0, "IndentBlanklineChar", {fg = "#282828", bg = ""})
+      vim.api.nvim_set_hl(0, "IndentBlanklineContextChar", {fg = "#707070", bg = ""})
+      vim.api.nvim_set_hl(0, "IndentBlanklineContextStart", {fg = "", bg = "", underline = true, sp = "#707070"})
+
+      vim.api.nvim_set_hl(0, "NonText", { fg = "#3e3e3e"})
     end
   },
   { -- 颜色显示
