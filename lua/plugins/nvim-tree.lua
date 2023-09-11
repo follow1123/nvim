@@ -12,22 +12,6 @@ return {
     lazy_map("n", "<M-1>", "<cmd>NvimTreeFindFileToggle<cr>", "nvim-tree: Find file in nvim tree"),
   },
 	config = function()
-
-    -- 代码诊断
-    -- vim.api.nvim_set_hl(0, "DiagnosticsError", {sp = "Red", undercurl = true})
-    -- vim.api.nvim_set_hl(0, "DiagnosticsWarning", {sp = "Yellow", undercurl = true})
-    -- vim.api.nvim_set_hl(0, "DiagnosticsInformation", {sp = "#4fc1ff", undercurl = true})
-    -- vim.api.nvim_set_hl(0, "DiagnosticsHint", {sp = "Blue", undercurl = true})
-    -- git
-    vim.api.nvim_set_hl(0, "NvimTreeFileDirty", {fg = "#1c7ca1"})
-    vim.api.nvim_set_hl(0, "NvimTreeFileStaged", {fg = "#536232"})
-    vim.api.nvim_set_hl(0, "NvimTreeFileMerge", {fg = "#e0ebff"})
-    -- vim.api.nvim_set_hl(0, "NvimTreeFileRenamed", {fg = ""})
-    vim.api.nvim_set_hl(0, "NvimTreeFileNew", {fg = "#771b1b"})
-    vim.api.nvim_set_hl(0, "NvimTreeFileDeleted", {fg = "Red"})
-    vim.api.nvim_set_hl(0, "NvimTreeFileIgnored", {fg = "#3e3e3e", strikethrough = true})
-
-    vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = "#1e1e1e" })
 		-- 插件配置
 		local api = require("nvim-tree.api")
 		require("nvim-tree").setup {
@@ -66,7 +50,7 @@ return {
         buf_map("n", "<leader>h", api.tree.toggle_help, "nvim-tree: Help", bufnr)
 
         -- 删除默认的快捷键
-        del_map("n", {"y", "Y", "x", "R", "r", "c", "C"}, bufnr)
+        del_map("n", {"d", "y", "Y", "x", "R", "r", "c", "C"}, bufnr)
 
         -- 文件操作
         buf_map("n", "dd", api.fs.cut, "nvim-tree: Cut", bufnr)
@@ -98,9 +82,30 @@ return {
         indent_markers = {
           enable = true, -- 开启目录树的缩进线
         },
+        root_folder_label = function(path)
+          return "[" .. vim.fn.fnamemodify(vim.fs.normalize(path), ":~:gs?\\(\\w\\)[a-zA-Z0-9 一-龟-]\\+\\ze\\\\?\\1?") .. "]"
+        end,
       }
     }
+    -- 基础
+    vim.api.nvim_set_hl(0, "NvimTreeNormal", {bg = "#1e1e1e"})
+    vim.api.nvim_set_hl(0, "NvimTreeIndentMarker", {fg = "#707070"})
 
+    -- 文件
+    vim.api.nvim_set_hl(0, "NvimTreeFolderNAme", {fg = "#d4d4d4"})
+    vim.api.nvim_set_hl(0, "NvimTreeEmptyFolderName", {fg = "#d4d4d4"})
+    vim.api.nvim_set_hl(0, "NvimTreeOpenedFolderName", {fg = "#d4d4d4"})
+    vim.api.nvim_set_hl(0, "NvimTreeSymlinkFolderName", {fg = "#d4d4d4"})
+    vim.api.nvim_set_hl(0, "NvimTreeSpecialFile", {fg = "#a986c0"})
+
+    -- git
+    vim.api.nvim_set_hl(0, "NvimTreeFileDirty", {fg = "#6493b3"})
+    vim.api.nvim_set_hl(0, "NvimTreeFileStaged", {fg = "#7dd24f"})
+    vim.api.nvim_set_hl(0, "NvimTreeFileMerge", {fg = "#e0ebff"})
+    -- vim.api.nvim_set_hl(0, "NvimTreeFileRenamed", {fg = ""})
+    vim.api.nvim_set_hl(0, "NvimTreeFileNew", {fg = "#f44c27"})
+    vim.api.nvim_set_hl(0, "NvimTreeFileDeleted", {fg = "Red"})
+    vim.api.nvim_set_hl(0, "NvimTreeFileIgnored", {fg = "#3e3e3e", strikethrough = true})
 
   end
 }
