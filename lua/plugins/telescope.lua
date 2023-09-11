@@ -7,15 +7,15 @@ return {
       { "<A-f>",      ":Telescope find_files<CR>",                         desc = "find files" },
       { "<C-f>",      ":Telescope current_buffer_fuzzy_find<CR>",          desc = "find in current buffer" },
       { "<leader>ff", ":Telescope live_grep<CR>",                          desc = "live grep" },
-      { "<leader>bb", ":Telescope buffers<CR>",                            desc = "buffers" },
+      { "<leader>bf", ":Telescope buffers<CR>",                            desc = "buffers" },
       { "<leader>hf", ":Telescope help_tags<CR>",                          desc = "help tags" },
 
       -- vim内置帮助相关
       { "<leader>hc", ":Telescope commands<CR>",                           desc = "list commands" },
       { "<leader>hh", ":Telescope highlights<CR>",                         desc = "list highlights" },
       { "<leader>hr", ":Telescope registers<CR>",                          desc = "list registers" },
-      { "<leader>hf", ":Telescope filetypes<CR>",                          desc = "list filetypes" },
-      { "<leader>ht", ":Telescope colorscheme<CR>",                        desc = "list colorscheme" },
+      { "<leader>hF", ":Telescope filetypes<CR>",                          desc = "list filetypes" },
+      { "<leader>hC", ":Telescope colorscheme<CR>",                        desc = "list colorscheme" },
       { "<leader>hk", ":Telescope keymaps<CR>",                            desc = "list keymaps" },
       { "<leader>ha", ":Telescope autocommands<CR>",                       desc = "list autocommands" },
     },
@@ -31,7 +31,6 @@ return {
         vim.cmd("normal! zz")
       end
 
-
       require("telescope").setup {
         defaults = {
           prompt_prefix = "  ",
@@ -45,6 +44,7 @@ return {
               ["<C-p>"] = actions.cycle_history_prev,                            -- 历史记录下一个
 
               ["<C-c>"] = actions.close,                                         -- 关闭
+              ["<Esc>"] = actions.close,                                         -- 关闭
 
               ["<C-x>"] = actions.select_horizontal,                             -- 水平分屏打开
               ["<C-v>"] = actions.select_vertical,                               -- 垂直分屏打开
@@ -52,7 +52,13 @@ return {
               ["<C-u>"] = actions.preview_scrolling_up,                          -- 预览窗口向上滚动
               ["<C-d>"] = actions.preview_scrolling_down,                        -- 预览窗口向下滚动
 
-              ["<C-w>"] = actions.send_selected_to_qflist + actions.open_qflist, -- 使用tab或shift tab选中后按ctrl w打开一个窗口单独显示选中的数据
+              -- 默认emacs快捷键
+              ["<C-a>"] =  function () vim.api.nvim_input("<Home>") end,
+              ["<C-e>"] =  function () vim.api.nvim_input("<End>") end,
+              ["<C-f>"] =  function () vim.api.nvim_input("<Right>") end,
+              ["<C-b>"] =  function () vim.api.nvim_input("<Left>") end,
+              ["<M-f>"] =  function () vim.api.nvim_input("<C-Right>") end,
+              ["<M-b>"] =  function () vim.api.nvim_input("<C-Left>") end,
             }
           }
         },
@@ -104,6 +110,7 @@ return {
 
       require("telescope").load_extension("projects")
       require("telescope").load_extension("file_browser")
+      vim.api.nvim_set_hl(0, "TelescopeSelection", { bg = "#4b4b4b" })
     end
   },
   {
