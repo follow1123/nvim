@@ -52,11 +52,11 @@ return {
       mapping = cmp_keymap.insert, -- 补全按键
       -- 补全来源
       sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' }, -- For luasnip users.
-        { name = 'buffer' },
-        { name = 'path' },
-        { name = 'nvim_lsp_signature_help' }
+        { name = "nvim_lsp" },
+        { name = "luasnip" }, -- For luasnip users.
+        { name = "nvim_lsp_signature_help" },
+        { name = "buffer" },
+        { name = "path" },
       }),
       experimental = {
         ghost_text = true, -- 虚拟文本提示
@@ -67,11 +67,11 @@ return {
         end,
       },
       completion = {
-        completeopt = 'menu,menuone,noinsert' -- 补全默认选中第一个
+        completeopt = "menu,menuone,noinsert" -- 补全默认选中第一个
       },
       formatting = require("plugins.cmp.format"), -- 补全弹窗数据格式
       performancem = {
-        max_view_entries = 100 -- 最大只显示100条补全数据
+        max_view_entries = 60 -- 最大只显示60条补全数据
       }
     }
     -- buffer内搜索时补全
