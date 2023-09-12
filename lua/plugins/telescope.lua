@@ -35,6 +35,7 @@ return {
         defaults = {
           prompt_prefix = "  ",
           selection_caret = "❯ ",
+          borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
           mappings = {
             i = {
               ["<C-j>"] = actions.move_selection_next,                           -- 下一个
@@ -111,6 +112,7 @@ return {
       require("telescope").load_extension("projects")
       require("telescope").load_extension("file_browser")
       vim.api.nvim_set_hl(0, "TelescopeSelection", { bg = "#4b4b4b" })
+      vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = "#d4d4d4" })
     end
   },
   {

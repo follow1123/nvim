@@ -1,5 +1,5 @@
 -- 去除回车后注释下一行
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
+vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*",
 	callback = function()
 		vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
@@ -19,12 +19,10 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- windows下离开insert模式后、进入vim时输入法切换为英文模式
 -- linux下离开insert模式数日发切换为英文模式
 if _G.IS_WINDOWS then
-	vim.api.nvim_create_autocmd({ "InsertLeave", "VimEnter" }, {
+	vim.api.nvim_create_autocmd("InsertLeave", {
 		pattern = "*",
     nested = true, -- 允许嵌套
-		callback = function()
-			vim.fn.system("im_select.exe 1")
-		end,
+		callback = function() vim.fn.system("im_select.exe 1") end,
 	})
 else
 	vim.api.nvim_create_autocmd("InsertLeave", {
@@ -61,5 +59,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 	callback = function()
 		vim.highlight.on_yank({ timeout = 100, })
+	end,
+})
+
+-- treesitter窗口配置
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "query",
+	callback = function()
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
 	end,
 })

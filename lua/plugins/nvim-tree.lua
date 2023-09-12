@@ -103,7 +103,7 @@ return {
     vim.api.nvim_set_hl(0, "NvimTreeFileStaged", {fg = "#7dd24f"})
     vim.api.nvim_set_hl(0, "NvimTreeFileMerge", {fg = "#e0ebff"})
     -- vim.api.nvim_set_hl(0, "NvimTreeFileRenamed", {fg = ""})
-    vim.api.nvim_set_hl(0, "NvimTreeFileNew", {fg = "#f44c27"})
+    vim.api.nvim_set_hl(0, "NvimTreeFileNew", {fg = "#536232"})
     vim.api.nvim_set_hl(0, "NvimTreeFileDeleted", {fg = "Red"})
     vim.api.nvim_set_hl(0, "NvimTreeFileIgnored", {fg = "#3e3e3e", strikethrough = true})
 

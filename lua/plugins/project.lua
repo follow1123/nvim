@@ -1,5 +1,4 @@
 -- 根据session list 获取对应session的root
-local function get_session_root(path)
   local session_dir = require("persistence.config").options.dir
   path = path:sub(session_dir:len() + 1, path:len())
   path = path:gsub("%%", ":", 1)

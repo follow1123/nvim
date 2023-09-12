@@ -118,7 +118,6 @@ return {
     "RRethy/vim-illuminate",
     keys = { "h", "j", "k", "l" },
     config = function()
-      -- default configuration
       require("illuminate").configure({
         providers = { "lsp", "treesitter", "regex", },
         delay = 100,
@@ -140,25 +139,25 @@ return {
       require("dressing").setup{
         select = {
           -- Options for nui Menu
-          nui = {
-            position = "50%",
-            size = nil,
-            -- relative = "editor",
-            border = {
-              style = "rounded",
-            },
-            buf_options = {
-              swapfile = false,
-              filetype = "DressingSelect",
-            },
-            win_options = {
-              winblend = 10,
-            },
-            max_width = 80,
-            max_height = 40,
-            min_width = 40,
-            min_height = 10,
-          },
+          -- nui = {
+          --   position = "50%",
+          --   size = nil,
+          --   -- relative = "editor",
+          --   border = {
+          --     style = "rounded",
+          --   },
+          --   buf_options = {
+          --     swapfile = false,
+          --     filetype = "DressingSelect",
+          --   },
+          --   win_options = {
+          --     winblend = 10,
+          --   },
+          --   max_width = 80,
+          --   max_height = 40,
+          --   min_width = 40,
+          --   min_height = 10,
+          -- },
           get_config = function(opts)
             if opts.kind == 'codeaction' then
               return {

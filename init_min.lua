@@ -222,7 +222,7 @@ if _G.IS_WINDOWS then
     vim.fn.system("powershell -c \"Start-Process cmd -ArgumentList '/c type " .. new_file_path .. " > " .. cur_path .. "' -Wait -Verb RunAs\"")
     -- 等待内部命令执行完后执行后续操作
     -- 删除新建的文件
-    vim.fn.system("del " .. new_file_path)
+    vim.fn.delete(new_file_path)
     -- 重新加载当前buffer
     vim.cmd("e!")
     print("save backup file in: " .. backup_path)
@@ -341,7 +341,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 
-require("mini.diff")
+-- require("utils.diff")
 
 -- ###########################
 -- #          lua            #
