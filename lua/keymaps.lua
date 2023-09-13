@@ -115,3 +115,5 @@ nmap("<M-q>", function ()
 end, "base: Close window or buffer")
 -- 打开配置文件
 nmap("<C-M-s>", "<cmd>e " .. _G.CONFIG_PATH .. "/init.lua <cr>", "base: Open setting file")
+nmap("<leader>1", "<cmd>Lazy<cr>")
+nmap("<leader>2", "<cmd>LspInfo<cr>")

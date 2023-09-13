@@ -8,7 +8,6 @@ return {
 
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#1e1e1e" })
       vim.api.nvim_set_hl(0, "CursorLine", { bg = "#323232" })
-      -- vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#569cd6", bg = "#1e1e1e" })
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e1e1e" })
 
       -- 光标在括号上时高亮另一对括号
@@ -72,7 +71,7 @@ return {
   },
   { -- 图标
       "kyazdani42/nvim-web-devicons",
-      module = true,
+      lazy = true,
       config = function()
           require("nvim-web-devicons").setup {
               override = {
@@ -99,24 +98,45 @@ return {
           }
       end
   },
-  { -- 缩进线
-    "lukas-reineke/indent-blankline.nvim",
+  { -- vim.ui 图形化插件
+    "stevearc/dressing.nvim",
+    module = true,
     config = function()
-      vim.opt.list = true
-      -- vim.opt.listchars:append "space:⋅"
-      vim.opt.listchars:append "eol:↴"
-      vim.opt.listchars:append "trail: "
-      require("indent_blankline").setup {
-        space_char_blankline = " ",
-        show_current_context = true,
-        show_current_context_start = true,
+      require("dressing").setup{
+        select = {
+          -- Options for nui Menu
+          -- nui = {
+          --   position = "50%",
+          --   size = nil,
+          --   -- relative = "editor",
+          --   border = {
+          --     style = "rounded",
+          --   },
+          --   buf_options = {
+          --     swapfile = false,
+          --     filetype = "DressingSelect",
+          --   },
+          --   win_options = {
+          --     winblend = 10,
+          --   },
+          --   max_width = 80,
+          --   max_height = 40,
+          --   min_width = 40,
+          --   min_height = 10,
+          -- },
+          get_config = function(opts)
+            if opts.kind == 'codeaction' then
+              return {
+                backend = 'nui',
+                nui = {
+                  relative = "cursor",
+                  max_width = 40,
+                }
+              }
+            end
+          end
+        }
       }
-
-      vim.api.nvim_set_hl(0, "IndentBlanklineChar", {fg = "#282828", bg = ""})
-      vim.api.nvim_set_hl(0, "IndentBlanklineContextChar", {fg = "#707070", bg = ""})
-      vim.api.nvim_set_hl(0, "IndentBlanklineContextStart", {fg = "", bg = "", underline = true, sp = "#707070"})
-
-      vim.api.nvim_set_hl(0, "NonText", { fg = "#3e3e3e"})
     end
   },
   { -- 颜色显示

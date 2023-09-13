@@ -120,6 +120,8 @@ vim.api.nvim_set_hl(0, "MatchParen", { -- 光标在括号上时高亮另一对�
 -- #   按键映射(keybinging)  #
 -- ###########################
 
+
+
 vim.g.mapleader = " " -- leader键<space>
 
 local opts_keymap = { noremap = true, silent = true } -- keymap默认配置

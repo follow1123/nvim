@@ -1,6 +1,25 @@
 return {
   "lewis6991/gitsigns.nvim",
-  event = "VeryLazy",
+  lazy = true,
+  init = function()
+    -- 进入buffer时判断是否使用git管理，有则加载gitsigns插件
+    vim.api.nvim_create_autocmd("BufReadPre", {
+      pattern = "*",
+      callback = function()
+        if package.loaded["gitsigns"] then
+          return
+        end
+        local git_path = vim.fs.find(".git", {
+          upward = true,
+          type = "directory",
+          path = vim.fn.expand("%:p:h")
+        })
+        if #git_path > 0 then
+          require("gitsigns")
+        end
+      end
+    })
+  end,
   config = function()
     require("gitsigns").setup {
       signs = {

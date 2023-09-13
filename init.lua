@@ -7,8 +7,6 @@ _G.IS_GUI = vim.fn.has("gui_running") == 1 and true or false
 -- nvim配置文件路径
 _G.CONFIG_PATH = vim.fn.stdpath("config")
 
-_G.LANG = {"lua", "rust", "c", "ps1"}
-
 require("options")
 require("keymaps")
 require("commands")
