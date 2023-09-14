@@ -35,13 +35,6 @@ else
 	})
 end
 
--- 退出insert模式和文本修改时保存
-vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
-	pattern = "*",
-  nested = true,
-	command = "silent! wall",
-})
-
 -- 在终端模式下，vim退出后还原光标样式
 if not _G.IS_GUI then
 	vim.api.nvim_create_autocmd("VimLeave", {
