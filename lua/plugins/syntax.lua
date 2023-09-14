@@ -99,7 +99,6 @@ return {
         min_count_to_highlight = 1,
         under_cursor = false,
       })
-      
       -- 设置光标所在符号位置颜色
       vim.api.nvim_set_hl(0, "IlluminatedWordRead", {bg = "#4b4b4b"}) -- 符号引用处的颜色
       vim.api.nvim_set_hl(0, "IlluminatedWordWrite", {underline = true, bg = "#264f78" }) -- 符号声明或定义处的颜色

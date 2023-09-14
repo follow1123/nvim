@@ -27,7 +27,6 @@ vim.opt.guifont = "JetBrainsMono Nerd Font:h14"   -- gui字体
 vim.opt.shell = _G.IS_WINDOWS and "cmd" or "zsh"  -- 目前windows下设置后toggleterm插件就无法使用了
 vim.opt.undofile = true                           -- 启用保存undofile的功能
 vim.opt.fillchars = { eob = ' ' }                 -- 去掉没有文字的行左边会显示的～号，
-vim.opt.pumheight = 15                            -- 补全弹窗最大补全个数
 
 vim.wo.signcolumn = "yes"                         -- 显示左侧图标指示列
 vim.g.mapleader = " "                             -- leader 键

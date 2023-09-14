@@ -64,13 +64,32 @@ local insert_keymap = {
   }
 }
 
+local function cmdlime_next()
+  return cmp.mapping.select_next_item({
+    behavior = cmp.SelectBehavior.Insert
+  })
+end
+
+local function cmdlime_prev()
+  return cmp.mapping.select_prev_item({
+    behavior = cmp.SelectBehavior.Insert
+  })
+end
+
+local function cmp_selected()
+  cmp.mapping.select_next_item({
+    count = 0,
+    behavior = cmp.SelectBehavior.Insert
+  })()
+end
+
 local cmdline_keymap = cmp.mapping.preset.cmdline{
   ["<C-n>"] = {c = function() vim.api.nvim_input("<Down>") end}, -- 历史记录上一个
   ["<C-p>"] = {c = function() vim.api.nvim_input("<Up>") end}, -- 历史记录下一个
-  ["<C-j>"] = {c = cmp.mapping.select_next_item(select_item_opts)}, -- 下一个
-  ["<C-k>"] = {c = cmp.mapping.select_prev_item(select_item_opts)}, -- 上一个
-  ["<C-c>"] = {c = cmp.mapping.abort()}, -- 打断补全
+  ["<C-j>"] = {c = cmdlime_next()}, -- 下一个
+  ["<C-k>"] = {c = cmdlime_prev()}, -- 上一个
 
+  ["<C-c>"] = {c = cmp.mapping.abort()}, -- 打断补全
   -- emacs方式移动快捷键
   ["<C-a>"] = {c = function() vim.api.nvim_input("<Home>") end},
   ["<C-e>"] = {c = function() vim.api.nvim_input("<End>") end},
@@ -79,14 +98,38 @@ local cmdline_keymap = cmp.mapping.preset.cmdline{
   ["<M-f>"] = {c = function() vim.api.nvim_input("<C-Right>") end},
   ["<M-b>"] = {c = function() vim.api.nvim_input("<C-Left>") end},
 
+  -- 还原默认补全操作
   ["<Tab>"] = {c = function()
-    if cmp.visible() then -- 补全弹框打开时，确认选中的补全
-      cmp.mapping.confirm(confirm_opts)()
-    else -- 补全弹框关闭时，打开补全弹框
+    -- 补全窗口已打开
+    -- 判断当前命令行上的最后一个单词是否和item的选中项匹配
+    -- 不匹配则补全选中项
+    -- 匹配则选中下一项
+    if cmp.visible() then
+      local entry = cmp.get_selected_entry()
+      local cmdline_text = vim.fn.getcmdline()
+      local cmdline_words = vim.split(cmdline_text, " ")
+      if entry and cmdline_words[#cmdline_words] ~= entry:get_word() then
+        cmp_selected()
+      else
+        cmdlime_next()()
+      end
+    else
+      -- 补全弹窗未打开
+      -- 直接打开补全
+      -- 补全item只有一项，则直接完成补全
+      -- 否则补全第一项
       cmp.mapping.complete()()
+      local entries = cmp.get_entries()
+      if entries and #entries > 0 then
+        if #entries == 1 then
+          cmp.mapping.confirm(confirm_opts)()
+        else
+          cmp_selected()
+        end
+      end
     end
   end},
-  ["<S-Tab>"] = {c = function () end} -- 禁用向上选择的功能
+  ["<S-Tab>"] = {c = cmdlime_prev()}
 }
 
 return {
