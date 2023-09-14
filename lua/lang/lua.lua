@@ -1,9 +1,3 @@
--- lua 文件单独配置
-
-vim.opt_local.tabstop = 2
-vim.opt_local.shiftwidth = 2
-vim.opt_local.expandtab = true
-
 --[[
 在vim内执行lua代码，实现方式默认调用lua命令
 

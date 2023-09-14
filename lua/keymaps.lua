@@ -58,9 +58,6 @@ nmap("<esc>", "<cmd>noh<cr><esc>", "base: Clear lighlight search")
 -- Ctrl+s保存
 map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", "base: Save file")
 
--- 取消高亮
-nmap("<leader>n", "<Esc>:nohlsearch<CR>")
-
 -- 添加保存存档点
 imap(",", ",<c-g>u", "base: Add undo break-points")
 imap(".", ".<c-g>u", "base: Add undo break-points")

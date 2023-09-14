@@ -63,3 +63,17 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.relativenumber = false
 	end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "lua",
+	callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.expandtab = true
+
+    -- 加载lua文件相关快捷键
+    if not package.loaded["lang.lua"] then
+      require("lang.lua")
+    end
+	end,
+})
