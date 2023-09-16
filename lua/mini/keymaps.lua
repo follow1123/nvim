@@ -123,3 +123,6 @@ imap("<C-j>", "<C-n>", "") -- 修改补全弹窗的快捷键
 imap("<C-k>", "<C-p>", "")
 imap("<C-n>", "<Nop>", "") -- 进入insert模式下禁用
 imap("<C-p>", "<Nop>", "")
+
+nmap("<M-e>", "<cmd>lua require('mini.extensions.comment').toggle()<cr>", "base: Comment line")
+vmap("<M-e>", "<cmd>lua require('mini.extensions.comment').visual_toggle()<cr>", "base: Comment line selected")
