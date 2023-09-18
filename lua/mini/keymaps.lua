@@ -127,4 +127,7 @@ imap("<C-p>", "<Nop>", "")
 nmap("<M-e>", "<cmd>lua require('mini.extensions.comment').toggle()<cr>", "base: Comment line")
 vmap("<M-e>", "<cmd>lua require('mini.extensions.comment').visual_toggle()<cr>", "base: Comment line selected")
 
-nmap("<M-4>", "<cmd>lua require('mini.extensions.terminal').toggle_below()<cr>", "base: Open below terminal")
+nmap("<M-4>", "<cmd>lua require('mini.extensions.terminal').toggle('below_term')<cr>", "base: Open below terminal")
+nmap("<C-\\>", "<cmd>lua require('mini.extensions.terminal').toggle('full_term')<cr>", "base: Open full terminal")
+nmap("<M-6>", "<cmd>lua require('mini.extensions.terminal').toggle('lazygit_term')<cr>", "base: Open lazygit terminal")
+nmap("<M-7>", "<cmd>lua require('mini.extensions.terminal').toggle('lf_term')<cr>", "base: Open lf terminal")
