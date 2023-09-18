@@ -126,3 +126,5 @@ imap("<C-p>", "<Nop>", "")
 
 nmap("<M-e>", "<cmd>lua require('mini.extensions.comment').toggle()<cr>", "base: Comment line")
 vmap("<M-e>", "<cmd>lua require('mini.extensions.comment').visual_toggle()<cr>", "base: Comment line selected")
+
+nmap("<M-4>", "<cmd>lua require('mini.extensions.terminal').toggle_below()<cr>", "base: Open below terminal")
