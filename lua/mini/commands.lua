@@ -5,9 +5,6 @@
 -- 打开设置
 vim.cmd("command! Setting :e " .. _G.CONFIG_PATH .. "/init_min.lua")
 
--- 格式化
-vim.cmd("command! Format gg=G")
-
 -- 打开终端
 if _G.IS_WINDOWS then
   vim.cmd("command! TermOpen term pwsh")
@@ -46,3 +43,6 @@ if _G.IS_WINDOWS then
   end, { desc = "save readonly file" })
 end
 
+
+-- 默认格式化方式，以缩进格式化
+vim.api.nvim_create_user_command("Format", "lua require('mini.extensions.formatter').format()", {bang = true})
