@@ -60,7 +60,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- lua 文件单独配置
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "lua",
+  pattern = {"lua", "json", "xml"},
   callback = function()
     -- 设置lua文件的tab宽度
     vim.opt_local.tabstop = 2
