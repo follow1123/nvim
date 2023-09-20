@@ -77,39 +77,7 @@ nmap("<C-u>", "<C-u>zz", "base: Scroll up and page center")
 nmap("n", "nzz", "base: Search next and page center")
 nmap("N", "Nzz", "base: Search previous and page center")
 
--- 快捷关闭窗口或Buffer
--- 如果当前窗口的buffer是共享的，则只关闭当前窗口，否则直接关闭当前的buffer
--- 如果当前buffer是最后一个listed的buffer则提示使用:q方式关闭
-nmap("<M-q>", function ()
-  local cur_bufnr = vim.api.nvim_get_current_buf()
-  local listed_buf = vim.fn.getbufinfo({buflisted = 1})
-  local is_listed_buf = false
-  for _, buf in ipairs(listed_buf) do
-    if buf.bufnr == cur_bufnr then
-      --  如果当前窗口是listed的buffer，并且是Command Line窗口，或有共享当前buffer的窗口，则使用wincmd c关闭窗口
-      if #buf.windows > 1 or string.match(buf.name, "Command Line") then
-        vim.cmd("wincmd c")
-        return
-      else
-        is_listed_buf = true
-        break
-      end
-    end
-  end
-  -- 判断是否为listed的buffer
-  if is_listed_buf then
-    -- 判断listed的buffer的数量是否大于1
-    if #listed_buf > 1 then
-      vim.cmd("bdelete!")
-    else
-      -- 否则提示使用:q方式关闭
-      vim.notify("is last buffer, use :q to exit vim", vim.log.levels.WARN)
-    end
-  -- 不是listed的buffer则使用关闭窗口的方式关闭
-  else
-    vim.cmd("wincmd c")
-  end
-end, "base: Close window or buffer")
+nmap("<M-q>", "<cmd>lua require('mini.extensions').smart_quit()<cr>", "base: Close window or buffer")
 
 nmap("<M-1>", "<cmd>lua require('mini.netrw').toggle()<cr>", "base: Open Netrw file manager")
 
@@ -118,12 +86,17 @@ nmap("<M-f>", ":find ", {
   silent = false
 })
 
-
 imap("<C-j>", "<C-n>", "") -- 修改补全弹窗的快捷键
 imap("<C-k>", "<C-p>", "")
 imap("<C-n>", "<Nop>", "") -- 进入insert模式下禁用
 imap("<C-p>", "<Nop>", "")
 
+map("c", "<C-a>", function() vim.api.nvim_input("<Home>") end, "emacs keymap")
+map("c", "<C-e>", function() vim.api.nvim_input("<End>") end, "emacs keymap")
+map("c", "<C-f>", function() vim.api.nvim_input("<Right>") end, "emacs keymap")
+map("c", "<C-b>", function() vim.api.nvim_input("<Left>") end, "emacs keymap")
+map("c", "<M-f>", function() vim.api.nvim_input("<C-Right>") end, "emacs keymap")
+map("c", "<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
 nmap("<M-e>", "<cmd>lua require('mini.extensions.comment').toggle()<cr>", "base: Comment line")
 vmap("<M-e>", "<cmd>lua require('mini.extensions.comment').visual_toggle()<cr>", "base: Comment line selected")
 
