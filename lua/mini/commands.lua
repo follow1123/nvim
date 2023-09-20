@@ -2,12 +2,8 @@
 -- #        command定义      #
 -- ###########################
 
--- 打开终端
-if _G.IS_WINDOWS then
-  vim.cmd("command! TermOpen term pwsh")
-else
-  vim.cmd("command! TermOpen term zsh")
-end
+-- 新打开终端
+vim.api.nvim_create_user_command("TermNew", "lua require('mini.extensions.terminal').new()", { desc = "New terminal" })
 
 -- windows下保存管理员权限文件
 if _G.IS_WINDOWS then

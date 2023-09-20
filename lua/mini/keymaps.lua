@@ -97,10 +97,13 @@ map("c", "<C-f>", function() vim.api.nvim_input("<Right>") end, "emacs keymap")
 map("c", "<C-b>", function() vim.api.nvim_input("<Left>") end, "emacs keymap")
 map("c", "<M-f>", function() vim.api.nvim_input("<C-Right>") end, "emacs keymap")
 map("c", "<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
+
+-- 自定义扩展功能
+-- 注释
 nmap("<M-e>", "<cmd>lua require('mini.extensions.comment').toggle()<cr>", "base: Comment line")
 vmap("<M-e>", "<cmd>lua require('mini.extensions.comment').visual_toggle()<cr>", "base: Comment line selected")
 
+-- 终端
 nmap("<M-4>", "<cmd>lua require('mini.extensions.terminal').toggle('below_term')<cr>", "base: Open below terminal")
 nmap("<C-\\>", "<cmd>lua require('mini.extensions.terminal').toggle('full_term')<cr>", "base: Open full terminal")
 nmap("<M-6>", "<cmd>lua require('mini.extensions.terminal').toggle('lazygit_term')<cr>", "base: Open lazygit terminal")
-nmap("<M-7>", "<cmd>lua require('mini.extensions.terminal').toggle('lf_term')<cr>", "base: Open lf terminal")
