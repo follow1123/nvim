@@ -1,13 +1,17 @@
-_G.LSP_MAP = {
+local ft_lsp= {
   lua = "lua_ls",
   rust = "rust_analyzer",
-  ps1 = "powershell_es",
 }
+
+if _G.IS_WINDOWS then
+  ft_lsp["ps1"] = "powershell_es"
+end
+
 return {
   {"folke/neodev.nvim", lazy = true}, -- neovim开发提示
   {
     "neovim/nvim-lspconfig",
-    ft = vim.tbl_keys(_G.LSP_MAP),
+    ft = vim.tbl_keys(ft_lsp),
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
@@ -27,7 +31,7 @@ return {
       })
       require("lspconfig.ui.windows").default_options.border = "single"
       require("mason-lspconfig").setup({
-        ensure_installed = vim.tbl_values(_G.LSP_MAP),
+        ensure_installed = vim.tbl_values(ft_lsp),
         handlers = {
           function(server_name)
             require("lspconfig")[server_name].setup {
