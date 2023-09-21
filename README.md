@@ -7,7 +7,6 @@
 
 * [LunarVim/Colorschemes](https://github.com/LunarVim/Colorschemes)
 * [nvim-lualine/lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
-* [akinsho/bufferline.nvim](https://github.com/akinsho/bufferline.nvim)
 * [kyazdani42/nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons)
 * [lukas-reineke/indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)
 * [norcalli/nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua)
@@ -18,6 +17,7 @@
 * [williamboman/mason.nvim](https://github.com/williamboman/mason.nvim)
 * [williamboman/mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)
 * [folke/neodev.nvim](https://github.com/folke/neodev.nvim)
+* [j-hui/fidget.nvim](https://github.com/j-hui/fidget.nvim)
 
 ### Completion
 
@@ -33,14 +33,11 @@
 ### Treesitter
 
 * [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-* [p00f/nvim-ts-rainbow](https://github.com/p00f/nvim-ts-rainbow)
-
 
 ### Telescope
 
 * [nvim-telescope/telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
 * [nvim-lua/plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
-* [nvim-telescope/telescope-file-browser.nvim](https://github.com/nvim-telescope/telescope-file-browser.nvim)
 
 ### Project
 
@@ -52,7 +49,6 @@
 
 * [folke/which-key.nvim](https://github.com/folke/which-key.nvim)
 * [iamcco/markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
-* [goolord/alpha-nvim](https://github.com/goolord/alpha-nvim)
 * [windwp/nvim-autopairs](https://github.com/windwp/nvim-autopairs)
 * [ethanholz/nvim-lastplace](https://github.com/ethanholz/nvim-lastplace)
 * [utilyre/barbecue.nvim](https://github.com/utilyre/barbecue.nvim)
