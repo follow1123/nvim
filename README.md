@@ -35,9 +35,6 @@
 * [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 * [p00f/nvim-ts-rainbow](https://github.com/p00f/nvim-ts-rainbow)
 
-### Terminal
-
-* [akinsho/toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
 
 ### Telescope
 
