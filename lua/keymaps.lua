@@ -84,7 +84,7 @@ nmap("<leader>1", "<cmd>Lazy<cr>")
 nmap("<leader>2", "<cmd>LspInfo<cr>")
 nmap("<leader>3", "<cmd>Mason<cr>")
 
-nmap("<M-q>", "<cmd>lua require('mini.extensions').smart_quit()<cr>", "base: Close window or buffer")
+nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
 
 -- 终端
 nmap("<C-\\>", "<cmd>lua require('extensions.terminal').toggle('full_term')<cr>", "base: Open full terminal")

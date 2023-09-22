@@ -15,7 +15,7 @@ return {
 		-- 插件配置
 		local api = require("nvim-tree.api")
 		require("nvim-tree").setup {
-      disable_netrw = true, -- 禁用默认netrw插件，已在plugin_init文件内禁用
+      disable_netrw = false, -- 禁用默认netrw插件，已在plugin_init文件内禁用
       hijack_netrw = true, -- 使用nvim-tree代替netrw
       sync_root_with_cwd = true,
       respect_buf_cwd = true,
