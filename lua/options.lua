@@ -4,7 +4,7 @@
 
 vim.opt.number = true                             -- 行号
 vim.opt.relativenumber = true                     -- 设置相对行号
-vim.opt.clipboard = "unnamedplus"                 -- 设置和剪贴板共用
+-- vim.opt.clipboard = "unnamedplus"                 -- 设置和剪贴板共用
 vim.opt.tabstop = 4	                              -- tab键相关
 vim.opt.shiftwidth = 4                            -- shift宽度
 vim.opt.smartindent = true                        -- 智能缩进
