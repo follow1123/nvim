@@ -61,8 +61,10 @@ ext.smart_quit = function ()
   end
   -- 判断是否为listed的buffer
   if not is_listed_buf then
-    vim.cmd("wincmd c")
-    return
+    local ok, _ = pcall(vim.api.nvim_command, "wincmd c")
+    if not ok then
+      vim.cmd("bdelete!")
+    end
   end
   -- 判断是否还有其他的buffer
   if #listed_buf <= 1 then

@@ -16,34 +16,59 @@ local terminal = {
       vim.notify(string.format("no '%s' terminal", term_name), vim.log.levels.WARN)
     end
   end,
+  send_msg = function (term_name, msg)
+    local term = term_map[term_name]
+    local instance = term.instance
+    if instance and instance.term_id then
+      if type(msg) == "table" then
+        for _, m in ipairs(msg) do
+          vim.api.nvim_chan_send(instance.term_id, m)
+        end
+      else
+        vim.api.nvim_chan_send(instance.term_id, msg)
+      end
+    end
+  end,
   -- 新建终端，新建的终端不被管理，需要手动关闭
   new = function()
     vim.cmd("term " .. shell)
   end
 }
 
+local function global_height()
+  return vim.api.nvim_get_option("lines")
+end
+
+local function global_width()
+  return vim.api.nvim_get_option("columns")
+end
+
+local full_window_opts = {
+    relative = 'editor',
+    width = global_width(),
+    height = global_height(),
+    row = 0,
+    col = 0,
+    style = 'minimal',
+    border = 'none',
+}
+
+local function open_full_window(enter, bufnr)
+  return vim.api.nvim_open_win(bufnr, enter, full_window_opts)
+end
+
+local function create_term_buf()
+  local term_buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_option(term_buf, "modifiable", false)
+  vim.api.nvim_buf_set_option(term_buf, "filetype", "fterm")
+  return term_buf
+end
+
 -- ######################## 终端事件
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "term://*" .. shell,
   callback = function(t)
     buf_map("t", "<Esc>", [[<C-\><C-n>]], "Quit terminal mode", t.buf)
-    buf_map("t", "<M-q>", "<cmd>bdelete!<cr>", "Quit terminal", t.buf)
-  end
-})
-
-vim.api.nvim_create_autocmd("TermEnter", {
-  pattern = "*",
-  callback = function()
-    vim.opt_local.laststatus = 0
-    vim.opt_local.cmdheight = 0
-  end
-})
-
-vim.api.nvim_create_autocmd("TermLeave", {
-  pattern = "*",
-  callback = function()
-    vim.opt_local.laststatus = 2
-    vim.opt_local.cmdheight = 1
   end
 })
 
@@ -58,40 +83,45 @@ term_map.below_term = {
   open = function()
     local term = term_map.below_term
     local default_winheight = term.default_winheight
-    vim.cmd(string.format("%dsplit term://%s", default_winheight, shell))
-    local bufnr = vim.api.nvim_get_current_buf()
-    buf_map("t", "<M-4>", term.toggle, "Toggle below terminal", bufnr)
+    vim.cmd(string.format("%dsplit", default_winheight))
+    local win_id = vim.api.nvim_get_current_win()
+    local bufnr = create_term_buf()
+    vim.api.nvim_win_set_buf(win_id, bufnr)
+    local term_id = vim.fn.termopen(shell, {
+      on_exit = function(_, code)
+        if code == 0 then
+          vim.api.nvim_win_close(term.instance.win_id, true)
+          vim.api.nvim_buf_delete(term.instance.bufnr, { force = true })
+          term.instance = nil
+        end
+      end
+    })
     buf_map("t", "<C-k>", [[<C-\><C-n><C-w>k]], "Move cursor up", bufnr)
+    buf_map("t", "<M-4>", term.toggle, "Toggle below terminal", bufnr)
     buf_map("t", "<C-h>", [[<C-\><C-n><C-w>h]], "Move cursor left", bufnr)
     buf_map("t", "<C-up>", [[<C-\><C-n><C-w>+i]], "Increase window size", bufnr)
     buf_map("t", "<C-down>", [[<C-\><C-n><C-w>-i]], "Decrease window size", bufnr)
     term.instance = {
       winheight = default_winheight,
-      bufnr = bufnr
+      bufnr = bufnr,
+      term_id = term_id,
+      win_id = win_id,
     }
-    -- 由于这个终端是一个分屏的终端，所以需要在离开窗口时也将底部状态栏相关高度设置为0
-    vim.api.nvim_create_autocmd("WinLeave", {
-      buffer = bufnr,
-      callback = function ()
-        vim.opt_local.laststatus = 0
-        vim.opt_local.cmdheight = 0
-      end
-    })
   end,
   toggle = function()
-    local below_term = term_map.below_term
-    local instance = below_term.instance
-    -- 没用终端则直接创建
-    if not instance or not vim.tbl_contains(vim.api.nvim_list_bufs(),instance.bufnr) then
-      below_term.open()
+    local term = term_map.below_term
+    local instance = term.instance
+    -- 不存在buffer则直接打开
+    if not instance or not vim.fn.getbufinfo(instance.bufnr) then
+      term.open()
       return
     end
-    -- 有则切换终端
-    local winid = vim.fn.bufwinid(instance.bufnr)
-    if winid > 0 then
-      vim.api.nvim_win_close(winid, true) -- 隐藏
+    -- 当前buffer不是term buffer则切换到term buffer
+    if vim.api.nvim_get_current_buf() == instance.bufnr then
+      vim.api.nvim_win_close(instance.win_id, true)
     else
       vim.cmd(string.format("%dsplit | buffer %s", instance.winheight, instance.bufnr)) -- 显示
+      instance.win_id = vim.api.nvim_get_current_win()
     end
   end
 }
@@ -100,34 +130,37 @@ term_map.below_term = {
 term_map.full_term = {
   open = function ()
     local term = term_map.full_term
-    vim.cmd("term " .. shell)
-    local bufnr = vim.api.nvim_get_current_buf()
+    local bufnr = create_term_buf()
+    local win_id = open_full_window(true, bufnr)
+    local term_id = vim.fn.termopen(shell, {
+      on_exit = function(_, code)
+        if code == 0 then
+          vim.api.nvim_win_close(term.instance.win_id, true)
+          vim.api.nvim_buf_delete(term.instance.bufnr, { force = true })
+          term.instance = nil
+        end
+      end
+    })
     buf_map("t", "<C-\\>", term.toggle, "Toggle terminal", bufnr)
     term.instance = {
-      bufnr = bufnr
+      bufnr = bufnr,
+      term_id = term_id,
+      win_id = win_id,
     }
   end,
   toggle = function()
     local term = term_map.full_term
     local instance = term.instance
-    local listed_bufs = vim.fn.getbufinfo({buflisted = 1})
     -- 不存在buffer则直接打开
-    if not instance or #vim.tbl_filter(function(value) return value.bufnr == instance.bufnr end, listed_bufs) == 0 then
+    if not instance or not vim.fn.getbufinfo(instance.bufnr) then
       term.open()
       return
     end
     -- 当前buffer不是term buffer则切换到term buffer
-    if vim.api.nvim_get_current_buf() ~= instance.bufnr then
-      vim.cmd("b" .. instance.bufnr)
-      return
-    end
-    -- 有其他buffer可以切换则直接切换，没有则提示
-    if #listed_bufs > 1 then
-      -- 使用按键模拟的方式切换到最近的buffer，使用其他方式会导致切换回cursorline无法显示
-      -- 由于已经将<C-\><C-n>映射为<esc>键，所以直接模拟esc键
-      vim.api.nvim_input([[<esc><C-^>]])
+    if vim.api.nvim_get_current_buf() == instance.bufnr then
+      vim.api.nvim_win_close(instance.win_id, true)
     else
-      vim.notify("no other buffer", vim.log.levels.INFO)
+      instance.win_id = open_full_window(true, instance.bufnr)
     end
   end
 }
@@ -138,34 +171,37 @@ if vim.v.shell_error == 0 then
   term_map.lazygit_term = {
     open = function ()
       local term = term_map.lazygit_term
-      vim.cmd("term lazygit")
-      local bufnr = vim.api.nvim_get_current_buf()
-      buf_map("t", "<M-q>", "<cmd>bdelete!<cr>", "Quit lazygit", bufnr)
+      local bufnr = create_term_buf()
+      local win_id = open_full_window(true, bufnr)
+      local term_id = vim.fn.termopen("lazygit", {
+        on_exit = function(_, code)
+          if code == 0 then
+            vim.api.nvim_win_close(term.instance.win_id, true)
+            vim.api.nvim_buf_delete(term.instance.bufnr, { force = true })
+            term.instance = nil
+          end
+        end
+     })
       buf_map("t", "<M-6>", term.toggle, "Toggle lazygit", bufnr)
       term.instance = {
-        bufnr = bufnr
+        bufnr = bufnr,
+        term_id = term_id,
+        win_id = win_id,
       }
     end,
     toggle = function()
       local term = term_map.lazygit_term
       local instance = term.instance
-      local listed_bufs = vim.fn.getbufinfo({buflisted = 1})
       -- 不存在buffer则直接打开
-      if not instance or #vim.tbl_filter(function(value) return value.bufnr == instance.bufnr end, listed_bufs) == 0 then
+      if not instance or not vim.fn.getbufinfo(instance.bufnr) then
         term.open()
         return
       end
       -- 当前buffer不是term buffer则切换到term buffer
-      if vim.api.nvim_get_current_buf() ~= instance.bufnr then
-        vim.cmd("b" .. instance.bufnr)
-        return
-      end
-      -- 有其他buffer可以切换则直接切换，没有则提示
-      if #listed_bufs > 1 then
-        -- 使用按键模拟的方式切换到最近的buffer，使用其他方式会导致切换回cursorline无法显示
-        vim.api.nvim_input([[<C-\><C-n><C-^>]])
+      if vim.api.nvim_get_current_buf() == instance.bufnr then
+        vim.api.nvim_win_close(instance.win_id, true)
       else
-        vim.notify("no other buffer", vim.log.levels.INFO)
+        instance.win_id = open_full_window(true, instance.bufnr)
       end
     end
   }
