@@ -1,3 +1,4 @@
+-- lua lsp 配置
 local lua_ls = {
   settings = {
     Lua = {
@@ -13,19 +14,38 @@ local lua_ls = {
     },
   }
 }
--- local curpo = vim.api.nvim_get_runtime_file("", true)
--- for _, value in ipairs(curpo) do
---   print(value)
--- end
 
--- 在nvim配置路径下的lsp配置 
-local pattern = _G.IS_WINDOWS and "\\" or "/"
-local config_path = _G.CONFIG_PATH .. pattern
-local cur_path = vim.fn.expand("%:p:h") .. pattern
+-- 判断当前路径是否是配置路径或则插件路径
+local function check_is_config_or_plugin_path()
+  local cur_path = vim.fs.normalize(vim.fn.expand("%:p:h"))
+  local config_path = vim.fs.normalize(_G.CONFIG_PATH)
+  return cur_path == config_path or (#cur_path >= #config_path and string.match(cur_path, "^" .. config_path .. "/")) or
+    #vim.fs.find({"lua", "README.md", "LICENSE"}, {
+      path = cur_path,
+      upward = true,
+      limit = 3,
+    }) == 3
+end
 
-if #cur_path >= #config_path and string.match(cur_path, "^" .. config_path) then
+--  开启neodev功能
+local function neodev()
+  local ok, m = pcall(require, "neodev")
+  if ok then
+    m.setup()
+  end
   require("neodev").setup()
   lua_ls.settings.Lua.workspace.library = vim.list_extend(vim.api.nvim_get_runtime_file("", true), {"${3rd}/luassert/library", "${3rd}/luv/library"})
+  vim.cmd("LspRestart")
 end
+
+if check_is_config_or_plugin_path() then
+  neodev()
+end
+
+-- 使用Neodev直接开启neodev功能
+vim.api.nvim_create_user_command("Neodev", neodev, {
+  desc = "load neodev plugin and add neovim library path"
+})
+
 return lua_ls
 
