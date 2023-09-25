@@ -48,6 +48,8 @@ ext.smart_quit = function ()
   local cur_bufnr = vim.api.nvim_get_current_buf()
   local listed_buf = vim.fn.getbufinfo({buflisted = 1})
   local is_listed_buf = false
+  local win_id_list = vim.api.nvim_list_wins()
+  local listed_visible_bufnr = {}
   for _, buf in ipairs(listed_buf) do
     if buf.bufnr == cur_bufnr then
       --  如果当前窗口是listed的buffer，并且是Command Line窗口，或有共享当前buffer的窗口，则使用wincmd c关闭窗口
@@ -56,7 +58,9 @@ ext.smart_quit = function ()
         return
       end
       is_listed_buf = true
-      break
+    end
+    if #buf.windows > 0 and vim.tbl_contains(win_id_list, buf.windows[1]) then
+      table.insert(listed_visible_bufnr, buf.bufnr)
     end
   end
   -- 判断是否为listed的buffer
@@ -65,14 +69,27 @@ ext.smart_quit = function ()
     if not ok then
       vim.cmd("bdelete!")
     end
+    return
   end
   -- 判断是否还有其他的buffer
   if #listed_buf <= 1 then
     vim.notify("is last buffer, use :q to exit vim", vim.log.levels.WARN)
     return
   end
+
+  -- 当前buffer是一个分屏，则关闭当前窗口
+  if #listed_visible_bufnr > 1 and vim.tbl_contains(listed_visible_bufnr, cur_bufnr) then
+    vim.cmd("wincmd c")
+    return
+  end
+  -- 查找到最后一个打开的buffer编号，并跳转
+  local last_bufnr = listed_buf[#listed_buf].bufnr
+  if last_bufnr == cur_bufnr then
+    last_bufnr = listed_buf[#listed_buf - 1].bufnr
+  end
+  vim.cmd("b " .. last_bufnr)
   -- 直接删除buffer
-  vim.cmd("bdelete!")
+  vim.cmd("bdelete! " .. cur_bufnr)
 end
 
 return ext
