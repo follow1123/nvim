@@ -30,10 +30,15 @@ term_config.terms = {
     end,
     toggle = function()
       local term = term_config.terms.below_term
-      term_utils.term_toggle(term, function (instance)
-        vim.cmd(string.format("%dsplit | buffer %s", instance.winheight, instance.bufnr)) -- 显示
-        instance.win_id = vim.api.nvim_get_current_win()
-      end)
+      term_utils.term_toggle(term,
+        function (instance)
+          vim.cmd(string.format("%dsplit | buffer %s", instance.winheight, instance.bufnr)) -- 显示
+          instance.win_id = vim.api.nvim_get_current_win()
+        end,
+        function (instance)
+          instance.winheight = vim.api.nvim_win_get_height(instance.win_id)
+          vim.api.nvim_win_close(instance.win_id, true)
+        end)
     end
   },
 
@@ -64,18 +69,7 @@ if vim.v.shell_error == 0 then
     end,
     toggle = function()
       local term = term_config.terms.lazygit_term
-      term_utils.term_toggle(term, function (instance)
-        instance.win_id = term_utils.open_full_window(true, instance.bufnr)
-        -- 解决window下ui向左偏移的问题
-        if _G.IS_WINDOWS then
-          require("extensions.terminal").send_msg("lazygit_term", {
-            ":cls\r",
-          })
-          vim.defer_fn(function ()
-            require("extensions.terminal").send_msg("lazygit_term", "\r")
-          end, 50)
-        end
-      end)
+      term_utils.term_toggle(term)
     end
   }
 end

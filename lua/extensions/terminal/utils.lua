@@ -39,15 +39,14 @@ term_utils.term_open = function(term, cmd, open, exit)
     win_id = term_utils.open_full_window(true, bufnr)
   end
   local term_id = vim.fn.termopen(cmd, {
+    detach = 1,
     on_exit = function(_, code)
       if type(exit) == "function" then
         exit(term, code)
         return
       end
-      if code == 0 then
-        vim.api.nvim_buf_delete(term.instance.bufnr, { force = true })
-        term.instance = nil
-      end
+      vim.api.nvim_buf_delete(term.instance.bufnr, { force = true })
+      term.instance = nil
     end
   })
   term.instance = {
@@ -92,6 +91,7 @@ term_utils.term_toggle = function(term, show, hide)
       show(instance)
     else
       instance.win_id = term_utils.open_full_window(true, instance.bufnr)
+      vim.cmd("normal ^")
     end
   end
 end
