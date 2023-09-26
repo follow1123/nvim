@@ -21,6 +21,10 @@ return {
     })
   end,
   config = function()
+    -- 清理Windows下的\r符号
+    local function clear_windows_end_char()
+      vim.cmd([[silent %s/\r$//g]])
+    end
     require("gitsigns").setup {
       signs = {
         add = { text = "│" },
@@ -84,14 +88,20 @@ return {
         buf_map("v", "<leader>gr", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end, "git: Reset hunk", bufnr)
         buf_map("n", "<leader>gS", gs.stage_buffer, "git: Stage buffer", bufnr)
         buf_map("n", "<leader>gu", gs.undo_stage_hunk, "git: Undo stage buffer", bufnr)
-        buf_map("n", "<leader>gR", gs.reset_buffer, "git: Reset buffer", bufnr)
+        buf_map("n", "<leader>gR", function()
+          gs.reset_buffer()
+          if _G.IS_WINDOWS then
+            clear_windows_end_char()
+          end
+        end, "git: Reset buffer", bufnr)
 
         -- 预览
         buf_map("n", "<leader>gp", gs.preview_hunk, "git: Preview hunk", bufnr)
         buf_map("n", "<leader>gb", function() gs.blame_line{full=true} end, "git: Preview blame line", bufnr)
         -- gitdiff
-        buf_map("n", "<leader>gd", gs.diffthis, "git: Diff this", bufnr)
-        buf_map("n", "<leader>gD", function() gs.diffthis("~") end, "git: Diff this", bufnr)
+        buf_map("n", "<leader>gd", function() gs.diffthis(nil, {
+          split = "belowright"
+        }) end, "git: Diff this", bufnr)
         -- buf_map("n", "<leader>gd", gs.toggle_deleted)
         -- 开关
         buf_map("n", "<leader>g1", gs.toggle_current_line_blame, "git: Toggle current line blame", bufnr)
@@ -100,6 +110,18 @@ return {
       end
     }
 
+    if _G.IS_WINDOWS then
+      vim.api.nvim_create_autocmd("BufWinEnter", {
+        pattern = "gitsigns://*",
+        callback = function(e)
+          local bufnr = e.buf
+          local buf_map = require("utils.keymap").buf_map
+          vim.api.nvim_buf_call(bufnr, clear_windows_end_char)
+          vim.api.nvim_buf_set_option(bufnr, "modifiable", false)
+          buf_map("n", "<M-q>", "<cmd>q!<cr>", "quit not write", bufnr)
+        end
+      })
+    end
     -- diff设置
     -- diff颜色加深版
     -- Add #536232 Change #1c7ca1 Delete #771b1b
