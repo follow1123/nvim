@@ -75,7 +75,7 @@ end
 term_utils.term_toggle = function(term, show, hide)
   local instance = term.instance
   -- 不存在buffer则直接打开
-  if not instance or #vim.fn.getbufinfo(instance.bufnr) == 0 then
+  if not instance or vim.api.nvim_buf_is_valid(instance.bufnr) then
     term.open()
     return
   end
