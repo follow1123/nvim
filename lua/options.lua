@@ -4,7 +4,7 @@
 
 vim.opt.number = true                             -- 行号
 vim.opt.relativenumber = true                     -- 设置相对行号
--- vim.opt.clipboard = "unnamedplus"                 -- 设置和剪贴板共用
+vim.opt.clipboard = "unnamedplus"                 -- 设置和剪贴板共用
 vim.opt.tabstop = 4	                              -- tab键相关
 vim.opt.shiftwidth = 4                            -- shift宽度
 vim.opt.smartindent = true                        -- 智能缩进
@@ -23,7 +23,7 @@ vim.opt.foldlevel = 99                            -- 最大折叠深度
 vim.opt.syntax = "on"                             -- 语法检测
 vim.opt.splitbelow = true                         -- 分割水平新窗口默认在下边
 vim.opt.splitright = true                         -- 分割垂直新窗口默认在右
-vim.opt.guifont = "JetBrainsMono Nerd Font:h14"   -- gui字体
+-- vim.opt.guifont = "JetBrainsMono Nerd Font:h14"   -- gui字体
 vim.opt.shell = _G.IS_WINDOWS and "cmd" or "zsh"  -- 目前windows下设置后toggleterm插件就无法使用了
 vim.opt.undofile = true                           -- 启用保存undofile的功能
 vim.opt.fillchars = { eob = ' ' }                 -- 去掉没有文字的行左边会显示的～号，

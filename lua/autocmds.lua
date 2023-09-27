@@ -41,7 +41,9 @@ if not _G.IS_GUI then
 		pattern = "*",
     nested = true,
 		callback = function()
-      vim.cmd("set guicursor+=a:ver25,a:blinkon1,a:blinkoff1")
+      vim.opt.guicursor:append("a:ver25")
+      vim.opt.guicursor:append("a:blinkon1")
+      vim.opt.guicursor:append("a:blinkoff1")
 		end,
 	})
 end
@@ -51,7 +53,6 @@ end
 vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 	callback = function()
-    vim.fn.setreg("+", vim.fn.getreg("0"))
 		vim.highlight.on_yank({ timeout = 100, })
 	end,
 })
