@@ -78,3 +78,13 @@ vim.api.nvim_create_autocmd("FileType", {
     end
 	end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "rust",
+	callback = function()
+    -- 加载lua文件相关快捷键
+    if not package.loaded["lang.rust"] then
+      require("lang.rust")
+    end
+	end,
+})
