@@ -24,10 +24,11 @@ local function rust_test()
   end
   term_toggle()
   test_file = string.gsub(test_file, "^/tests/", "")
-  terminal.send_msg(term_name, string.format("cargo test --test %s -- --nocapture --color always\r", test_file))
+  terminal.send_msg(term_name, string.format("cargo test --test %s -- --nocapture --color always\r", test_file))
 end
 
 local function rust_run()
+  vim.cmd("w")
   term_toggle()
   terminal.send_msg(term_name, "cargo run\r")
 end

@@ -13,7 +13,9 @@ return {
   },
   config = function()
     local project_session = require("project_session")
-    project_session.setup()
+    project_session.setup({
+      options = { "buffers", "curdir", "tabpages", "winsize", "folds" },
+    })
     if _G.IS_GUI then
       project_session.load_last()
       pcall(vim.api.nvim_command, "TSEnable highlight")
