@@ -34,6 +34,12 @@ terminal.send_msg = function (term_name, msg)
   end
 end
 
+terminal.get_term = function(term_name)
+  if term_name then
+    return terms[term_name]
+  end
+end
+
 -- ######################## 终端事件
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "term://*" .. shell,
