@@ -2,12 +2,22 @@
 -- #        按键映射         #
 -- ###########################
 
-local keymap_util = require("mini.utils").keymap
+local function map(mode, lhs, rhs, opts)
+  opts = vim.fn.empty(opts) == 0 and opts or nil
+  local def_opts = { noremap = true, silent = true }
+  if type(opts) == "string" then
+    def_opts.desc = opts
+  elseif type(opts) == "table" then
+    def_opts = vim.tbl_extend("force", def_opts, opts)
+  end
+  vim.keymap.set(mode, lhs, rhs, def_opts)
+end
 
-local map = keymap_util.map
-local nmap = keymap_util.nmap
-local vmap = keymap_util.vmap
-local imap = keymap_util.imap
+local function nmap(lhs, rhs, opts) map("n", lhs, rhs, opts) end
+
+local function vmap(lhs, rhs, opts) map("v", lhs, rhs, opts) end
+
+local function imap(lhs, rhs, opts) map("i", lhs, rhs, opts) end
 
 -- 禁用翻页键
 nmap("<C-f>", "<Nop>", "base: Disable pagedown key")
@@ -77,7 +87,7 @@ nmap("<C-u>", "<C-u>zz", "base: Scroll up and page center")
 nmap("n", "nzz", "base: Search next and page center")
 nmap("N", "Nzz", "base: Search previous and page center")
 
-nmap("<M-q>", "<cmd>lua require('mini.extensions').smart_quit()<cr>", "base: Close window or buffer")
+nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
 
 nmap("<M-1>", "<cmd>lua require('mini.netrw').toggle()<cr>", "base: Open Netrw file manager")
 
@@ -100,10 +110,10 @@ map("c", "<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
 
 -- 自定义扩展功能
 -- 注释
-nmap("<M-e>", "<cmd>lua require('mini.extensions.comment').toggle()<cr>", "base: Comment line")
-vmap("<M-e>", "<cmd>lua require('mini.extensions.comment').visual_toggle()<cr>", "base: Comment line selected")
+nmap("<M-e>", "<cmd>lua require('extensions.comment').toggle()<cr>", "base: Comment line")
+vmap("<M-e>", "<cmd>lua require('extensions.comment').visual_toggle()<cr>", "base: Comment line selected")
 
 -- 终端
-nmap("<M-4>", "<cmd>lua require('mini.extensions.terminal').toggle('below_term')<cr>", "base: Open below terminal")
-nmap("<C-\\>", "<cmd>lua require('mini.extensions.terminal').toggle('full_term')<cr>", "base: Open full terminal")
-nmap("<M-6>", "<cmd>lua require('mini.extensions.terminal').toggle('lazygit_term')<cr>", "base: Open lazygit terminal")
+nmap("<M-4>", "<cmd>lua require('extensions.terminal').toggle('below_term')<cr>", "base: Open below terminal")
+nmap("<C-\\>", "<cmd>lua require('extensions.terminal').toggle('full_term')<cr>", "base: Open full terminal")
+nmap("<M-6>", "<cmd>lua require('extensions.terminal').toggle('lazygit_term')<cr>", "base: Open lazygit terminal")

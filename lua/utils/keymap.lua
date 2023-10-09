@@ -35,6 +35,7 @@ keymap.del_map = function(mode, lhs, bufnr)
   end
 end
 
+-- 配合lazy.nvim插件使用
 keymap.lazy_map = function(mode, lhs, rhs, opts)
   opts = vim.fn.empty(opts) == 0 and opts or nil
   local lazy_key = { lhs, rhs , mode = mode, noremap = true, silent = true}
@@ -46,17 +47,10 @@ keymap.lazy_map = function(mode, lhs, rhs, opts)
   return lazy_key
 end
 
-keymap.nmap = function(lhs, rhs, opts)
-  keymap.map("n", lhs, rhs, opts)
-end
+keymap.nmap = function(lhs, rhs, opts) keymap.map("n", lhs, rhs, opts) end
 
-keymap.vmap = function(lhs, rhs, opts)
-  keymap.map("v", lhs, rhs, opts)
-end
+keymap.vmap = function(lhs, rhs, opts) keymap.map("v", lhs, rhs, opts) end
 
-keymap.imap = function(lhs, rhs, opts)
-  keymap.map("i", lhs, rhs, opts)
-end
-
+keymap.imap = function(lhs, rhs, opts) keymap.map("i", lhs, rhs, opts) end
 
 return keymap

@@ -16,6 +16,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     local netrw_keymap_opt = { noremap = true, silent = true }
     vim.api.nvim_buf_set_keymap(0, "n", "<C-l>", "<C-w>l", netrw_keymap_opt) -- 设置ctrl+l移动窗口
+    vim.api.nvim_buf_set_keymap(0, "n", "<Tab>", "<Plug>NetrwLocalBrowseCheck", netrw_keymap_opt) -- tab打开或关闭目录树
   end
 })
 

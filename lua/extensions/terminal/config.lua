@@ -88,7 +88,7 @@ term_config.terms = {
     end
   },
 
-  -- ######################## 全屏终端
+  -- ######################## 全屏终端 full terminal
   full_term = {
     open = function ()
       local term = term_config.terms.full_term

@@ -19,4 +19,4 @@ require("mini.keymaps")
 require("mini.commands")
 require("mini.autocmds")
 -- 加载自动匹配括号的插件
-require("mini.extensions.autopairs").on()
+require("extensions.autopairs").on()
