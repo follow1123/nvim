@@ -40,6 +40,9 @@ return {
    ft = "markdown",
    config = function()
      vim.g.mkdp_browser = "chrome"
+     if _G.IS_LINUX then
+       vim.g.mkdp_browser = "google-chrome"
+     end
      vim.g.mkdp_filetypes = { "markdown" }
      -- 设置预览markdown快捷键
      nmap("<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", {
