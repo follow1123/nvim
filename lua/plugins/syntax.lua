@@ -1,5 +1,5 @@
 local enable_lang = {
-  "lua", "rust", "c", "json", "yaml", "toml", "markdown"
+  "lua", "rust", "c", "cpp", "json", "yaml", "toml", "markdown"
 }
 -- 语法插件
 return {

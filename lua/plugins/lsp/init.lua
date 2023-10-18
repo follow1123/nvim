@@ -1,6 +1,8 @@
 local ft_lsp= {
   lua = "lua_ls",
   rust = "rust_analyzer",
+  c = "clangd",
+  cpp = "clangd",
 }
 
 if _G.IS_WINDOWS then
