@@ -27,7 +27,7 @@ end
 -- 处理自动配置符号操作
 local function handle_char(input_char)
   local line = vim.api.nvim_get_current_line()
-  local cursor_col = vim.fn.col(".")
+  local cursor_col = vim.fn.col(".") - 1
   local prev_str = string.sub(line, 1, cursor_col)
   local next_str = string.sub(line, cursor_col + 1, #line)
   local pairs = autopairs.symbols[input_char]
