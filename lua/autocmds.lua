@@ -1,3 +1,9 @@
+-- 设置tab默认宽度和风格（是否使用空格代替）
+local function set_tab_style(width, expand)
+  vim.opt_local.tabstop = width
+  vim.opt_local.shiftwidth = width
+  vim.opt_local.expandtab = expand
+end
 -- 去除回车后注释下一行
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*",
@@ -69,9 +75,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "lua",
 	callback = function()
-    vim.opt_local.tabstop = 2
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.expandtab = true
+    set_tab_style(2, true)
 
     -- 加载lua文件相关快捷键
     if not package.loaded["lang.lua"] then
@@ -83,9 +87,25 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "rust",
 	callback = function()
-    -- 加载lua文件相关快捷键
+    -- 加载rust文件相关快捷键
     if not package.loaded["lang.rust"] then
       require("lang.rust")
     end
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "typescript", "javascript", "json", "html", "css", "less", "scss" },
+	callback = function()
+    -- 设置默认缩进
+    set_tab_style(2, true)
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "typescriptreact", "javascriptreact" },
+	callback = function()
+    -- 设置默认缩进
+    set_tab_style(2, true)
 	end,
 })
