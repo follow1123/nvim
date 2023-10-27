@@ -1,15 +1,14 @@
-local enable_lang = {
-  "lua", "rust", "c", "cpp", "json", "yaml", "toml", "markdown"
-}
 -- 语法插件
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    ft = enable_lang,
+    event = "VeryLazy",
     build = ":TSUpdate",
     config = function()
       require("nvim-treesitter.configs").setup{
-        ensure_installed = enable_lang,
+        ensure_installed = {
+          "lua", "rust", "c", "cpp", "json", "yaml", "toml", "markdown", "javascript", "typescript"
+        },
         sync_install = false,
         auto_install = true,
         ignore_install = { },
@@ -60,7 +59,7 @@ return {
   },
   { -- 代码导航
     "utilyre/barbecue.nvim",
-    ft = enable_lang,
+    event = "VeryLazy",
     dependencies = { "SmiteshP/nvim-navic" },
     config = function()
       vim.opt.updatetime = 200
@@ -107,7 +106,7 @@ return {
   },
   { -- 缩进线
     "lukas-reineke/indent-blankline.nvim",
-    ft = enable_lang,
+    event = "VeryLazy",
     config = function()
       vim.opt.list = true
       -- vim.opt.listchars:append "space:⋅"
@@ -126,10 +125,4 @@ return {
       vim.api.nvim_set_hl(0, "NonText", { fg = "#3e3e3e"}) -- 空白字符颜色
     end
   },
-  -- 彩色括号插件
-  {
-    "p00f/nvim-ts-rainbow",
-    enabled = false,
-    -- ft = _G.LANG,
-  }
 }
