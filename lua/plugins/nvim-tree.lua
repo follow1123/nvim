@@ -9,11 +9,43 @@ return {
   lazy = vim.fn.isdirectory(vim.fn.expand("%:p")) == 0,
   -- nvim打开目录则直接加载插件，否则使用key懒加载
   keys = {
-    lazy_map("n", "<M-1>", "<cmd>NvimTreeFindFileToggle<cr>", "nvim-tree: Find file in nvim tree"),
+    lazy_map("n", "<M-1>", "<cmd>NvimTreeFindFileToggleOrFocus<cr>", "nvim-tree: Find file in nvim tree"),
   },
 	config = function()
 		-- 插件配置
 		local api = require("nvim-tree.api")
+
+    -- 目录树打开时直接获取焦点
+    local function nvim_tree_toggle_or_focus()
+      local visible_wins = vim.api.nvim_list_wins()
+      local cur_win_id = vim.api.nvim_get_current_win()
+      local has_nvim_tree = false
+      local tree_win_id
+      for _, win_id in ipairs(visible_wins) do
+        local ft = vim.api.nvim_get_option_value("filetype", {
+          win = win_id
+        })
+        if ft == "NvimTree" then
+          has_nvim_tree = true
+          tree_win_id = win_id
+          break
+        end
+      end
+      if not has_nvim_tree then
+        api.tree.toggle {
+          find_file = true
+        }
+        return
+      end
+      if cur_win_id == tree_win_id then
+        api.tree.close()
+      else
+        api.tree.focus()
+      end
+    end
+    vim.api.nvim_create_user_command("NvimTreeFindFileToggleOrFocus", nvim_tree_toggle_or_focus, {
+      desc = "nvim tree toggle or focus"
+    })
 		require("nvim-tree").setup {
       disable_netrw = true, -- 禁用默认netrw插件，已在plugin_init文件内禁用
       hijack_netrw = true, -- 使用nvim-tree代替netrw
