@@ -77,6 +77,14 @@ term_config.terms = {
         instance.open_win_id = open_win_id
         term.reset_nvim_tree()
       else
+
+        -- 窗口存在则跳转
+        local cur_win_id = vim.api.nvim_get_current_win()
+        if cur_win_id ~= instance.win_id then
+          vim.fn.win_gotoid(instance.win_id)
+          return
+        end
+
         -- 保存当前窗口高度
         instance.winheight = vim.api.nvim_win_get_height(instance.win_id)
         -- 还原到打开时的窗口
