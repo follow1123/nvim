@@ -21,7 +21,30 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 netrw.toggle = function()
-  vim.cmd(":Lex")
+  -- 目录树打开时直接获取焦点
+  local visible_wins = vim.api.nvim_list_wins()
+  local cur_win_id = vim.api.nvim_get_current_win()
+  local has_netrw = false
+  local tree_win_id
+  for _, win_id in ipairs(visible_wins) do
+    local ft = vim.api.nvim_get_option_value("filetype", {
+      win = win_id
+    })
+    if ft == "netrw" then
+      has_netrw = true
+      tree_win_id = win_id
+      break
+    end
+  end
+  if not has_netrw then
+    vim.cmd(":Lex")
+    return
+  end
+  if cur_win_id == tree_win_id then
+    vim.cmd(":Lex")
+  else
+    vim.fn.win_gotoid(tree_win_id)
+  end
 end
 
 return netrw
