@@ -1,6 +1,5 @@
-local keymap = {}
 -- 按键映射
-keymap.on_attach = function(_, bufnr)
+local function lsp_keymap(bufnr)
   local keymap_uitl = require("utils.keymap")
   local buf_map = keymap_uitl.buf_map
 
@@ -45,4 +44,6 @@ keymap.on_attach = function(_, bufnr)
   buf_map("n", "<leader>lD", "<cmd>lua require('telescope.builtin').diagnostics()<cr>", "LSP: List workspace diagnostics ", bufnr)
 end
 
-return keymap
+return {
+  setup = lsp_keymap
+}

@@ -1,4 +1,3 @@
-
 return {
   {"folke/neodev.nvim", lazy = true}, -- neovim开发提示
   {
@@ -10,16 +9,19 @@ return {
       { "j-hui/fidget.nvim", tag = "legacy", },  -- 右下角lsp服务提示
     },
     config = function()
-
-      local servers = {
-        "lua_ls", "rust_analyzer", "clangd", "tsserver"
+      -- vue2使用vuels, vue3使用volar
+      local services = {
+        "lua_ls", "rust_analyzer", "clangd", "tsserver", "vuels"
       }
 
+      -- windows环境下添加powershell语言服务
       if _G.IS_WINDOWS then
-        table.insert(servers, "powershell_es")
+        table.insert(services, "powershell_es")
       end
 
+      -- 右下角lsp服务提示配置加载
       require("fidget").setup()
+      -- mason图标配置
       require("mason").setup({
         ui = {
           border = "single",
@@ -30,19 +32,34 @@ return {
           }
         }
       })
+
+      -- lsp提示窗口配置
       require("lspconfig.ui.windows").default_options.border = "single"
+
+      local lspconfig = require("lspconfig")
+
+      -- lsp默认配置
+      lspconfig.util.default_config = vim.tbl_extend(
+        "force",
+        lspconfig.util.default_config,
+        {
+          autostart = true,
+          -- keymap配置
+          on_attach = function (_, bufnr)
+            require("plugins.lsp.keymap").setup(bufnr)
+          end,
+          capabilities = require('cmp_nvim_lsp').default_capabilities() -- lsp补全配置
+        }
+      )
+
       require("mason-lspconfig").setup({
-        ensure_installed = servers,
+        ensure_installed = services,
         handlers = {
-          function(server_name)
+          function(service_name)
             -- 查找是否单独定义lsp配置文件，否则使用空配置
-            local ok, server_conf = pcall(require, "plugins.lsp.lang." .. server_name)
-            local settings = ok and server_conf.settings or {}
-            require("lspconfig")[server_name].setup {
-              settings = settings, -- lua lsp配置
-              on_attach = require("plugins.lsp.keymap").on_attach, -- keymap配置
-              capabilities = require('cmp_nvim_lsp').default_capabilities() -- lsp补全配置
-            }
+            local ok, service_config = pcall(require, "plugins.lsp.services." .. service_name)
+            service_config = ok and service_config or {}
+            lspconfig[service_name].setup(service_config)
           end,
         }
       })
