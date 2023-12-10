@@ -95,7 +95,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "typescript", "javascript", "json", "html", "css", "less", "scss" },
+	pattern = { "typescript", "javascript", "json", "html", "css", "less", "scss", "vue" },
 	callback = function()
     -- 设置默认缩进
     set_tab_style(2, true)
