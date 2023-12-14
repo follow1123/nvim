@@ -39,18 +39,14 @@ return {
       local lspconfig = require("lspconfig")
 
       -- lsp默认配置
-      lspconfig.util.default_config = vim.tbl_extend(
-        "force",
-        lspconfig.util.default_config,
-        {
-          autostart = true,
-          -- keymap配置
-          on_attach = function (_, bufnr)
-            require("plugins.lsp.keymap").setup(bufnr)
-          end,
-          capabilities = require('cmp_nvim_lsp').default_capabilities() -- lsp补全配置
-        }
-      )
+      lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
+        autostart = true,
+        -- keymap配置
+        on_attach = function (_, bufnr)
+          require("plugins.lsp.keymap").setup(bufnr)
+        end,
+        capabilities = require('cmp_nvim_lsp').default_capabilities() -- lsp补全配置
+      })
 
       require("mason-lspconfig").setup({
         ensure_installed = services,
@@ -99,6 +95,8 @@ return {
       vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
         border = "single",
       })
+      -- 插件加载完成后重新加载当前文件时lsp服务启动
+      vim.cmd("silent! e")
     end
   }
 }

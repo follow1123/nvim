@@ -31,7 +31,7 @@ end
 
 --  开启neodev功能
 local function neodev()
-  print("start config neodev")
+  -- print("start config neodev")
   local ok, m = pcall(require, "neodev")
   if ok then
     m.setup()
@@ -45,9 +45,9 @@ config.on_attach = function (_, bufnr)
 
   require("plugins.lsp.keymap").setup(bufnr)
 
-  print("enter attach method")
+  -- print("enter attach method")
   if is_neovim_config_dir() then
-    print("config neodev")
+    -- print("config neodev")
     vim.schedule_wrap(neodev)()
   end
 end
