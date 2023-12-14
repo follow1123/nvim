@@ -25,3 +25,11 @@ vim.api.nvim_set_hl(0, "Pmenu", { fg = "#cccccc", bg = "#252526" })
 vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#042e48" } )
 vim.api.nvim_set_hl(0, "PmenuSBar", { bg = "#252525" } )
 vim.api.nvim_set_hl(0, "PmenuThumb", { bg = "#808080" } )
+
+-- diff颜色
+-- Add #536232 Change #1c7ca1 Delete #771b1b
+vim.api.nvim_set_hl(0, "DiffAdd", { fg = "", bg = "#414733" }) -- diff新增
+vim.api.nvim_set_hl(0, "DiffChange", { fg = "", bg = "#215e76" }) -- diff修改
+vim.api.nvim_set_hl(0, "DiffDelete", { fg = "", bg = "#552222" }) -- diff删除
+vim.api.nvim_set_hl(0, "DiffText", { fg = "", bg = "#414733" }) -- diff文本
+vim.api.nvim_set_hl(0, "FoldColumn", { fg = "", bg = "#1e1e1e" }) -- diff模式最左侧显示的折叠栏的颜色
