@@ -44,11 +44,6 @@ return {
        vim.g.mkdp_browser = "google-chrome"
      end
      vim.g.mkdp_filetypes = { "markdown" }
-     -- 设置预览markdown快捷键
-     nmap("<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", {
-       desc = "markdown: Markdown preview toggle",
-       buffer = true
-     })
    end
   },
   { -- 启动时光标恢复到原来的位置

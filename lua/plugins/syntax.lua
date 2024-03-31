@@ -16,11 +16,15 @@ return {
         highlight = {
           enable = true,
           disable = function(_, buf)
-            local max_filesize = 500 * 1024
+            local max_filesize = 1024 * 1024 * 2
             local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+            -- 当文件大于2M时不显示高亮
             if ok and stats and stats.size > max_filesize then
-              return true
+              vim.notify("file size too big", vim.log.levels.WARN)
+              -- 这里写false才是禁用，不知道是不是代码问题
+              return false
             end
+            return true
           end,
           additional_vim_regex_highlighting = false,
         },
@@ -112,11 +116,7 @@ return {
       -- vim.opt.listchars:append "space:⋅"
       vim.opt.listchars:append "eol:↴"
       vim.opt.listchars:append "trail: "
-      require("indent_blankline").setup {
-        space_char_blankline = " ",
-        show_current_context = true,
-        show_current_context_start = true,
-      }
+      require("ibl").setup()
 
       vim.api.nvim_set_hl(0, "IndentBlanklineChar", {fg = "#282828", bg = ""})
       vim.api.nvim_set_hl(0, "IndentBlanklineContextChar", {fg = "#707070", bg = ""})
