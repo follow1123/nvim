@@ -63,6 +63,7 @@ return {
   },
   { -- 代码导航
     "utilyre/barbecue.nvim",
+    enabled = false,
     event = "VeryLazy",
     dependencies = { "SmiteshP/nvim-navic" },
     config = function()
@@ -112,17 +113,30 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     event = "VeryLazy",
     config = function()
+      -- 显示空白字符
       vim.opt.list = true
       -- vim.opt.listchars:append "space:⋅"
       vim.opt.listchars:append "eol:↴"
+      vim.opt.listchars:append "tab: > "
       vim.opt.listchars:append "trail: "
-      require("ibl").setup()
 
-      vim.api.nvim_set_hl(0, "IndentBlanklineChar", {fg = "#282828", bg = ""})
-      vim.api.nvim_set_hl(0, "IndentBlanklineContextChar", {fg = "#707070", bg = ""})
-      vim.api.nvim_set_hl(0, "IndentBlanklineContextStart", {bg = "#3e3e3e", fg = "", underline = false})
+      -- 配置缩进线颜色组，可以配置多种颜色
+      local highlight = { "IndentGray" }
+      local hooks = require "ibl.hooks"
+      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+        vim.api.nvim_set_hl(0, "IndentGray", { fg = "#303030" })
+      end)
 
-      vim.api.nvim_set_hl(0, "NonText", { fg = "#3e3e3e"}) -- 空白字符颜色
+      -- indent-blankline插件相关配置
+      require("ibl").setup({
+        indent = {
+          -- 缩进线样式
+          char = "▏",
+          tab_char = "▏",
+          highlight = highlight
+        }
+      })
+
     end
   },
 }

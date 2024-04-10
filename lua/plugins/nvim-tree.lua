@@ -114,9 +114,10 @@ return {
         indent_markers = {
           enable = true, -- 开启目录树的缩进线
         },
-        root_folder_label = function(path)
-          return "[" .. vim.fn.fnamemodify(vim.fs.normalize(path), ":~:gs?\\(\\w\\)[a-zA-Z0-9 一-龟-]\\+\\ze\\\\?\\1?") .. "]"
-        end,
+        root_folder_label = false -- 不显示root目录
+        -- root_folder_label = function(path)
+        --   return "[" .. vim.fn.fnamemodify(vim.fs.normalize(path), ":~:gs?\\(\\w\\)[a-zA-Z0-9 一-龟-]\\+\\ze\\\\?\\1?") .. "]"
+        -- end,
       }
     }
     -- 基础
