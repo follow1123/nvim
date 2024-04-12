@@ -102,36 +102,32 @@ return {
     "stevearc/dressing.nvim",
     module = true,
     config = function()
-      require("dressing").setup{
-        select = {
-          -- Options for nui Menu
-          -- nui = {
-          --   position = "50%",
-          --   size = nil,
-          --   -- relative = "editor",
-          --   border = {
-          --     style = "rounded",
-          --   },
-          --   buf_options = {
-          --     swapfile = false,
-          --     filetype = "DressingSelect",
-          --   },
-          --   win_options = {
-          --     winblend = 10,
-          --   },
-          --   max_width = 80,
-          --   max_height = 40,
-          --   min_width = 40,
-          --   min_height = 10,
-          -- },
+      require("dressing").setup {
+        input = {
+          border = "single",
           get_config = function(opts)
-            if opts.kind == 'codeaction' then
+            -- project_session插件打开项目时输入框居中显示
+            if opts.kind == "projectsession" then
               return {
-                backend = 'nui',
-                nui = {
+                relative = "editor",
+              }
+            end
+          end
+        },
+        select = {
+          builtin = {
+            border = "single",
+          },
+          get_config = function(opts)
+            -- codeaction弹框特殊样式
+            if opts.kind == "codeaction" then
+              return {
+                backend = "nui",
+                builtin = {
+                  border = "single",
+                  show_numbers = false,
                   relative = "cursor",
-                  max_width = 40,
-                }
+                },
               }
             end
           end
