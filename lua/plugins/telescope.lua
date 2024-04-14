@@ -1,3 +1,4 @@
+local colors = require("utils.colors")
 -- 搜索插件
 return {
   "nvim-telescope/telescope.nvim",
@@ -85,7 +86,7 @@ return {
     }
 
     require("telescope").load_extension("projects")
-    vim.api.nvim_set_hl(0, "TelescopeSelection", { bg = "#4b4b4b" })
-    vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = "#d4d4d4" })
+    vim.api.nvim_set_hl(0, "TelescopeSelection", { bg = colors.gray_02 })
+    vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = colors.white_03 })
   end
 }

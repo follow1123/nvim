@@ -80,9 +80,6 @@ nmap("N", "Nzz", "base: Search previous and page center")
 
 -- 打开配置文件
 nmap("<C-M-s>", "<cmd>e " .. _G.CONFIG_PATH .. "/init.lua <cr>", "base: Open setting file")
-nmap("<leader>1", "<cmd>Lazy<cr>")
-nmap("<leader>2", "<cmd>LspInfo<cr>")
-nmap("<leader>3", "<cmd>Mason<cr>")
 
 nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
 

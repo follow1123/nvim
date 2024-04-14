@@ -1,3 +1,4 @@
+local colors = require("utils.colors")
 -- 语法插件
 return {
   {
@@ -14,24 +15,14 @@ return {
         ignore_install = { },
         modules = {},
         highlight = {
-          enable = true,
-          disable = function(_, buf)
-            local max_filesize = 1024 * 1024 * 2
-            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-            -- 当文件大于2M时不显示高亮
-            if ok and stats and stats.size > max_filesize then
-              vim.notify("file size too big", vim.log.levels.WARN)
-              -- 这里写false才是禁用，不知道是不是代码问题
-              return false
-            end
-            return true
-          end,
+          enable = false,
           additional_vim_regex_highlighting = false,
         },
         indent = {
           enable = true
         },
       }
+      require("utils.keymap").nmap("<leader>5", "<cmd>TSToggle highlight<cr>")
     end
   },
   { -- 括号自动匹配
@@ -61,35 +52,6 @@ return {
       }
     end
   },
-  { -- 代码导航
-    "utilyre/barbecue.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    dependencies = { "SmiteshP/nvim-navic" },
-    config = function()
-      vim.opt.updatetime = 200
-
-      require("barbecue").setup({
-        create_autocmd = false,                            -- prevent barbecue from updating itself automatically
-        exclude_filetypes = { "netrw", "toggleterm", "" }, -- "" 内置终端没有filetype属性
-      })
-
-      vim.api.nvim_create_autocmd({
-        "WinScrolled", -- or WinResized on NVIM-v0.9 and higher
-        "BufWinEnter",
-        "CursorHold",
-        "InsertLeave",
-
-        -- include this if you have set `show_modified` to `true`
-        "BufModifiedSet",
-      }, {
-        group = vim.api.nvim_create_augroup("barbecue.updater", {}),
-        callback = function()
-          require("barbecue.ui").update()
-        end,
-      })
-    end
-  },
   { -- 显示相关符号
     "RRethy/vim-illuminate",
     keys = { "h", "j", "k", "l" },
@@ -104,9 +66,9 @@ return {
         under_cursor = false,
       })
       -- 设置光标所在符号位置颜色
-      vim.api.nvim_set_hl(0, "IlluminatedWordText", {sp = "#FFFFFF"}) -- 符号引用处的颜色
-      vim.api.nvim_set_hl(0, "IlluminatedWordRead", {bg = "#4b4b4b"}) -- 符号引用处的颜色
-      vim.api.nvim_set_hl(0, "IlluminatedWordWrite", {underline = true, bg = "#264f78", sp = "#FFFFFF"}) -- 符号声明或定义处的颜色
+      vim.api.nvim_set_hl(0, "IlluminatedWordText", {sp = colors.white_01}) -- 符号引用处的颜色
+      vim.api.nvim_set_hl(0, "IlluminatedWordRead", {bg = colors.gray_02}) -- 符号引用处的颜色
+      vim.api.nvim_set_hl(0, "IlluminatedWordWrite", {underline = true, bg = colors.blue_04, sp = colors.white_01}) -- 符号声明或定义处的颜色
     end
   },
   { -- 缩进线
@@ -124,7 +86,7 @@ return {
       local highlight = { "IndentGray" }
       local hooks = require "ibl.hooks"
       hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        vim.api.nvim_set_hl(0, "IndentGray", { fg = "#303030" })
+        vim.api.nvim_set_hl(0, "IndentGray", { fg = colors.gray_03 })
       end)
 
       -- indent-blankline插件相关配置

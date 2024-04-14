@@ -1,3 +1,4 @@
+local colors = require("utils.colors")
 local keymap_uitl = require("utils.keymap")
 local lazy_map = keymap_uitl.lazy_map
 local buf_map = keymap_uitl.buf_map
@@ -120,25 +121,25 @@ return {
         -- end,
       }
     }
-    -- 基础
-    vim.api.nvim_set_hl(0, "NvimTreeNormal", {bg = "#1e1e1e"})
-    vim.api.nvim_set_hl(0, "NvimTreeIndentMarker", {fg = "#707070"})
 
-    -- 文件
-    vim.api.nvim_set_hl(0, "NvimTreeFolderNAme", {fg = "#d4d4d4"})
-    vim.api.nvim_set_hl(0, "NvimTreeEmptyFolderName", {fg = "#d4d4d4"})
-    vim.api.nvim_set_hl(0, "NvimTreeOpenedFolderName", {fg = "#d4d4d4"})
-    vim.api.nvim_set_hl(0, "NvimTreeSymlinkFolderName", {fg = "#d4d4d4"})
-    vim.api.nvim_set_hl(0, "NvimTreeSpecialFile", {fg = "#a986c0"})
+    -- 文件基础颜色
+    vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = colors.primary }) -- 文件树背景颜色
+    vim.api.nvim_set_hl(0, "NvimTreeIndentMarker", { fg = colors.gray_03 }) -- 缩进线颜色
+    vim.api.nvim_set_hl(0, "NvimTreeSpecialFile", { fg = colors.purple_02 }) -- 特殊文件颜色
+    vim.api.nvim_set_hl(0, "NvimTreeFolderArrowOpen", { fg = colors.gray_05}) -- 文件夹箭头icon打开颜色
+    vim.api.nvim_set_hl(0, "NvimTreeFolderArrowClosed", { fg = colors.gray_05}) -- 文件夹箭头icon关闭颜色
 
-    -- git
-    vim.api.nvim_set_hl(0, "NvimTreeFileDirty", {fg = "#6493b3"})
-    vim.api.nvim_set_hl(0, "NvimTreeFileStaged", {fg = "#7dd24f"})
-    vim.api.nvim_set_hl(0, "NvimTreeFileMerge", {fg = "#e0ebff"})
-    -- vim.api.nvim_set_hl(0, "NvimTreeFileRenamed", {fg = ""})
-    vim.api.nvim_set_hl(0, "NvimTreeFileNew", {fg = "#536232"})
-    vim.api.nvim_set_hl(0, "NvimTreeFileDeleted", {fg = "Red"})
-    vim.api.nvim_set_hl(0, "NvimTreeFileIgnored", {fg = "#3e3e3e", strikethrough = true})
+    -- git相关颜色
+    vim.api.nvim_set_hl(0, "NvimTreeGitNewIcon", { fg = colors.green_02})
+    vim.api.nvim_set_hl(0, "NvimTreeGitRenamedIcon", { fg = colors.green_02})
+    vim.api.nvim_set_hl(0, "NvimTreeGitDeletedIcon", { fg = colors.blue_03})
+    vim.api.nvim_set_hl(0, "NvimTreeGitDirtyIcon", { fg = colors.blue_03})
+
+    -- 文件夹状态相关颜色
+    vim.api.nvim_set_hl(0, "NvimTreeFolderName", { fg = colors.white_03 })
+    vim.api.nvim_set_hl(0, "NvimTreeEmptyFolderName", { fg = colors.white_03 })
+    vim.api.nvim_set_hl(0, "NvimTreeOpenedFolderName", { fg = colors.white_03 })
+    vim.api.nvim_set_hl(0, "NvimTreeSymlinkFolderName", { fg = colors.white_03 })
 
   end
 }

@@ -19,6 +19,7 @@ return {
         table.insert(services, "powershell_es")
       end
 
+
       -- 右下角lsp服务提示配置加载
       require("fidget").setup()
       -- mason图标配置
@@ -96,7 +97,12 @@ return {
         border = "single",
       })
       -- 插件加载完成后重新加载当前文件时lsp服务启动
-      vim.cmd("silent! e")
+      -- vim.cmd("silent! e")
+
+      local keymap_util = require("utils.keymap")
+
+      keymap_util.nmap("<leader>2", "<cmd>LspInfo<cr>")
+      keymap_util.nmap("<leader>3", "<cmd>Mason<cr>")
     end
   }
 }

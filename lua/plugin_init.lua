@@ -1,3 +1,4 @@
+local colors = require("utils.colors")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -33,4 +34,5 @@ require("lazy").setup({
     }
   }
 })
-vim.api.nvim_set_hl(0, "LazyProp", {bg = "#4b4b4b"})
+vim.api.nvim_set_hl(0, "LazyProp", { bg = colors.gray_04 })
+require("utils.keymap").nmap("<leader>1", "<cmd>Lazy<cr>")

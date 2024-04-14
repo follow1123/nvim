@@ -1,3 +1,4 @@
+local colors = require("utils.colors")
 return {
   "lewis6991/gitsigns.nvim",
   lazy = true,
@@ -70,17 +71,17 @@ return {
         local gs = package.loaded.gitsigns
 
         -- hunk移动
-				buf_map("n", "]c", function()
-					if vim.wo.diff then return "]c" end
-					vim.schedule(function() gs.next_hunk{preview = true} end)
-					return "<Ignore>"
-				end, { expr = true, desc = "git: Next hunk" }, bufnr)
+        buf_map("n", "]c", function()
+          if vim.wo.diff then return "]c" end
+          vim.schedule(function() gs.next_hunk{preview = true} end)
+          return "<Ignore>"
+          end, { expr = true, desc = "git: Next hunk" }, bufnr)
 
-       buf_map("n", "[c", function()
-					if vim.wo.diff then return "[c" end
-					vim.schedule(function() gs.prev_hunk{preview = true} end)
-					return "<Ignore>"
-				end, { expr = true, desc = "git: Previous hunk" }, bufnr)
+        buf_map("n", "[c", function()
+          if vim.wo.diff then return "[c" end
+          vim.schedule(function() gs.prev_hunk{preview = true} end)
+          return "<Ignore>"
+          end, { expr = true, desc = "git: Previous hunk" }, bufnr)
         -- git暂存
         buf_map("n", "<leader>gs", gs.stage_hunk, "git: Stage hunk", bufnr)
         buf_map("n", "<leader>gr", gs.reset_hunk, "git: Reset hunk", bufnr)
@@ -122,16 +123,19 @@ return {
         end
       })
     end
-    -- diff设置
-    -- diff颜色加深版
-    -- Add #536232 Change #1c7ca1 Delete #771b1b
-    vim.api.nvim_set_hl(0, "DiffAdd", { fg = "", bg = "#414733" })
-    vim.api.nvim_set_hl(0, "DiffChange", { fg = "", bg = "#215e76" })
-    vim.api.nvim_set_hl(0, "DiffDelete", { fg = "", bg = "#552222" })
-    vim.api.nvim_set_hl(0, "DiffText", { fg = "", bg = "#414733" })
+
     -- gitsign内置颜色配置
-    vim.api.nvim_set_hl(0, "GitSignsAddInline", { fg = "", bg = "#536232" })
-    vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { fg = "", bg = "#771b1b" })
-    vim.api.nvim_set_hl(0, "GitSignsChangeInline", { fg = "", bg = "#1c7ca1" })
+    -- 右侧git状态颜色
+    vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = colors.green_02, bg = "NONE" })
+    vim.api.nvim_set_hl(0, "GitSignsChange", { fg = colors.blue_02, bg = "NONE"})
+    vim.api.nvim_set_hl(0, "GitSignsDelete", { fg = colors.red_02, bg = "NONE"})
+    vim.api.nvim_set_hl(0, "GitSignsTopdelete", { fg = colors.red_02, bg = "NONE"})
+    vim.api.nvim_set_hl(0, "GitSignsChangedelete", { fg = colors.blue_02, bg = "NONE"})
+    vim.api.nvim_set_hl(0, "GitSignsUntracked", { fg = colors.green_02, bg = "NONE"})
+
+    -- diff预览框颜色
+    vim.api.nvim_set_hl(0, "GitSignsAddInline", { fg = "NONE", bg = colors.green_02 })
+    vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { fg = "NONE", bg = colors.red_02 })
+    vim.api.nvim_set_hl(0, "GitSignsChangeInline", { fg = "NONE", bg = colors.blue_02 })
   end
 }
