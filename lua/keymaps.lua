@@ -87,3 +87,7 @@ nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close wi
 nmap("<C-\\>", "<cmd>lua require('extensions.terminal').toggle('full_term')<cr>", "base: Open full terminal")
 nmap("<M-4>", "<cmd>lua require('extensions.terminal').toggle('below_term')<cr>", "base: Open below terminal")
 nmap("<M-6>", "<cmd>lua require('extensions.terminal').toggle('lazygit_term')<cr>", "base: Open lazygit terminal")
+
+-- quickfix list
+nmap("[q", "<cmd>cprevious<cr>zz","base: Prev quickfix")
+nmap("]q", "<cmd>cnext<cr>zz", "base: Next quickfix")
