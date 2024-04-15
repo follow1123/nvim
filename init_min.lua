@@ -5,11 +5,11 @@
 -- #################################################################################
 
 --判断使用为windows
-_G.IS_WINDOWS = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1) and true or false
+_G.IS_WINDOWS = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1)
 -- 判断是否为linux
-_G.IS_LINUX = vim.fn.has("unix") == 1 and true or false
+_G.IS_LINUX = vim.fn.has("unix") == 1
 -- 判断是否为gui方式启动
-_G.IS_GUI = vim.fn.has("gui_running") == 1 and true or false
+_G.IS_GUI = vim.fn.has("gui_running") == 1
 
 _G.CONFIG_PATH = vim.fn.stdpath("config")
 
