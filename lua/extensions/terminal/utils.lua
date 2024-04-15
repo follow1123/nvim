@@ -1,19 +1,21 @@
 local term_utils = {}
 
 -- 全屏终端window的默认配置
-local full_window_opts = {
-  relative = "editor",
-  width = vim.api.nvim_get_option("columns"),
-  height = vim.api.nvim_get_option("lines") - 1,
-  row = 0,
-  col = 0,
-  style = "minimal",
-  border = "none",
-}
+local full_window_opts = function ()
+  return {
+      relative = "editor",
+      width = vim.api.nvim_get_option("columns"),
+      height = vim.api.nvim_get_option("lines") - 1,
+      row = 0,
+      col = 0,
+      style = "minimal",
+      border = "none",
+  }
+end
 
 -- 打开一个全屏窗口
 term_utils.open_full_window = function(enter, bufnr)
-  return vim.api.nvim_open_win(bufnr, enter, full_window_opts)
+  return vim.api.nvim_open_win(bufnr, enter, full_window_opts())
 end
 
 -- 创建一个显示终端的buffer
