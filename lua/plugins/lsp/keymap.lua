@@ -8,7 +8,7 @@ local function lsp_keymap(bufnr)
   buf_map("n", "gd", "<cmd>lua require('telescope.builtin').lsp_definitions()<cr>", "LSP: Goto definition", bufnr)
   buf_map("n", "gi", "<cmd>lua require('telescope.builtin').lsp_implementations()<cr>", "LSP: Goto implementation", bufnr)
   buf_map("n", "gT", "<cmd>lua require('telescope.builtin').lsp_type_definitions()<cr>", "LSP: Type definition", bufnr)
-  buf_map("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<cr>", "LSP: Goto references", bufnr)
+  buf_map("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", "LSP: Goto references", bufnr)
 
   -- 符号列表
   buf_map("n", "<leader>ls", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>", "LSP: list document symbols", bufnr)
