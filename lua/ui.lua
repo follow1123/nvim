@@ -9,7 +9,7 @@ vim.cmd("colorscheme habamax") -- 主题
 vim.api.nvim_set_hl(0, "FloatBorder", { bg = colors.primary }) -- 弹框边框颜色
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = colors.primary })
 
-vim.api.nvim_set_hl(0, "Visual", { fg = "NONE", bg = colors.blue_04 }) -- visual模式选中文本的颜色
+vim.api.nvim_set_hl(0, "Visual", { fg = "NONE", bg = colors.gray_02 }) -- visual模式选中文本的颜色
 vim.api.nvim_set_hl(0, "ModeMsg", { fg = colors.white_02 , bold = true }) -- 切换模式时左下角显示的颜色
 vim.api.nvim_set_hl(0, "VertSplit", { bg = "NONE" }) -- 垂直分屏时分割线的背景颜色
 
@@ -23,7 +23,7 @@ vim.api.nvim_set_hl(0, "MatchParen", {
 })
 
 -- 补全相关颜色
-vim.api.nvim_set_hl(0, "PmenuSel", { fg = "NONE", bg = colors.blue_04 }) -- 选择栏颜色
+vim.api.nvim_set_hl(0, "PmenuSel", { fg = "NONE", bg = colors.gray_02 }) -- 选择栏颜色
 vim.api.nvim_set_hl(0, "PmenuSBar", { bg = vim.api.nvim_get_hl(0, { name = "Pmenu" }).bg }) -- 选择滚动条颜色
 
 -- diff设置
