@@ -21,7 +21,7 @@ local vmap = keymap_utils.vmap
 nmap("<M-r>", function () run_lua_code(vim.trim(vim.api.nvim_get_current_line())) end, "lua_dev: Run code on cursor")
 
 vmap("<M-r>", function ()
-  require("utils") .handle_selected_region_content(function (content)
+  require("utils").handle_selected_region_content(function (content)
     run_lua_code(vim.tbl_map(vim.trim, content))
   end)
 end, "lua_dev: Run code on cursor")
