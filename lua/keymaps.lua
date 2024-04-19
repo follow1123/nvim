@@ -64,8 +64,8 @@ imap(".", ".<c-g>u", "base: Add undo break-points")
 imap(";", ";<c-g>u", "base: Add undo break-points")
 
 -- 上下移动选中的行
-nmap("<M-j>", "<cmd>m .+1<cr>==", "base: Move up")
-nmap("<M-k>", "<cmd>m .-2<cr>==", "base: Move down")
+nmap("<M-j>", function() return vim.bo.modifiable and "<cmd>m .+1<cr>==" or "<Ignore>" end, { expr = true, desc = "base: Move down" })
+nmap("<M-k>", function() return vim.bo.modifiable and "<cmd>m .-2<cr>==" or "<Ignore>" end, { expr = true, desc = "base: Move up" })
 vmap("<M-j>", ":m '>+1<cr>gv=gv", "base: Move up")
 vmap("<M-k>", ":m '<-2<cr>gv=gv", "base: Move down")
 
