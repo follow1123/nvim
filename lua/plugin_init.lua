@@ -35,4 +35,4 @@ require("lazy").setup({
   }
 })
 vim.api.nvim_set_hl(0, "LazyProp", { bg = colors.gray_04 })
-require("utils.keymap").nmap("<leader>1", "<cmd>Lazy<cr>")
+require("utils.keymap").nmap("<leader>1", "<cmd>Lazy<cr>", "Open Lazy Manager panel")

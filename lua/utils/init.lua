@@ -1,7 +1,7 @@
-local utils = {}
+local M = {}
 
 -- 在visual模式选中文本后获取对应选中的区域处理
-utils.handle_selected_region_content = function(callback)
+function M.handle_selected_region_content(callback)
   vim.api.nvim_input("<Esc>")
   vim.schedule(function ()
     -- 获取visual模式选择的行和列信息
@@ -27,7 +27,7 @@ utils.handle_selected_region_content = function(callback)
 end
 
 -- 监听下一个输入的字符
-utils.handle_input_char = function(callback)
+function M.handle_input_char(callback)
   vim.schedule(function ()
     if type(callback) == "function" then
       callback(vim.fn.nr2char(vim.fn.getchar()))
@@ -35,4 +35,4 @@ utils.handle_input_char = function(callback)
   end)
 end
 
-return utils
+return M

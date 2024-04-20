@@ -22,7 +22,7 @@ return {
           enable = true
         },
       }
-      require("utils.keymap").nmap("<leader>5", "<cmd>TSToggle highlight<cr>")
+      require("utils.keymap").nmap("<leader>5", "<cmd>TSToggle highlight<cr>", "Toggle highlight")
     end
   },
   { -- 括号自动匹配

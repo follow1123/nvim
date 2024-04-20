@@ -101,8 +101,8 @@ return {
 
       local keymap_util = require("utils.keymap")
 
-      keymap_util.nmap("<leader>2", "<cmd>LspInfo<cr>")
-      keymap_util.nmap("<leader>3", "<cmd>Mason<cr>")
+      keymap_util.nmap("<leader>2", "<cmd>LspInfo<cr>", "Open lsp info panel")
+      keymap_util.nmap("<leader>3", "<cmd>Mason<cr>", "Open mason setup panel")
     end
   }
 }

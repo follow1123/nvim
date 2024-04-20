@@ -1,5 +1,3 @@
-local lsp_utils = require("utils.lsp")
-
 local source = {
   -- 默认补全source
   global_sources = {
@@ -71,7 +69,8 @@ end
 -- 加载lsp的source
 source.load_lsp_cmp = function(bufnr)
   bufnr = bufnr and bufnr or vim.api.nvim_get_current_buf()
-  if lsp_utils.buf_has_client(bufnr) then
+
+  if #vim.lsp.get_active_clients({bufnr = bufnr}) ~= 0 then
     if not package.loaded["cmp_nvim_lsp"] or not package.loaded["cmp_nvim_lsp_signature_help"] then
       require("cmp_nvim_lsp")
       require("cmp_nvim_lsp_signature_help")

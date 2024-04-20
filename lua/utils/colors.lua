@@ -2,7 +2,7 @@
 -- #        颜色配置         #
 -- ###########################
 
-local colors = {
+local M = {
   primary = vim.api.nvim_get_hl(0, { name = "Normal" }).bg,
 
   white_01 = "White",
@@ -44,4 +44,4 @@ local colors = {
   purple_02 = "#a986c0",
 }
 
-return colors
+return M
