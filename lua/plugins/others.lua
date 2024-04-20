@@ -36,9 +36,9 @@ return {
   },
   { -- markdown
     "iamcco/markdown-preview.nvim",
-    build = "cd app && npm install",
+    build = function() vim.fn["mkdp#util#install"]() end,
     ft = "markdown",
-    config = function()
+    init = function()
       vim.g.mkdp_browser = "chrome"
       if _G.IS_LINUX then
         vim.g.mkdp_browser = "google-chrome"
