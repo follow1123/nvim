@@ -10,10 +10,17 @@ if _G.IS_WINDOWS then
   vim.api.nvim_create_user_command("SudoSave", "lua require('extensions').sudo_save()", { desc = "save readonly file" })
 end
 
+-- 格式化
+vim.api.nvim_create_user_command("Format",
+  function(opts)
+    require("extensions.formatter").format(opts.args)
+  end,
+  {
+    desc = "Format file use external command",
+    nargs = "?", -- 允许0或1个参数
+    complete = function ()
+      return { "json", "xml" }
+    end
+  }
+)
 
--- 设置文件类型
-vim.api.nvim_create_user_command("Json", "set filetype=json", {bang = true})
-vim.api.nvim_create_user_command("Xml", "set filetype=xml", {bang = true})
-
--- 默认格式化方式，以缩进格式化
-vim.api.nvim_create_user_command("Format", "lua require('extensions.formatter').format()", {bang = true})
