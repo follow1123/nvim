@@ -1,7 +1,7 @@
 local source = {
   -- 默认补全source
   global_sources = {
-      { group_index = 1, name = "luasnip", priority = 997, max_item_count = 5 },
+      { group_index = 1, name = "luasnip", priority = 997, max_item_count = 3 },
       { group_index = 1, name = "path" },
   },
 }
@@ -82,7 +82,7 @@ source.load_lsp_cmp = function(bufnr)
   end
 end
 
--- lsp 关联是加载lsp补全
+-- lsp启动时加载lsp补全
 vim.api.nvim_create_autocmd("LspAttach", {
   pattern = "*",
   nested = true,
