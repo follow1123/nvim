@@ -1,7 +1,7 @@
 -- ###########################
 -- #         注释插件        #
 -- ###########################
-local comment = {}
+local M = {}
 
 -- 注释字符串
 local comments = {
@@ -34,7 +34,7 @@ local function is_commented(line, filetype)
 end
 
 -- 注释操作
-comment.comment = function (line_num, line, filetype)
+function M.comment(line_num, line, filetype)
   local comment_str = ft_comments[filetype]
   local first_char_index = string.find(line, "%S")
   if first_char_index then
@@ -46,7 +46,7 @@ comment.comment = function (line_num, line, filetype)
 end
 
 -- 取消注释操作
-comment.uncomment = function(line_num, line, filetype)
+function M.uncomment(line_num, line, filetype)
   local comment_str = ft_comments[filetype]
   local first_char_index = string.find(line, "%S")
   if comment_str then
@@ -62,20 +62,20 @@ comment.uncomment = function(line_num, line, filetype)
 end
 
 -- 切换注释和取消注释操作
-comment.toggle = function()
+function M.toggle()
   local line_num = vim.fn.line(".")
   local line = vim.api.nvim_get_current_line()
   local filetype = vim.o.filetype
   local status = is_commented(line, filetype)
   if status == 1 then
-    comment.uncomment(line_num, line, filetype)
+    M.uncomment(line_num, line, filetype)
   elseif status == 2 then
-    comment.comment(line_num, line, filetype)
+    M.comment(line_num, line, filetype)
   end
 end
 
 -- visual切换注释和取消注释操作
-comment.visual_toggle = function()
+function M.visual_toggle()
   vim.api.nvim_input("<esc>")
   vim.schedule(function ()
     local start_line = vim.fn.line("'<")
@@ -87,13 +87,13 @@ comment.visual_toggle = function()
       local line = selected_lines[selected_index]
       local status = is_commented(line, filetype)
       if status == 1 then
-        comment.uncomment(line_num, line, filetype)
+        M.uncomment(line_num, line, filetype)
       elseif status == 2 then
-        comment.comment(line_num, line, filetype)
+        M.comment(line_num, line, filetype)
       end
       selected_index = selected_index + 1
     end
   end)
 end
 
-return comment
+return M

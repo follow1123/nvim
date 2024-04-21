@@ -2,17 +2,17 @@
 -- #        扩展小功能       #
 -- ###########################
 
-local ext = {}
+local M = {}
 
 -- windows下保存管理员权限文件
 if _G.IS_WINDOWS then
-  -- 获取备份文件路径，如果不存在就创建
+  -- 获取份文件路径，如果不存在就创建
   local backup_dir = vim.fs.normalize(vim.fn.stdpath("data") .. "/sudo_backup")
   if vim.fn.isdirectory(backup_dir) == 0 then
     vim.fn.mkdir(backup_dir, "p")
   end
   backup_dir = backup_dir:gsub("/", "\\")
-  ext.sudo_save = function ()
+  function M.sudo_save()
     -- 获取当前文件的绝对路径
     local cur_path = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
     -- 根据当前文件的路径生产一个备份文件的名称
@@ -44,7 +44,7 @@ end
 -- 快捷关闭窗口或Buffer
 -- 如果当前窗口的buffer是共享的，则只关闭当前窗口，否则直接关闭当前的buffer
 -- 如果当前buffer是最后一个listed的buffer则提示使用:q方式关闭
-ext.smart_quit = function ()
+function M.smart_quit()
   local cur_bufnr = vim.api.nvim_get_current_buf()
   local listed_buf = vim.fn.getbufinfo({buflisted = 1})
   local is_listed_buf = false
@@ -92,4 +92,4 @@ ext.smart_quit = function ()
   vim.cmd("bdelete! " .. cur_bufnr)
 end
 
-return ext
+return M
