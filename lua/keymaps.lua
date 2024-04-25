@@ -84,9 +84,9 @@ nmap("<C-M-s>", "<cmd>e " .. _G.CONFIG_PATH .. "/init.lua <cr>", "base: Open set
 nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
 
 -- 终端
-nmap("<C-\\>", "<cmd>lua require('extensions.terminal').toggle('full_term')<cr>", "base: Open full terminal")
-nmap("<M-4>", "<cmd>lua require('extensions.terminal').toggle('below_term')<cr>", "base: Open below terminal")
-nmap("<M-6>", "<cmd>lua require('extensions.terminal').toggle('lazygit_term')<cr>", "base: Open lazygit terminal")
+nmap("<C-\\>", "<cmd>lua require('extensions.terminal').full_term:toggle()<cr>", "base: Open full terminal")
+nmap("<M-4>", "<cmd>lua require('extensions.terminal').split_term:toggle()<cr>", "base: Open split terminal")
+nmap("<M-6>", "<cmd>lua require('extensions.terminal').lazygit_term:toggle()<cr>", "base: Open lazygit terminal")
 
 -- quickfix list
 nmap("[q", "<cmd>cprevious<cr>zz","base: Prev quickfix")

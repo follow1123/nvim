@@ -114,6 +114,6 @@ nmap("<M-e>", "<cmd>lua require('extensions.comment').toggle()<cr>", "base: Comm
 vmap("<M-e>", "<cmd>lua require('extensions.comment').visual_toggle()<cr>", "base: Comment line selected")
 
 -- 终端
-nmap("<M-4>", "<cmd>lua require('extensions.terminal').toggle('below_term')<cr>", "base: Open below terminal")
-nmap("<C-\\>", "<cmd>lua require('extensions.terminal').toggle('full_term')<cr>", "base: Open full terminal")
-nmap("<M-6>", "<cmd>lua require('extensions.terminal').toggle('lazygit_term')<cr>", "base: Open lazygit terminal")
+nmap("<M-4>", "<cmd>lua require('extensions.terminal').split_term:toggle()<cr>", "base: Open split terminal")
+nmap("<C-\\>", "<cmd>lua require('extensions.terminal').full_term:toggle()<cr>", "base: Open full terminal")
+nmap("<M-6>", "<cmd>lua require('extensions.terminal').lazygit_term:toggle()<cr>", "base: Open lazygit terminal")

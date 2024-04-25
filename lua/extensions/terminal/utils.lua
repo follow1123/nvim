@@ -1,105 +1,67 @@
-local term_utils = {}
+local M = {}
 
--- 全屏终端window的默认配置
-local full_window_opts = function ()
-  return {
-      relative = "editor",
-      width = vim.api.nvim_get_option("columns"),
-      height = vim.api.nvim_get_option("lines") - 1,
-      row = 0,
-      col = 0,
-      style = "minimal",
-      border = "none",
-  }
+---@param enter boolean 是否直接直接进入窗口
+---@param bufnr number buffer number
+---@return number winid
+---打开一个全屏窗口
+function M.open_full_window(enter, bufnr)
+  return vim.api.nvim_open_win(bufnr, enter, {
+    relative = "editor",
+    width = vim.api.nvim_get_option("columns"),
+    height = vim.api.nvim_get_option("lines") - 1,
+    row = 0,
+    col = 0,
+    style = "minimal",
+    border = "none",
+  })
 end
 
--- 打开一个全屏窗口
-term_utils.open_full_window = function(enter, bufnr)
-  return vim.api.nvim_open_win(bufnr, enter, full_window_opts())
-end
-
--- 创建一个显示终端的buffer
-term_utils.create_term_buf = function()
+---@return number bufnr
+---创建一个显示终端的buffer
+function M.create_term_buf()
   local term_buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_option(term_buf, "modifiable", false)
   vim.api.nvim_buf_set_option(term_buf, "filetype", "fterm")
   return term_buf
 end
 
--- 全屏终端无法离开当前窗口，只能使用默认方式退出或离开
-local function focus_term_event(bufnr)
+---@param bufnr number
+---全屏终端无法离开当前窗口，只能使用默认方式退出或离开
+function M.create_focus_term_event(bufnr)
   vim.api.nvim_create_autocmd("WinLeave", {
     buffer = bufnr,
     callback = function(e)
       -- 终端窗口失去焦点时直接切换回来
-      local term_win_id = vim.fn.bufwinid(e.buf)
+      local winid = vim.fn.bufwinid(e.buf)
       vim.schedule(function()
-        if term_win_id > 0 and term_win_id ~= vim.api.nvim_get_current_win() then
-          vim.fn.win_gotoid(term_win_id)
+        if winid > 0 and winid ~= vim.api.nvim_get_current_win() then
+          vim.fn.win_gotoid(winid)
         end
       end)
     end
   })
 end
 
--- 打开终端
-term_utils.term_open = function(term, cmd, open, exit)
-  local bufnr, win_id
+---@param bufnr number
+---打开终端后直接进入insert模式
+function M.start_insert_event(bufnr)
+  vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
+    buffer = bufnr,
+    command = "startinsert!"
+  })
+end
 
-  if type(open) == "function" then
-    bufnr, win_id = open(term)
-  else
-    bufnr = term_utils.create_term_buf()
-    win_id = term_utils.open_full_window(true, bufnr)
-  end
-
-  local term_id = vim.fn.termopen(cmd, {
-    detach = 1,
-    on_exit = function(_, code)
-      if type(exit) == "function" then
-        exit(term, code)
-        return
-      end
-
-      vim.api.nvim_buf_delete(term.instance.bufnr, { force = true })
-      term.instance = nil
+---@param bufnr number
+---软件窗口大小调整时自适应终端窗口大小
+function M.window_resize_event(bufnr)
+  vim.api.nvim_create_autocmd("VimResized", {
+    buffer = bufnr,
+    callback = function(e)
+      local winid = vim.fn.bufwinid(e.buf)
+      vim.api.nvim_win_set_width(winid, vim.api.nvim_get_option("columns"))
+      vim.api.nvim_win_set_height(winid, vim.api.nvim_get_option("lines") - 1)
     end
   })
-
-  term.instance = {
-    bufnr = bufnr,
-    term_id = term_id,
-    win_id = win_id,
-  }
-
-  if term.full_window then focus_term_event(bufnr) end
-
-  return term.instance
 end
 
--- 显示隐藏终端
-term_utils.term_toggle = function(term, show, hide)
-  local instance = term.instance
-  -- 不存在buffer则直接打开
-  if not instance or not vim.api.nvim_buf_is_valid(instance.bufnr) then
-    term.open()
-    return
-  end
-  -- 当前buffer不是term buffer则切换到term buffer
-  if vim.api.nvim_get_current_buf() == instance.bufnr then
-    if type(hide) == "function" then
-      hide(instance)
-    else
-      vim.api.nvim_win_close(instance.win_id, true)
-    end
-  else
-    if type(show) == "function" then
-      show(instance)
-    else
-      instance.win_id = term_utils.open_full_window(true, instance.bufnr)
-      vim.cmd("normal ^")
-    end
-  end
-end
-
-return term_utils
+return M
