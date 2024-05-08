@@ -187,7 +187,6 @@ function SplitTerm:toggle()
     else
       vim.fn.win_gotoid(self.winid)
     end
-    vim.o.laststatus = 2
   else
     if self.bufnr and vim.api.nvim_buf_is_valid(self.bufnr) and self.chan_id then
       self:show()
@@ -197,7 +196,6 @@ function SplitTerm:toggle()
       end
       self:open()
     end
-    vim.o.laststatus = 0
   end
 end
 
@@ -243,7 +241,6 @@ function SplitTerm:on_exit()
   if vim.api.nvim_win_is_valid(self.from_winid) then
     vim.fn.win_gotoid(self.from_winid)
   end
-  vim.o.laststatus = 2
   self:reset_terminal()
 end
 

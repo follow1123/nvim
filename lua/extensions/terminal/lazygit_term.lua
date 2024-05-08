@@ -26,12 +26,14 @@ LazygitTerm.__index = LazygitTerm
 
 setmetatable(LazygitTerm, Term)
 
+local cmd = "lazygit"
+
 function LazygitTerm:new()
-  if not vim.fn.executable("lazygit") then
+  if not vim.fn.executable(cmd) then
     vim.notify("no lazygit command!", vim.log.levels.ERROR)
     return nil
   end
-  return Term.new(self, "lazygit")
+  return Term.new(self, cmd)
 end
 
 function LazygitTerm:on_open()
