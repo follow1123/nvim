@@ -80,7 +80,6 @@ local function reset_nvim_tree()
     if filetype == "NvimTree" then
       vim.api.nvim_buf_call(bufnr, function()
         vim.cmd("wincmd H")
-        vim.api.nvim_input("zb")
         vim.api.nvim_win_set_width(winid, win_width)
       end)
       break
@@ -165,7 +164,11 @@ function SplitTerm:hide()
 
   -- 保留当前的窗口宽度或高度
   if self.position == "top" or self.position == "bottom" then
-    self.size = (vim.api.nvim_win_get_height(self.winid) - 1) * -1
+    if _G.IS_GUI then
+      self.size = (vim.api.nvim_win_get_height(self.winid) - 1) * -1
+    else
+      self.size = vim.api.nvim_win_get_height(self.winid) * -1
+    end
   elseif self.position == "left" or self.position == "right" then
     self.size = vim.api.nvim_win_get_width(self.winid)
   end
