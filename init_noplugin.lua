@@ -13,10 +13,10 @@ _G.IS_GUI = vim.fn.has("gui_running") == 1
 
 _G.CONFIG_PATH = vim.fn.stdpath("config")
 
-require("mini.ui")
-require("mini.options")
-require("mini.keymaps")
-require("mini.commands")
-require("mini.autocmds")
+require("no_plugin.ui")
+require("no_plugin.options")
+require("no_plugin.keymaps")
+require("no_plugin.commands")
+require("no_plugin.autocmds")
 -- 加载自动匹配括号的插件
 require("extensions.autopairs").on()

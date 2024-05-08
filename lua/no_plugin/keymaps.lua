@@ -39,17 +39,6 @@ nmap("<C-down>", "<C-w>+", "base: Increase window height")
 vmap("<", "<gv", "base: Left tab")
 vmap(">", ">gv", "base: Right tab")
 
--- buffer
-nmap("<S-h>", "<cmd>bprevious<cr>", "base: Prev buffer")
-nmap("<S-l>", "<cmd>bnext<cr>", "base: Next buffer")
-nmap("[b", "<cmd>bprevious<cr>","base: Prev buffer")
-nmap("]b", "<cmd>bnext<cr>", "base: Next buffer")
-
--- 切换两个buffer
-nmap("<leader>bb", "<cmd>e #<cr>", "buffer: Switch to Other Buffer")
-nmap("<leader>`", "<cmd>e #<cr>", "base: Switch to Other Buffer")
-nmap("<C-Tab>", "<C-^>", "base: Switch to Other Buffer")
-
 -- 搜索历史
 nmap("n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
 map("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
@@ -74,10 +63,10 @@ imap(".", ".<c-g>u", "base: Add undo break-points")
 imap(";", ";<c-g>u", "base: Add undo break-points")
 
 -- 上下移动选中的行
-nmap("<M-j>", "<cmd>m .+1<cr>==", "base: Move up")
-nmap("<M-k>", "<cmd>m .-2<cr>==", "base: Move down")
-vmap("<M-j>", ":m '>+1<cr>gv=gv", "base: Move up")
-vmap("<M-k>", ":m '<-2<cr>gv=gv", "base: Move down")
+nmap("<M-j>", function() return vim.bo.modifiable and "<cmd>m .+1<cr>==" or "<Ignore>" end, { expr = true, desc = "base: Move down" })
+nmap("<M-k>", function() return vim.bo.modifiable and "<cmd>m .-2<cr>==" or "<Ignore>" end, { expr = true, desc = "base: Move up" })
+vmap("<M-j>", function() return vim.bo.modifiable and ":m '>+1<cr>gv=gv" or "<Ignore>" end, { expr = true, desc = "base: Move down" })
+vmap("<M-k>", function() return vim.bo.modifiable and ":m '<-2<cr>gv=gv" or "<Ignore>" end, { expr = true, desc = "base: Move up" })
 
 -- 翻页时保持光标居中
 nmap("<C-d>", "<C-d>zz", "base: Scroll dowm and page center")
