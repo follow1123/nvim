@@ -73,7 +73,7 @@ return {
   },
   { -- 缩进线
     "lukas-reineke/indent-blankline.nvim",
-    event = "VeryLazy",
+    priority = 1,
     config = function()
       -- 显示空白字符
       vim.opt.list = true

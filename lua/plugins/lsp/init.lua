@@ -2,7 +2,7 @@ return {
   {"folke/neodev.nvim", lazy = true}, -- neovim开发提示
   {
     "neovim/nvim-lspconfig",
-    event = "VeryLazy",
+    priority = 2,
     dependencies = {
       "williamboman/mason.nvim", -- lsp包管理器
       "williamboman/mason-lspconfig.nvim", -- 包管理器整合插件
