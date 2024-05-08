@@ -29,17 +29,6 @@ nmap("<C-down>", "<C-w>+", "base: Increase window height")
 vmap("<", "<gv", "base: Left tab")
 vmap(">", ">gv", "base: Right tab")
 
--- buffer
-nmap("<S-h>", "<cmd>bprevious<cr>", "base: Prev buffer")
-nmap("<S-l>", "<cmd>bnext<cr>", "base: Next buffer")
-nmap("[b", "<cmd>bprevious<cr>","base: Prev buffer")
-nmap("]b", "<cmd>bnext<cr>", "base: Next buffer")
-
--- 切换两个buffer
-nmap("<leader>bb", "<cmd>e #<cr>", "buffer: Switch to Other Buffer")
-nmap("<leader>`", "<cmd>e #<cr>", "base: Switch to Other Buffer")
-nmap("<C-Tab>", "<C-^>", "base: Switch to Other Buffer")
-
 -- 搜索历史
 nmap("n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
 map("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
@@ -76,10 +65,6 @@ nmap("<C-u>", "<C-u>zz", "base: Scroll up and page center")
 -- 搜索时保持光标居中
 nmap("n", "nzz", "base: Search next and page center")
 nmap("N", "Nzz", "base: Search previous and page center")
-
-
--- 打开配置文件
-nmap("<C-M-s>", "<cmd>e " .. _G.CONFIG_PATH .. "/init.lua <cr>", "base: Open setting file")
 
 nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
 
