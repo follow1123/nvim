@@ -6,7 +6,7 @@ local M = {}
 
 -- windows下保存管理员权限文件
 if _G.IS_WINDOWS then
-  -- 获取份文件路径，如果不存在就创建
+  -- 获取备份文件路径，如果不存在就创建
   local backup_dir = vim.fs.normalize(vim.fn.stdpath("data") .. "/sudo_backup")
   if vim.fn.isdirectory(backup_dir) == 0 then
     vim.fn.mkdir(backup_dir, "p")

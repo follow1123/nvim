@@ -78,7 +78,7 @@ nmap("N", "Nzz", "base: Search previous and page center")
 
 nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
 
-nmap("<M-1>", "<cmd>lua require('mini.netrw').toggle()<cr>", "base: Open Netrw file manager")
+nmap("<M-1>", "<cmd>lua require('no_plugin.netrw').toggle()<cr>", "base: Open Netrw file manager")
 
 nmap("<M-f>", ":find ", {
   desc = "base: Find files",
