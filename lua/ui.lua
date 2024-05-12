@@ -36,3 +36,8 @@ vim.api.nvim_set_hl(0, "DiffText", { fg = "NONE", bg = colors.green_03})
 for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
   vim.api.nvim_set_hl(0, group, {})
 end
+
+if not _G.IS_GUI then
+  vim.api.nvim_set_hl(0, "Normal", { bg = "None" })
+  vim.api.nvim_set_hl(0, "CursorLine", { bg = colors.gray_02 })
+end

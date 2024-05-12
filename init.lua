@@ -7,10 +7,10 @@ _G.IS_GUI = vim.fn.has("gui_running") == 1
 -- nvim配置文件路径
 _G.CONFIG_PATH = vim.fn.stdpath("config")
 
+require("ui")
 require("options")
 require("keymaps")
 require("commands")
 require("autocmds")
-require("ui")
 
 require("plugin_init")
