@@ -1,8 +1,9 @@
--- #################################################################################
--- #                                                                               #
--- #                                  最小化配置                                   #
--- #                                                                               #
--- #################################################################################
+--#############################################################################
+--#                                                                           #
+--#                                最小化配置                                 #
+--#                                                                           #
+--#############################################################################
+
 --判断使用为windows
 _G.IS_WINDOWS = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1)
 -- 判断是否为linux
@@ -12,47 +13,47 @@ _G.IS_GUI = vim.fn.has("gui_running") == 1
 
 _G.CONFIG_PATH = vim.fn.stdpath("config")
 
--- #################################################################################
--- #                                                                               #
--- #                                   基础配置                                    #
--- #                                                                               #
--- #################################################################################
+--#############################################################################
+--#                                                                           #
+--#                                基础配置                                   #
+--#                                                                           #
+--#############################################################################
 
-vim.opt.number = true                             -- 行号
-vim.opt.relativenumber = true                     -- 设置相对行号
-vim.opt.clipboard = "unnamedplus"                 -- 设置和剪贴板共用
-vim.opt.tabstop = 4	                              -- tab键相关
-vim.opt.shiftwidth = 4                            -- shift宽度
-vim.opt.smartindent = true                        -- 智能缩进
-vim.opt.termguicolors = true                      -- 开启终端颜色
-vim.opt.cursorline = true                         -- 游标
-vim.opt.incsearch = true                          -- 增量搜索
-vim.opt.smartindent = true                        -- 智能匹配
-vim.opt.ignorecase = true	                        -- 搜索忽略大小写
-vim.opt.wrap = false	                            -- 禁止折行显示文本
-vim.opt.scrolloff = 4                             -- 光标移动的时候始终保持上下左右至少有 4 个空格的间隔
-vim.opt.sidescrolloff = 8                         -- 光标所有移动时保持离边框8个字符时开始横向滚动
-vim.opt.mouse = "a"                               -- 支持鼠标
-vim.opt.foldmethod = "indent"                     -- 根据缩进折叠
-vim.opt.foldenable = false                        -- 打开文件时自动折叠
-vim.opt.foldlevel = 99                            -- 最大折叠深度
-vim.opt.syntax = "on"                             -- 语法检测
-vim.opt.splitbelow = true                         -- 分割水平新窗口默认在下边
-vim.opt.splitright = true                         -- 分割垂直新窗口默认在右
-vim.opt.undofile = true                           -- 启用保存undofile的功能
-vim.opt.fillchars = { eob = ' ' }                 -- 去掉没有文字的行左边会显示的～号，
-vim.opt.pumheight = 15                            -- 补全弹窗最大补全个数
-vim.opt.path:append("**/*")                       -- 添加find查找所有子目录路径
-vim.opt.wildmenu = true                           -- 搜索显示补全
-vim.opt.colorcolumn = "80" -- 限制列宽
+vim.opt.number = true             -- 行号
+vim.opt.relativenumber = true     -- 设置相对行号
+vim.opt.clipboard = "unnamedplus" -- 设置和剪贴板共用
+vim.opt.tabstop = 4	              -- tab键相关
+vim.opt.shiftwidth = 4            -- shift宽度
+vim.opt.smartindent = true        -- 智能缩进
+vim.opt.termguicolors = true      -- 开启终端颜色
+vim.opt.cursorline = true         -- 游标
+vim.opt.incsearch = true          -- 增量搜索
+vim.opt.smartindent = true        -- 智能匹配
+vim.opt.ignorecase = true	        -- 搜索忽略大小写
+vim.opt.wrap = false	            -- 禁止折行显示文本
+vim.opt.scrolloff = 4             -- 光标移动的时候始终保持上下左右至少有 4 个空格的间隔
+vim.opt.sidescrolloff = 8         -- 光标所有移动时保持离边框8个字符时开始横向滚动
+vim.opt.mouse = "a"               -- 支持鼠标
+vim.opt.foldmethod = "indent"     -- 根据缩进折叠
+vim.opt.foldenable = false        -- 打开文件时自动折叠
+vim.opt.foldlevel = 99            -- 最大折叠深度
+vim.opt.syntax = "on"             -- 语法检测
+vim.opt.splitbelow = true         -- 分割水平新窗口默认在下边
+vim.opt.splitright = true         -- 分割垂直新窗口默认在右
+vim.opt.undofile = true           -- 启用保存undofile的功能
+vim.opt.fillchars = { eob = ' ' } -- 去掉没有文字的行左边会显示的～号，
+vim.opt.pumheight = 15            -- 补全弹窗最大补全个数
+vim.opt.path:append("**/*")       -- 添加find查找所有子目录路径
+vim.opt.wildmenu = true           -- 搜索显示补全
+vim.opt.colorcolumn = "80"        -- 限制列宽
 
-vim.g.mapleader = " "                             -- leader 键
+vim.g.mapleader = " "             -- leader键
 
--- #################################################################################
--- #                                                                               #
--- #                                  keymap配置                                   #
--- #                                                                               #
--- #################################################################################
+--#############################################################################
+--#                                                                           #
+--#                                  keymap                                   #
+--#                                                                           #
+--#############################################################################
 
 local keymap_opts = { noremap = true, silent = true }
 
@@ -72,28 +73,9 @@ vim.keymap.set("n","<C-right>", "<C-w>>", keymap_opts)
 vim.keymap.set("n","<C-up>", "<C-w>-", keymap_opts)
 vim.keymap.set("n","<C-down>", "<C-w>+", keymap_opts)
 
--- visual模式下tab        
-vim.keymap.set("v","<", "<gv", keymap_opts)
-vim.keymap.set("v",">", ">gv", keymap_opts)
-
--- buffer
-vim.keymap.set("n","<S-h>", "<cmd>bprevious<cr>", keymap_opts)
-vim.keymap.set("n","<S-l>", "<cmd>bnext<cr>", keymap_opts)
-vim.keymap.set("n","[b", "<cmd>bprevious<cr>", keymap_opts)
-vim.keymap.set("n","]b", "<cmd>bnext<cr>", keymap_opts)
-
--- 切换两个buffer
-vim.keymap.set("n","<leader>bb", "<cmd>e #<cr>", keymap_opts)
-vim.keymap.set("n","<leader>`", "<cmd>e #<cr>", keymap_opts)
-vim.keymap.set("n","<C-Tab>", "<C-^>", keymap_opts)
-
 -- 搜索历史
 vim.keymap.set("n","n", "'Nn'[v:searchforward]", { expr = true })
-vim.keymap.set("x", "n", "'Nn'[v:searchforward]", { expr = true })
-vim.keymap.set("o", "n", "'Nn'[v:searchforward]", { expr = true })
 vim.keymap.set("n", "N", "'nN'[v:searchforward]", { expr = true })
-vim.keymap.set("x", "N", "'nN'[v:searchforward]", { expr = true })
-vim.keymap.set("o", "N", "'nN'[v:searchforward]", { expr = true })
 
 -- visual line模式
 vim.keymap.set("n","<leader>v", "V", keymap_opts)
@@ -102,23 +84,24 @@ vim.keymap.set("n","<leader>v", "V", keymap_opts)
 vim.keymap.set("i","<esc>", "<cmd>noh<cr><esc>", keymap_opts)
 vim.keymap.set("n","<esc>", "<cmd>noh<cr><esc>", keymap_opts)
 
--- Ctrl+s保存
-vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", keymap_opts)
-
 -- 添加保存存档点
 vim.keymap.set("i",",", ",<c-g>u", keymap_opts)
 vim.keymap.set("i",".", ".<c-g>u", keymap_opts)
 vim.keymap.set("i",";", ";<c-g>u", keymap_opts)
 
 -- 上下移动选中的行
-vim.keymap.set("n","<M-j>", function() return vim.bo.modifiable and "<cmd>m .+1<cr>==" or "<Ignore>" end, { expr = true })
-vim.keymap.set("n","<M-k>", function() return vim.bo.modifiable and "<cmd>m .-2<cr>==" or "<Ignore>" end, { expr = true })
 vim.keymap.set("v","<M-j>", function() return vim.bo.modifiable and ":m '>+1<cr>gv=gv" or "<Ignore>" end, { expr = true })
 vim.keymap.set("v","<M-k>", function() return vim.bo.modifiable and ":m '<-2<cr>gv=gv" or "<Ignore>" end, { expr = true })
 
 -- 翻页时保持光标居中
 vim.keymap.set("n","<C-d>", "<C-d>zz", keymap_opts)
 vim.keymap.set("n","<C-u>", "<C-u>zz", keymap_opts)
+
+-- quickfix list
+vim.keymap.set("n", "[q", "<cmd>cprevious<cr>zz", keymap_opts)
+vim.keymap.set("n", "]q", "<cmd>cnext<cr>zz", keymap_opts)
+
+vim.keymap.set("n", "<M-`>", "<C-^>", keymap_opts)
 
 -- 搜索时保持光标居中
 vim.keymap.set("n","n", "nzz", keymap_opts)
@@ -139,11 +122,11 @@ vim.keymap.set("c", "<M-f>", function() vim.api.nvim_input("<C-Right>") end, key
 vim.keymap.set("c", "<M-b>", function() vim.api.nvim_input("<C-Left>") end, keymap_opts)
 
 
--- #################################################################################
--- #                                                                               #
--- #                               autocommand配置                                 #
--- #                                                                               #
--- #################################################################################
+--#############################################################################
+--#                                                                           #
+--#                                autocommand                                #
+--#                                                                           #
+--#############################################################################
 
 -- 去除回车后注释下一行
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -201,11 +184,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- #################################################################################
--- #                                                                               #
--- #                                  theme配置                                    #
--- #                                                                               #
--- #################################################################################
+--#############################################################################
+--#                                                                           #
+--#                                  colorscheme                              #
+--#                                                                           #
+--#############################################################################
 
-vim.api.nvim_set_hl(0, "Visual", { fg = "NONE", bg = "#4b4b4b" }) -- visual模式选中文本的颜色
-vim.api.nvim_set_hl(0, "ColorColumn", { link = "CursorLine" }) -- visual模式选中文本的颜色
+-- visual模式选中文本的颜色
+vim.api.nvim_set_hl(0, "Visual", { fg = "NONE", bg = "#4b4b4b" })
+
+-- visual模式选中文本的颜色
+vim.api.nvim_set_hl(0, "ColorColumn", { link = "CursorLine" })

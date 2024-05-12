@@ -1,6 +1,8 @@
--- ###########################
--- #        按键映射         #
--- ###########################
+--#############################################################################
+--#                                                                           #
+--#                                   keymap                                  #
+--#                                                                           #
+--#############################################################################
 
 local function map(mode, lhs, rhs, opts)
   opts = vim.fn.empty(opts) == 0 and opts or nil
@@ -35,17 +37,9 @@ nmap("<C-right>", "<C-w>>", "base: Increase window width")
 nmap("<C-up>", "<C-w>-", "base: Decrease window height")
 nmap("<C-down>", "<C-w>+", "base: Increase window height")
 
--- visual模式下tab        
-vmap("<", "<gv", "base: Left tab")
-vmap(">", ">gv", "base: Right tab")
-
 -- 搜索历史
 nmap("n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
-map("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
-map("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
 nmap("N", "'nN'[v:searchforward]", { expr = true, desc = "base: Prev search result" })
-map("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "base: Prev search result" })
-map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "base: Prev search result" })
 
 -- visual line模式
 nmap("<leader>v", "V", "base: Visual line mode")
@@ -63,8 +57,6 @@ imap(".", ".<c-g>u", "base: Add undo break-points")
 imap(";", ";<c-g>u", "base: Add undo break-points")
 
 -- 上下移动选中的行
-nmap("<M-j>", function() return vim.bo.modifiable and "<cmd>m .+1<cr>==" or "<Ignore>" end, { expr = true, desc = "base: Move down" })
-nmap("<M-k>", function() return vim.bo.modifiable and "<cmd>m .-2<cr>==" or "<Ignore>" end, { expr = true, desc = "base: Move up" })
 vmap("<M-j>", function() return vim.bo.modifiable and ":m '>+1<cr>gv=gv" or "<Ignore>" end, { expr = true, desc = "base: Move down" })
 vmap("<M-k>", function() return vim.bo.modifiable and ":m '<-2<cr>gv=gv" or "<Ignore>" end, { expr = true, desc = "base: Move up" })
 
@@ -76,14 +68,17 @@ nmap("<C-u>", "<C-u>zz", "base: Scroll up and page center")
 nmap("n", "nzz", "base: Search next and page center")
 nmap("N", "Nzz", "base: Search previous and page center")
 
+-- quickfix list
+nmap("[q", "<cmd>cprevious<cr>zz", "base: Prev quickfix")
+nmap("]q", "<cmd>cnext<cr>zz", "base: Next quickfix")
+
+nmap("<M-`>", "<C-^>", "base: Toggle switch buffer")
+
 nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
 
 nmap("<M-1>", "<cmd>lua require('no_plugin.netrw').toggle()<cr>", "base: Open Netrw file manager")
 
-nmap("<M-f>", ":find ", {
-  desc = "base: Find files",
-  silent = false
-})
+nmap("<M-f>", ":find ", { desc = "base: Find files", silent = false })
 
 imap("<C-j>", "<C-n>", "") -- 修改补全弹窗的快捷键
 imap("<C-k>", "<C-p>", "")

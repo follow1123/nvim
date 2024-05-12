@@ -21,7 +21,6 @@ return {
           h = "Help",
           l = "LSP",
           p = "Project",
-          w = "Window",
         },
         ["["] = "Next Options",
         ["]"] = "Previous Options",
