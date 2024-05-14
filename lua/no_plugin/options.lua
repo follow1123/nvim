@@ -30,4 +30,5 @@ vim.g.mapleader = " "                             -- leader 键
 vim.opt.pumheight = 15                            -- 补全弹窗最大补全个数
 vim.opt.path:append("**/*")                       -- 添加find查找所有子目录路径
 vim.opt.wildmenu = true                           -- 搜索显示补全
-vim.opt.colorcolumn = "80" -- 限制列宽
+vim.opt.colorcolumn = "80"                        -- 限制列宽
+vim.opt.inccommand = "split"                      -- 替换时底部显示所有匹配的列

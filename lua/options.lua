@@ -30,6 +30,7 @@ vim.opt.shell = _G.IS_WINDOWS and "cmd" or "zsh" -- 目前windows下设置后tog
 vim.opt.undofile = true                          -- 启用保存undofile的功能
 vim.opt.fillchars = { eob = ' ' }                -- 去掉没有文字的行左边会显示的～号，
 vim.opt.colorcolumn = "80"                       -- 限制列宽
+vim.opt.inccommand = "split"      -- 替换时底部显示所有匹配的列
 
 vim.wo.signcolumn = "yes"                        -- 显示左侧图标指示列
 vim.g.mapleader = " "                            -- leader 键

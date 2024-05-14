@@ -32,6 +32,7 @@ set splitright            " 分割垂直新窗口默认在右
 set fillchars+=eob:\      " 去掉没有文字的行左边会显示的～号，
 set pumheight=15          " 补全弹窗最大补全个数
 set colorcolumn=80        " 限制列宽
+set inccommand=nosplit    " 替换时底部显示所有匹配的列
 
 " let g:mapleader=" "                         " leader 键
 
