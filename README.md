@@ -1,23 +1,19 @@
-# Nvim
-
-**一个自定义配置的Neovim可用版本**
-
-![preview](imgs/screenshot.png)
+# Neovim Config
 
 ## 特性
 
-* 轻量ide，开发lua、rust等
-* 非常非常非常懒加载，使用[lazy.vim](https://github.com/folke/lazy.nvim)插件管理，优化每个插件的启动方式
-* 内部包含一个无插件的配置
+* lua、rust、c/c++相关配置
+* 使用[lazy.vim](https://github.com/folke/lazy.nvim)插件管理，优化启动速度
+* 存在无插件配置和最小化配置，以及vimrc文件适应各vim或neovim
+
 
 ## 依赖
 
 * Neovim >= **0.8.0** 
 * Git >= **2.19.0** 
 * [Nerd Font](https://www.nerdfonts.com/) 字体 **_(可选)_**
-* [nodejs](https://nodejs.org/) (预览markdown)
-* c 编译工具 (用于编译nvim-treesitter)
-* [fd](https://github.com/sharkdp/fd) (文件查找)
+* C编译工具 (用于编译nvim-treesitter)
+* [fd](https://github.com/sharkdp/fd) (文件查找) **_(可选)_**
 * [ripgrep](https://github.com/BurntSushi/ripgrep) (模糊搜索)
 * [lazygit](https://github.com/jesseduffield/lazygit) (git管理)
 
@@ -26,66 +22,29 @@
 ### Windows
 
 * 在powershell下安装
+
 ```powershell
 git clone https://github.com/follow1123/nvim $env:LOCALAPPDATA\nvim
+
+# 如果下载插件后打开nvim下载插件后报错，使用:Lazy restore命令将所有插件的版本都恢复到lazy-lock文件里面的版本
+# 如果还是报错可能是插件删库了，在plugin目录内找到对应插件的位置去除
+
+# 无插件配置init文件为init_noplugin.lua
+# 最小化配置init文件为init_mini.lua
+# vimrc配置文件为vimrc
 ```
 ### Linux
 ```bash
 git clone https://github.com/follow1123/nvim ~/.config/nvim
 ```
 
-## 项目结构
-
-```cmd
-.
-├── lua
-│   ├── extensions              自定义扩展功能
-│   ├── mini                    无插件配置
-│   ├── lang                    语言功能，类似ftplugin
-│   ├── autocmds.lua            自动命令
-│   ├── commands.lua            自定义命令
-│   ├── keymaps.lua             按键映射
-│   ├── options.lua             基础配置
-│   ├── plugin_init.lua         插件初始化
-│   ├── plugins                 插件目录
-│   │   ├── cmp                 补全功能插件
-│   │   │   ├── format.lua
-│   │   │   ├── init.lua
-│   │   │   ├── keymap.lua
-│   │   │   └── source.lua
-│   │   ├── git.lua             git功能插件
-│   │   ├── lsp                 LSP功能插件
-│   │   │   ├── init.lua
-│   │   │   ├── keymap.lua
-│   │   │   └── lang
-│   │   │       └── lua_ls.lua
-│   │   ├── nvim-tree.lua       目录树插件
-│   │   ├── others.lua          其他插件
-│   │   ├── project.lua         项目管理相关插件
-│   │   ├── syntax.lua          语法相关插件
-│   │   ├── telescope.lua       telescope插件
-│   │   └── ui.lua              ui相关插件
-│   └── utils                   工具
-├── init.lua                    nvim配置入口
-└── init_min.lua                无插件配置入口
-```
-
-### 无插件配置使用方式
-
-#### windows
-
-```cmd
-nvim -u %LOCALAPPDATA%\nvim\init_min.lua
-```
-
-#### linux
-
-```bash
-nvim -u ~/.config/nvim/init_min.lua
-```
-
 ## 按键映射
+
 > 使用[which-key](https://github.com/folke/which-key.nvim)插件管理按键
+
+* 按键大部部分使用原版vim的方式，只是添加了新功能
+
+* 使用`:WhichKey`命令插件按键配置
 
 ### 基础按键
 
