@@ -19,4 +19,4 @@ require("no_plugin.keymaps")
 require("no_plugin.commands")
 require("no_plugin.autocmds")
 -- 加载自动匹配括号的插件
-require("extensions.autopairs").on()
+require("extensions.pairs").setup()

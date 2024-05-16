@@ -14,3 +14,5 @@ require("commands")
 require("autocmds")
 
 require("plugin_init")
+
+require("extensions.pairs").setup()
