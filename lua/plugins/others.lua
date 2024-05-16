@@ -1,38 +1,6 @@
 local keymap_uitl = require("utils.keymap")
-local colors = require("utils.colors")
 local lazy_map = keymap_uitl.lazy_map
 return {
-  { -- which key
-    "folke/which-key.nvim",
-    event = "InsertEnter",
-    keys = "<space>",
-    config = function()
-      vim.o.timeout = true
-      vim.o.timeoutlen = 700
-      local wk = require("which-key")
-      wk.register({
-        ["<leader>"] = {
-          name = "Base custom keymap",
-          b = "Buffer",
-          c = "Code",
-          d = "Diff",
-          f = "File",
-          g = "Git",
-          h = "Help",
-          l = "LSP",
-          p = "Project",
-        },
-        ["["] = "Next Options",
-        ["]"] = "Previous Options",
-      })
-      wk.setup {
-        window = {
-          border = "single",
-        }
-      }
-      vim.api.nvim_set_hl(0, "WhichKeyFloat", { bg = colors.primary })
-    end,
-  },
   { -- markdown
     "iamcco/markdown-preview.nvim",
     build = function() vim.fn["mkdp#util#install"]() end,

@@ -32,43 +32,6 @@ return {
       }
     end
   },
-  { -- vim.ui 图形化插件
-    "stevearc/dressing.nvim",
-    module = true,
-    config = function()
-      require("dressing").setup {
-        input = {
-          border = "single",
-          get_config = function(opts)
-            -- project_session插件打开项目时输入框居中显示
-            if opts.kind == "projectsession" then
-              return {
-                relative = "editor",
-              }
-            end
-          end
-        },
-        select = {
-          builtin = {
-            border = "single",
-          },
-          get_config = function(opts)
-            -- codeaction弹框特殊样式
-            if opts.kind == "codeaction" then
-              return {
-                backend = "nui",
-                builtin = {
-                  border = "single",
-                  show_numbers = false,
-                  relative = "cursor",
-                },
-              }
-            end
-          end
-        }
-      }
-    end
-  },
   { -- 颜色显示
     "norcalli/nvim-colorizer.lua",
     keys = {

@@ -31,8 +31,18 @@ vim.opt.undofile = true                          -- 启用保存undofile的功�
 vim.opt.fillchars = { eob = ' ' }                -- 去掉没有文字的行左边会显示的～号，
 vim.opt.colorcolumn = "80"                       -- 限制列宽
 vim.opt.inccommand = "split"      -- 替换时底部显示所有匹配的列
+vim.opt.timeout = true                           -- leaderkey按键延时 
+vim.opt.timeoutlen = 700                         -- leaderkey按键延时间，毫秒
+
+-- 显示空白字符
+vim.opt.list = true
+-- vim.opt.listchars:append "space:⋅"
+vim.opt.listchars:append "eol:↴"
+vim.opt.listchars:append "tab:  "
+vim.opt.listchars:append "trail: "
 
 vim.wo.signcolumn = "yes"                        -- 显示左侧图标指示列
+
 vim.g.mapleader = " "                            -- leader 键
 
 -- netrw 文件树配置
