@@ -1,111 +1,57 @@
--- 设置tab默认宽度和风格（是否使用空格代替）
-local function set_tab_style(width, expand)
-  vim.opt_local.tabstop = width
-  vim.opt_local.shiftwidth = width
-  vim.opt_local.expandtab = expand
-end
 -- 去除回车后注释下一行
 vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = "*",
-	callback = function()
-		vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
-	end,
+  pattern = "*",
+  callback = function()
+    vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
+  end,
 })
 
 -- 使用:terminal命令打开终端时默认关闭行号，并直接进入insert模式
 vim.api.nvim_create_autocmd("TermOpen", {
-	pattern = "*",
-	callback = function()
+  pattern = "*",
+  callback = function()
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
     vim.cmd("startinsert!")
-	end,
+  end,
 })
 
 -- windows下离开insert模式后、进入vim时输入法切换为英文模式
 -- linux下离开insert模式数日发切换为英文模式
 if _G.IS_WINDOWS then
-	vim.api.nvim_create_autocmd("InsertLeave", {
-		pattern = "*",
+  vim.api.nvim_create_autocmd("InsertLeave", {
+    pattern = "*",
     nested = true, -- 允许嵌套
-		callback = function() vim.fn.system("im_select.exe 1") end,
-	})
+    callback = function() vim.fn.system("im_select.exe 1") end,
+  })
 else
-	vim.api.nvim_create_autocmd("InsertLeave", {
-		pattern = "*",
-		callback = function()
-			if tonumber(vim.fn.system("fcitx5-remote")) == 2 then
-				vim.fn.system("fcitx5-remote -c")
-			end
-		end,
-	})
+  vim.api.nvim_create_autocmd("InsertLeave", {
+    pattern = "*",
+    callback = function()
+      if tonumber(vim.fn.system("fcitx5-remote")) == 2 then
+        vim.fn.system("fcitx5-remote -c")
+      end
+    end,
+  })
 end
 
 -- 在终端模式下，vim退出后还原光标样式
 if not _G.IS_GUI then
-	vim.api.nvim_create_autocmd("VimLeave", {
-		pattern = "*",
+  vim.api.nvim_create_autocmd("VimLeave", {
+    pattern = "*",
     nested = true,
-		callback = function()
+    callback = function()
       vim.opt.guicursor:append("a:ver25")
       vim.opt.guicursor:append("a:blinkon1")
       vim.opt.guicursor:append("a:blinkoff1")
-		end,
-	})
+    end,
+  })
 end
-
 
 -- 复制时高亮
 vim.api.nvim_create_autocmd("TextYankPost", {
-	pattern = "*",
-	callback = function()
-		vim.highlight.on_yank({ timeout = 100, })
-	end,
-})
-
--- treesitter窗口配置
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "query",
-	callback = function()
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-	end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "lua",
-	callback = function()
-    set_tab_style(2, true)
-
-    -- 加载lua文件相关快捷键
-    if not package.loaded["lang.lua"] then
-      require("lang.lua")
-    end
-	end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "rust",
-	callback = function()
-    -- 加载rust文件相关快捷键
-    if not package.loaded["lang.rust"] then
-      require("lang.rust")
-    end
-	end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "typescript", "javascript", "json", "html", "css", "less", "scss", "vue" },
-	callback = function()
-    -- 设置默认缩进
-    set_tab_style(2, true)
-	end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "typescriptreact", "javascriptreact" },
-	callback = function()
-    -- 设置默认缩进
-    set_tab_style(2, true)
-	end,
+  pattern = "*",
+  callback = function()
+    vim.highlight.on_yank({ timeout = 100, })
+  end,
 })
