@@ -11,9 +11,8 @@ local M = {}
 ---@type Symbol[]
 M.symbols = {
   { left = "{", right = "}" },
-  { left = "(", right = ")" },
   { left = "[", right = "]" },
-  { left = "{", right = "}" },
+  { left = "(", right = ")" },
   { left = '"', right = '"' },
   { left = "'", right = "'" },
 }
@@ -21,6 +20,18 @@ M.symbols = {
 ---直接输出符号对并向左移动光标
 ---@param symbol Symbol
 local function complete_pair(symbol)
+
+  if symbol.left == "(" then
+    local line = vim.fn.line(".") - 1
+    local col = vim.fn.col(".") - 1
+    local next_char = vim.api.nvim_buf_get_text(0, line, col, line, col + 1, {})[1]
+
+    if string.match(next_char, "%S") then
+      vim.api.nvim_put({ symbol.left } , "", false, true)
+      return
+    end
+  end
+
   vim.api.nvim_put({ symbol.left .. symbol.right } , "", false, true)
   vim.api.nvim_input("<Left>")
 end
