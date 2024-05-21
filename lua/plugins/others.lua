@@ -23,16 +23,6 @@ return {
       }
     end
   },
-  { -- 注释插件
-    "numToStr/Comment.nvim",
-    keys = {
-      lazy_map("n", "<M-e>", "<cmd>normal gcc<cr>", "comment: Comment code in normal mode"),
-      lazy_map("v","<M-e>", "<cmd>normal gcc<cr>", "comment: Comment code in visual mode"),
-    },
-    config = function()
-      require("Comment").setup()
-    end
-  },
   {
     "ThePrimeagen/harpoon",
     keys = {

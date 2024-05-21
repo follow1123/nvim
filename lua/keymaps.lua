@@ -68,3 +68,7 @@ nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close wi
 nmap("<C-\\>", "<cmd>lua require('extensions.terminal').full_term:toggle()<cr>", "base: Open full terminal")
 nmap("<M-4>", "<cmd>lua require('extensions.terminal').split_term:toggle()<cr>", "base: Open split terminal")
 nmap("<M-6>", "<cmd>lua require('extensions.terminal').lazygit_term:toggle()<cr>", "base: Open lazygit terminal")
+
+-- 注释
+nmap("<M-e>", "<cmd>lua require('extensions.comment').toggle_comment_line()<cr>", "base: Comment line")
+vmap("<M-e>", "<cmd>lua require('extensions.comment').toggle_comment_visual_mode()<cr>", "base: Comment line selected")

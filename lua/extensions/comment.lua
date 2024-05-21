@@ -1,98 +1,284 @@
--- ###########################
--- #         注释插件        #
--- ###########################
+---@class Comment
+---@field start string
+---@field close string?
+---@field match_start string?
+---@field match_close string?
+
+---@class CommentExt
+---@field toggle_comment_line function
 local M = {}
 
--- 注释字符串
+---@type table<string, Comment>
 local comments = {
-  minus = "--",
-  rem = "REM",
-  slash = "//",
-  hash = "#"
+  dash = { start = "--", match_start = "%-%-" },
+  rem = { start = "REM" },
+  slash = { start = "//" },
+  hash = { start = "#" },
+  lisp = { start = ";;" },
+  html = {
+    start = "<!--", close = "-->",
+    match_start = "<%!%-%-", match_close = "%-%->"
+  }
 }
 
--- 文件类型注释map
-local ft_comments = {
-  lua = comments.minus,
+---@type table<string, Comment>
+local fts = {
+  lua = comments.dash,
   dosbatch = comments.rem,
   c = comments.slash,
   rust = comments.slash,
   ps1 = comments.hash,
   conf = comments.hash,
+  xml = comments.html,
+  lisp = comments.lisp,
+  json = comments.slash,
+  markdown = comments.html
 }
 
--- 判断是否被注释
-local function is_commented(line, filetype)
-  local pattern = ft_comments[filetype]
-  if pattern then
-    if filetype == "lua" then
-      pattern = "%-%-"
+---@param text string
+---@param pattern string
+---@return integer index start index
+---@return integer index end index
+local function locate_pos(text, pattern)
+  local start_idx, end_idx = string.find(text, pattern)
+  local err_msg = string.format("not fond `%s` in `%s`", pattern, text)
+  assert(start_idx, err_msg)
+  assert(end_idx, err_msg)
+  return start_idx, end_idx
+end
+
+---@param start_line integer
+---@param end_line integer
+---@param start_col integer
+---@param end_col integer
+---@param text string
+local function insert_text(start_line, end_line, start_col, end_col, text)
+  start_line = start_line > 0 and start_line - 1 or start_line
+  end_line = end_line > 0 and end_line - 1 or end_line
+  start_col = start_col > 0 and start_col - 1 or start_col
+  end_col = end_col > 0 and end_col - 1 or end_col
+  vim.api.nvim_buf_set_text(
+    0, start_line, start_col, end_line, end_col, { text })
+end
+
+---@param line_num integer
+---@param start_col integer
+---@param end_col integer
+---@return string
+local function get_text(line_num, start_col, end_col)
+  line_num = line_num > 0 and line_num - 1 or line_num
+  start_col = start_col > 0 and start_col - 1 or start_col
+  end_col = end_col > 0 and end_col - 1 or end_col
+  return vim.api.nvim_buf_get_text(
+    0, line_num, start_col, line_num, end_col, {})[1]
+end
+
+---@param comment Comment
+---@param line_num integer
+---@param text string
+local function comment_line(comment, line_num, text)
+  local start_idx, end_idx = locate_pos(text, "%S")
+  insert_text(line_num, line_num, start_idx, end_idx, comment.start .. " ")
+end
+
+---@param comment Comment
+---@param line_num integer
+---@param text string
+local function uncomment_line(comment, line_num, text)
+  local start_idx, _ = locate_pos(text, comment.match_start or comment.start)
+  insert_text(
+    line_num, line_num, start_idx, start_idx + #comment.start + 1, "")
+end
+
+---@param comment Comment
+---@param text string
+local function is_line_commented(comment, text)
+  local comment_str = comment.match_start or comment.start
+  return string.match(vim.trim(text), "^" .. comment_str) ~= nil
+end
+
+---@param comment Comment
+---@param line_num integer
+---@param text string
+local function toggle_comment_line(comment, line_num, text)
+  if is_line_commented(comment, text) then
+    uncomment_line(comment, line_num, text)
+  else
+    comment_line(comment, line_num, text)
+  end
+end
+
+---@return Comment
+local function get_ft_comment()
+  local ft = vim.bo.filetype
+  local comment = fts[ft]
+  assert(comment,
+    string.format("filetype: `%s` not implement comment", ft))
+  return comment
+end
+
+---@param comment Comment
+---@param start_line integer
+---@param end_line integer
+local function toggle_comment_lines(comment, start_line, end_line)
+  local line_info = {}
+  local comment_indent_idx
+
+  for i = start_line, end_line , 1 do
+    local text = vim.fn.getline(i)
+    if vim.fn.empty(text) == 1 then
+      goto continue
     end
-    return string.match(vim.trim(line), "^" .. pattern) and 1 or 2
-  end
-  return 0
-end
 
--- 注释操作
-function M.comment(line_num, line, filetype)
-  local comment_str = ft_comments[filetype]
-  local first_char_index = string.find(line, "%S")
-  if first_char_index then
-    local prev_str = string.sub(line, 1, first_char_index - 1)
-    local next_str = string.sub(line, first_char_index, #line)
-    local commented_line = prev_str .. comment_str .. " " .. next_str
-    vim.fn.setline(line_num, commented_line)
-  end
-end
+    local line = { line_num = i, text = text }
 
--- 取消注释操作
-function M.uncomment(line_num, line, filetype)
-  local comment_str = ft_comments[filetype]
-  local first_char_index = string.find(line, "%S")
-  if comment_str then
-    local comment_len = #comment_str + 1
-    if first_char_index then
-      local prev_str = string.sub(line, 1, first_char_index - 1)
-      local next_str = string.sub(line, first_char_index, #line)
-      local uncomment_line = vim.trim(string.sub(next_str, comment_len, #line))
-      uncomment_line = prev_str .. vim.trim(uncomment_line)
-      vim.fn.setline(line_num, uncomment_line)
+    if is_line_commented(comment, text) then
+      line.commented = true
+    end
+
+    table.insert(line_info, line)
+
+    local start_idx, _ = locate_pos(text, "%S")
+    if comment_indent_idx == nil or start_idx < comment_indent_idx then
+      comment_indent_idx = start_idx
+    end
+    ::continue::
+  end
+
+  for _, line in ipairs(line_info) do
+    if line.commented then
+      uncomment_line(comment, line.line_num, line.text)
+    else
+      insert_text(
+        line.line_num, line.line_num, comment_indent_idx,
+        comment_indent_idx, comment.start .. " "
+      )
     end
   end
 end
 
--- 切换注释和取消注释操作
-function M.toggle()
+---@param comment Comment
+---@param start_line integer
+---@param end_line integer
+---@param start_col integer
+---@param end_col integer
+local function comment_bracket(
+  comment, start_line, end_line, start_col, end_col)
+
+  insert_text(
+    start_line, start_line, start_col, start_col, comment.start .. " ")
+
+  if start_line == end_line then
+    end_col = end_col + #comment.start + 1
+  end
+
+  insert_text(end_line, end_line, end_col, end_col, " " .. comment.close)
+end
+
+---@param comment Comment
+---@param start_line integer
+---@param end_line integer
+---@param start_col integer
+---@param end_col integer
+local function uncomment_bracket(
+  comment, start_line, end_line, start_col, end_col)
+
+  if start_col == 0 then
+    start_col = start_col + 1
+  end
+
+  insert_text(
+    start_line, start_line, start_col, start_col + #comment.start + 1, "")
+
+  if start_line == end_line then
+    end_col = end_col - #comment.start - 1
+  end
+
+  insert_text(end_line, end_line, end_col - #comment.close - 1, end_col, "")
+end
+
+---@param comment Comment
+---@param start_line integer
+---@param end_line integer
+---@param start_col integer
+---@param end_col integer
+local function is_bracket_commented(
+  comment, start_line, end_line, start_col, end_col)
+
+  assert(
+    comment.start and comment.close,
+    string.format(
+      "Invalid comment: start: `%s`, close, `%s`",
+      comment.start, comment.close
+    )
+  )
+
+  local start_text = get_text(
+    start_line, start_col, #vim.fn.getline(start_line))
+
+  local is_comment_start = string.match(
+    vim.trim(start_text), "^" .. (comment.match_start or comment.start)) ~= nil
+
+  local end_text = get_text(end_line, 0, end_col)
+  local is_comment_close = string.match(
+    vim.trim(end_text), (comment.match_close or comment.close) .. "$") ~= nil
+
+  return is_comment_start and is_comment_close
+end
+
+---@param comment Comment
+---@param start_line integer
+---@param end_line integer
+---@param start_col integer
+---@param end_col integer
+local function toggle_bracket_comment(
+  comment, start_line, end_line, start_col, end_col)
+  if is_bracket_commented(
+    comment, start_line, end_line, start_col, end_col) then
+
+    uncomment_bracket(comment, start_line, end_line, start_col, end_col)
+  else
+    comment_bracket(comment, start_line, end_line, start_col, end_col)
+  end
+end
+
+function M.toggle_comment_line()
+  local comment = get_ft_comment()
   local line_num = vim.fn.line(".")
-  local line = vim.api.nvim_get_current_line()
-  local filetype = vim.o.filetype
-  local status = is_commented(line, filetype)
-  if status == 1 then
-    M.uncomment(line_num, line, filetype)
-  elseif status == 2 then
-    M.comment(line_num, line, filetype)
+  local start_col = 0
+  local end_col = vim.fn.col("$")
+  local text = get_text(line_num, start_col, end_col)
+
+  if vim.fn.empty(text) == 1 then
+    return
   end
+
+  if comment.close then
+    toggle_bracket_comment(comment, line_num, line_num, start_col, end_col)
+    return
+  end
+
+  toggle_comment_line(comment, line_num, text)
 end
 
--- visual切换注释和取消注释操作
-function M.visual_toggle()
-  vim.api.nvim_input("<esc>")
+function M.toggle_comment_visual_mode()
+  local comment = get_ft_comment()
+
+  vim.api.nvim_input("<Esc>")
+
   vim.schedule(function ()
     local start_line = vim.fn.line("'<")
     local end_line = vim.fn.line("'>")
-    local selected_lines = vim.fn.getline(start_line, end_line)
-    local filetype = vim.o.filetype
-    local selected_index = 1
-    for line_num = start_line, end_line do
-      local line = selected_lines[selected_index]
-      local status = is_commented(line, filetype)
-      if status == 1 then
-        M.uncomment(line_num, line, filetype)
-      elseif status == 2 then
-        M.comment(line_num, line, filetype)
-      end
-      selected_index = selected_index + 1
+    local start_col = vim.fn.col("'<")
+    local end_col = vim.fn.col("'>")
+
+    if comment.close then
+      toggle_bracket_comment(comment, start_line, end_line, start_col, end_col)
+      return
     end
+
+    toggle_comment_lines(comment, start_line, end_line)
+
   end)
 end
 
