@@ -45,10 +45,10 @@ vim.wo.signcolumn = "yes"                        -- 显示左侧图标指示列
 
 vim.g.mapleader = " "                            -- leader 键
 
--- netrw 文件树配置
-vim.g.netrw_liststyle = 3                        -- 设置文件管理模式为tree模式
+-- netrw相关
+-- vim.g.netrw_liststyle = 3                        -- 设置文件管理模式为tree模式
+-- vim.g.netrw_banner = 0                           -- 不显示顶部的信息
 vim.g.netrw_winsize = 20                         -- 设置文件管理器打开时默认的宽度
-vim.g.netrw_banner = 0                           -- 不显示顶部的信息
 vim.g.netrw_browse_split = 4                     -- 默认在上一个窗口打开文件(同一个窗口)
-vim.g.netrw_altv = 1
-vim.g.netrw_preview = 1
+vim.g.netrw_altv = 1                             -- 打开文件时窗口显示在右侧
+vim.g.netrw_preview = 1                          -- 预览文件时窗口显示在右侧
