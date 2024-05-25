@@ -33,3 +33,21 @@ vim.keymap.set(
     desc = "netrw: Copy relative path"
   }
 )
+
+vim.keymap.set(
+  "n", "<M-f>",
+  function()
+    local ok, tb = pcall(require, "telescope.builtin")
+    if ok then
+      tb.find_files({
+        find_command = { "fd", "-t", "d" }
+      })
+    else
+      vim.api.nvim_input(":find ")
+    end
+  end,
+  {
+    noremap = true, silent = true, buffer = true,
+    desc = "netrw: Copy relative path"
+  }
+)
