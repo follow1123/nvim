@@ -40,6 +40,13 @@ return {
     config = function()
       require("harpoon").setup()
     end
+  },
+  { -- 颜色显示
+    "norcalli/nvim-colorizer.lua",
+    cmd = "ColorizerToggle",
+    config = function()
+      require("colorizer").setup { "*" }
+    end
   }
 }
 
