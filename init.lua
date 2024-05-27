@@ -8,7 +8,19 @@ _G.IS_GUI = vim.fn.has("gui_running") == 1
 _G.CONFIG_PATH = vim.fn.stdpath("config")
 
 require("ui")
+-- 禁用lsp的高亮
+for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+  vim.api.nvim_set_hl(0, group, {})
+end
+
+if not _G.IS_GUI then
+  vim.api.nvim_set_hl(0, "Normal", { bg = "None" })
+  vim.api.nvim_set_hl(0, "CursorLine", { link = "Visual" })
+end
+
 require("options")
+vim.wo.signcolumn = "yes"            -- 显示左侧图标指示列
+
 require("keymaps")
 require("commands")
 require("autocmds")

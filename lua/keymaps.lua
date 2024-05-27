@@ -4,11 +4,11 @@
 --#                                                                           #
 --#############################################################################
 
-local keymap_util = require("utils.keymap")
+local keymap = require("utils.keymap")
 
-local nmap = keymap_util.nmap
-local vmap = keymap_util.vmap
-local imap = keymap_util.imap
+local nmap = keymap.nmap
+local vmap = keymap.vmap
+local imap = keymap.imap
 
 -- 禁用翻页键
 nmap("<C-f>", "<Nop>", "base: Disable pagedown key")
@@ -60,8 +60,14 @@ nmap("]q", "<cmd>cnext<cr>zz", "base: Next quickfix")
 
 nmap("<M-`>", "<C-^>", "base: Toggle switch buffer")
 
---############ 扩展功能keymap
+keymap.map("c", "<C-a>", function() vim.api.nvim_input("<Home>") end, "emacs keymap")
+keymap.map("c", "<C-e>", function() vim.api.nvim_input("<End>") end, "emacs keymap")
+keymap.map("c", "<C-f>", function() vim.api.nvim_input("<Right>") end, "emacs keymap")
+keymap.map("c", "<C-b>", function() vim.api.nvim_input("<Left>") end, "emacs keymap")
+keymap.map("c", "<M-f>", function() vim.api.nvim_input("<C-Right>") end, "emacs keymap")
+keymap.map("c", "<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
 
+--############ 扩展功能keymap
 nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
 
 nmap("<M-1>", "<cmd>lua require('extensions.netrw-plus').toggle()<cr>", "netrw: Open Netrw file manager")

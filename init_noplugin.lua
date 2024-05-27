@@ -13,10 +13,13 @@ _G.IS_GUI = vim.fn.has("gui_running") == 1
 
 _G.CONFIG_PATH = vim.fn.stdpath("config")
 
-require("no_plugin.ui")
-require("no_plugin.options")
-require("no_plugin.keymaps")
-require("no_plugin.commands")
-require("no_plugin.autocmds")
--- 加载自动匹配括号的插件
+require("ui")
+require("options")
+vim.opt.pumheight = 15      -- 补全弹窗最大补全个数
+vim.opt.path:append("**/*") -- 添加find查找所有子目录路径
+vim.opt.wildmenu = true     -- 搜索显示补全
+require("keymaps")
+require("commands")
+require("autocmds")
+
 require("extensions.pairs").setup()

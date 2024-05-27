@@ -41,8 +41,6 @@ vim.opt.listchars:append "eol:↴"
 vim.opt.listchars:append "tab:  "
 vim.opt.listchars:append "trail: "
 
-vim.wo.signcolumn = "yes"                        -- 显示左侧图标指示列
-
 vim.g.mapleader = " "                            -- leader 键
 
 -- netrw相关
