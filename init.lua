@@ -19,6 +19,7 @@ if not _G.IS_GUI then
 end
 
 require("options")
+vim.opt.shortmess:append({I = true}) -- 关闭intro
 vim.wo.signcolumn = "yes"            -- 显示左侧图标指示列
 
 require("keymaps")
