@@ -52,18 +52,31 @@ return {
       },
       experimental = { ghost_text = true }, -- 虚拟文本
     })
-    print()
+
+    -- Telescope搜索时禁用补全功能
+    cmp.setup.filetype({ "TelescopePrompt" }, { enabled = false })
+    -- 默认在注释内不开启补全，但是在在lua内有文档注释，需要开启补全
+    cmp.setup.filetype({ "lua" }, { enabled = true })
 
     cmp.event:on("confirm_done", function (evt)
-      if evt.commit_character then
-        return
-      end
-      local Kind = cmp.lsp.CompletionItemKind
-      local entry = evt.entry
-      local item = entry:get_completion_item()
-      if item.kind == Kind.Function or item.kind ==  Kind.Method then
-        vim.api.nvim_input("(")
-        vim.schedule_wrap(cmp.complete)()
+      if vim.o.filetype == "lua" then
+        if evt.commit_character then return end
+        local Kind = cmp.lsp.CompletionItemKind
+        local entry = evt.entry
+        local item = entry:get_completion_item()
+        if item.kind == Kind.Function or item.kind ==  Kind.Method then
+          local key = "("
+          local line = vim.fn.line(".")
+          local col = vim.fn.col(".")
+          line = line > 0 and line - 1 or line
+          local next_char = vim.api.nvim_buf_get_text(
+            0, line, col, line, col + 1, {})[1]
+          if not string.match(next_char, "^%S") then
+            key = string.format("%s)%s", key,
+              vim.api.nvim_replace_termcodes("<Left>", true, false, true))
+          end
+          vim.api.nvim_feedkeys(key, "i", true)
+        end
       end
     end)
   end
