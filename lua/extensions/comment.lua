@@ -77,7 +77,11 @@ end
 ---@param line_num integer
 ---@param text string
 local function comment_line(comment, line_num, text)
-  local start_idx, end_idx = locate_pos(text, "%S")
+  local start_idx = 0
+  local end_idx = 0
+  if vim.fn.empty(text) ~= 1 then
+    start_idx, end_idx = locate_pos(text, "%S")
+  end
   insert_text(line_num, line_num, start_idx, end_idx, comment.start .. " ")
 end
 
@@ -124,6 +128,8 @@ local function toggle_comment_lines(comment, start_line, end_line)
   local line_info = {}
   local comment_indent_idx
 
+  local need_comment = false
+
   for i = start_line, end_line , 1 do
     local text = vim.fn.getline(i)
     if vim.fn.empty(text) == 1 then
@@ -131,13 +137,9 @@ local function toggle_comment_lines(comment, start_line, end_line)
     end
 
     local line = { line_num = i, text = text }
-
-    if is_line_commented(comment, text) then
-      line.commented = true
-    end
+    need_comment = need_comment and need_comment or not is_line_commented(comment, text)
 
     table.insert(line_info, line)
-
     local start_idx, _ = locate_pos(text, "%S")
     if comment_indent_idx == nil or start_idx < comment_indent_idx then
       comment_indent_idx = start_idx
@@ -145,15 +147,16 @@ local function toggle_comment_lines(comment, start_line, end_line)
     ::continue::
   end
 
+  local function action(_, line_num, _)
+     insert_text(
+        line_num, line_num, comment_indent_idx,
+        comment_indent_idx, comment.start .. " ")
+  end
+
+  action = need_comment and action or uncomment_line
+
   for _, line in ipairs(line_info) do
-    if line.commented then
-      uncomment_line(comment, line.line_num, line.text)
-    else
-      insert_text(
-        line.line_num, line.line_num, comment_indent_idx,
-        comment_indent_idx, comment.start .. " "
-      )
-    end
+    action(comment, line.line_num, line.text)
   end
 end
 
@@ -248,10 +251,6 @@ function M.toggle_comment_line()
   local start_col = 0
   local end_col = vim.fn.col("$")
   local text = get_text(line_num, start_col, end_col)
-
-  if vim.fn.empty(text) == 1 then
-    return
-  end
 
   if comment.close then
     toggle_bracket_comment(comment, line_num, line_num, start_col, end_col)
