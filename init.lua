@@ -13,10 +13,10 @@ for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
   vim.api.nvim_set_hl(0, group, {})
 end
 
-if not _G.IS_GUI then
-  vim.api.nvim_set_hl(0, "Normal", { bg = "None" })
-  vim.api.nvim_set_hl(0, "CursorLine", { link = "Visual" })
-end
+-- if not _G.IS_GUI then
+--   vim.api.nvim_set_hl(0, "Normal", { bg = "None" })
+--   vim.api.nvim_set_hl(0, "CursorLine", { link = "Visual" })
+-- end
 
 require("options")
 vim.opt.shortmess:append({I = true}) -- 关闭intro
@@ -28,4 +28,4 @@ require("autocmds")
 
 require("plugin_init")
 
-require("extensions.pairs").setup()
+-- require("extensions.pairs").setup()
