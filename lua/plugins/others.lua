@@ -28,8 +28,6 @@ return {
     keys = {
       lazy_map("n", "<leader>fa", "<cmd>lua require('harpoon'):list():add()<cr>", "harpoon: Add file to harpoon list"),
       lazy_map("n", "<leader>fl", "<cmd>lua require('harpoon').ui:toggle_quick_menu(require('harpoon'):list())<cr>", "harpoon: Toggle harpoon list"),
-      lazy_map("n", "<S-h>", "<cmd>lua require('harpoon'):list():prev()<cr>", "harpoon: Goto previous file in harpoon list"),
-      lazy_map("n", "<S-l>", "<cmd>lua require('harpoon'):list():next()<cr>", "harpoon: Goto next file in harpoon list"),
       lazy_map("n", "<M-j>", "<cmd>lua require('harpoon'):list():select(1)<cr>", "harpoon: Goto next first file in harpoon list"),
       lazy_map("n", "<M-k>", "<cmd>lua require('harpoon'):list():select(2)<cr>", "harpoon: Goto next second in harpoon list"),
       lazy_map("n", "<M-l>", "<cmd>lua require('harpoon'):list():select(3)<cr>", "harpoon: Goto next third in harpoon list"),
@@ -38,7 +36,7 @@ return {
     branch = "harpoon2",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      require("harpoon").setup()
+      require("harpoon"):setup()
     end
   },
   { -- 颜色显示
@@ -46,6 +44,20 @@ return {
     cmd = "ColorizerToggle",
     config = function()
       require("colorizer").setup { "*" }
+    end
+  },
+  {
+    "follow1123/project_session.nvim",
+    cmd = { "ProjectOpen", "ProjectAdd", "ProjectDelete" },
+    keys = {
+      lazy_map("n", "<leader>pf", "<cmd>lua require('telescope').extensions.projects.recent_projects()<cr>", "project: List recent projects"),
+      lazy_map("n", "<leader>pa", "<cmd>lua require('project_session').add()<cr>", "project: Add this project"),
+      lazy_map("n", "<leader>po", "<cmd>lua require('project_session').open()<cr>", "project: Open project"),
+      lazy_map("n", "<leader>ps", "<cmd>lua require('project_session').save()<cr>", "project: Save project"),
+      lazy_map("n", "<leader>pr", "<cmd>lua require('project_session').load_last()<cr>", "project: Load last project"),
+    },
+    config = function()
+      require("project_session").setup()
     end
   }
 }
