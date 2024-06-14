@@ -30,8 +30,8 @@ nmap("<C-down>", "<C-w>+", "base: Increase window height")
 nmap("n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
 nmap("N", "'nN'[v:searchforward]", { expr = true, desc = "base: Prev search result" })
 
--- visual line模式
-nmap("<leader>v", "V", "base: Visual line mode")
+nmap("<M-n>", "<cmd>bnext<cr>", "base: next buffer")
+nmap("<M-p>", "<cmd>bprev<cr>", "base: previous buffer")
 
 -- 清除搜索的高亮文本
 imap("<esc>", "<cmd>noh<cr><esc>", "base: Clear lighlight search")

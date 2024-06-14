@@ -96,9 +96,6 @@ return {
         { border = "single", }
       )
 
-      local keymap = require("utils.keymap")
-      keymap.nmap("<leader>2", "<cmd>LspInfo<cr>", "Open lsp info panel")
-      keymap.nmap("<leader>3", "<cmd>Mason<cr>", "Open mason setup panel")
       vim.cmd("LspStart")
     end
   }
