@@ -11,8 +11,16 @@ local confirm_opts = {
 local select_item_opts = { behavior = cmp.SelectBehavior.Select }
 
 return {
-  ["<C-n>"] = cmp.mapping.select_next_item(select_item_opts), -- 下一个
-  ["<C-p>"] = cmp.mapping.select_prev_item(select_item_opts), -- 上一个
+  ["<C-n>"] = cmp.mapping(function()
+    if cmp.visible() then
+      cmp.select_next_item(select_item_opts) -- 下一个
+    end
+  end),
+  ["<C-p>"] = cmp.mapping(function()
+    if cmp.visible() then
+      cmp.select_prev_item(select_item_opts) -- 上一个
+    end
+  end),
   ["<C-u>"] = cmp.mapping.scroll_docs(-4), -- 文档向上滚动
   ["<C-d>"] = cmp.mapping.scroll_docs(4), -- 文件向下滚动
   ["<CR>"] = cmp.mapping.confirm(confirm_opts), -- 完成补全
