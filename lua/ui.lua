@@ -6,7 +6,7 @@
 
 local colors = require("utils.colors")
 
-vim.cmd("colorscheme habamax") -- 主题
+vim.cmd.colorscheme("habamax") -- 主题
 
 vim.api.nvim_set_hl(0, "FloatBorder", { link = "Normal" }) -- 弹框边框颜色
 vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal" })

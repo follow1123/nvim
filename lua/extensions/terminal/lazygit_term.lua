@@ -55,7 +55,7 @@ end
 function LazygitTerm:show()
   Term.show(self)
   -- 显示lazygit终端时内容会向左偏移，使用normal下^按键矫正
-  vim.cmd("normal ^")
+  vim.cmd.normal("^")
 end
 
 return LazygitTerm

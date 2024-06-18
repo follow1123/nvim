@@ -6,7 +6,7 @@ function M.run_code()
   if #line == 0 then
     return
   end
-  vim.cmd(string.format("lua %s", line))
+  vim.cmd.lua(line)
 end
 
 ---执行所有选中行的代码

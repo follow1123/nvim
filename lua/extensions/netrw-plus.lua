@@ -23,7 +23,7 @@ end
 ---@param filename string
 local function locate_file(bufnr, dir, filename)
   vim.api.nvim_buf_call(bufnr, function()
-    vim.cmd("e " .. dir)
+    vim.cmd.e(dir)
     vim.fn.search(filename)
   end)
 end
@@ -102,13 +102,13 @@ function M.toggle()
 
   if not netrw_winnr then
     vim.g.netrw_browse_split = 4 -- 默认在上一个窗口打开文件(同一个窗口)
-    vim.cmd(":Lexplore")
+    vim.cmd("Lexplore")
     return
   end
 
   if winnr == netrw_winnr then
     vim.g.netrw_browse_split = 0
-    vim.cmd(":q")
+    vim.cmd.q()
   else
     vim.fn.win_gotoid(netrw_winnr)
   end

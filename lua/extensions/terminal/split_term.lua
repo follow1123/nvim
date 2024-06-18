@@ -79,7 +79,7 @@ local function reset_nvim_tree()
     local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
     if filetype == "NvimTree" then
       vim.api.nvim_buf_call(bufnr, function()
-        vim.cmd("wincmd H")
+        vim.cmd.wincmd("H")
         vim.api.nvim_win_set_width(winid, win_width)
       end)
       break

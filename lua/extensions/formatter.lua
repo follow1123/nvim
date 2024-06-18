@@ -23,7 +23,7 @@ function M.format(filetype)
   if file_formatter and vim.fn.executable(file_formatter.name) == 1 then
     vim.cmd(file_formatter.cmd)
   else
-    vim.cmd("normal gg=G")
+    vim.cmd.normal("gg=G")
   end
 end
 

@@ -36,7 +36,10 @@ function M.on_init()
 
       vim.diagnostic.reset()
       for _, client in ipairs(clients) do
-        vim.cmd("LspRestart " .. client.id)
+        vim.cmd({
+          cmd = "LspRestart",
+          args = { client.id }
+        })
       end
     end,
     { desc = "LSP: Load ext library" }

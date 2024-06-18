@@ -26,7 +26,11 @@ if _G.IS_WINDOWS then
       return
     end
     -- 执行:w命令将当前buffer的内容保存到备份目录下的.new文件
-    vim.cmd("silent w! " .. new_file_path)
+    vim.cmd.w({
+      bang = true,
+      mods = { silent = true },
+      args = { new_file_path }
+    })
     -- 使用powershell的Start-Process以管理员方式执行cmd下的type命令将.new文件覆盖当前文件
     local result = vim.fn.system("powershell -c \"Start-Process cmd -ArgumentList '/c type " .. new_file_path .. " > " .. cur_path .. "' -Wait -Verb RunAs\"")
     if vim.v.shell_error ~= 0 then
@@ -36,7 +40,7 @@ if _G.IS_WINDOWS then
     -- 删除新建的文件
     vim.fn.delete(new_file_path)
     -- 重新加载当前buffer
-    vim.cmd("e!")
+    vim.cmd.e({ bang = true })
     vim.notify("save backup file in: " .. backup_path, vim.log.levels.INFO)
   end
 end
@@ -54,7 +58,7 @@ function M.smart_quit()
     if buf.bufnr == cur_bufnr then
       --  如果当前窗口是listed的buffer，并且是Command Line窗口，或有共享当前buffer的窗口，则使用wincmd c关闭窗口
       if #buf.windows > 1 or string.match(buf.name, "Command Line") then
-        vim.cmd("wincmd c")
+        vim.cmd.wincmd("c")
         return
       end
       is_listed_buf = true
@@ -67,7 +71,7 @@ function M.smart_quit()
   if not is_listed_buf then
     local ok, _ = pcall(vim.api.nvim_command, "wincmd c")
     if not ok then
-      vim.cmd("bdelete!")
+      vim.cmd.bdelete({ bang = true })
     end
     return
   end
@@ -79,7 +83,7 @@ function M.smart_quit()
 
   -- 当前buffer是一个分屏，则关闭当前窗口
   if #listed_visible_bufnr > 1 and vim.tbl_contains(listed_visible_bufnr, cur_bufnr) then
-    vim.cmd("wincmd c")
+    vim.cmd.wincmd("c")
     return
   end
   -- 查找到最后一个打开的buffer编号，并跳转
@@ -87,9 +91,9 @@ function M.smart_quit()
   if last_bufnr == cur_bufnr then
     last_bufnr = listed_buf[#listed_buf - 1].bufnr
   end
-  vim.cmd("b " .. last_bufnr)
+  vim.cmd.b(last_bufnr)
   -- 直接删除buffer
-  vim.cmd("bdelete! " .. cur_bufnr)
+  vim.cmd.bdelete({ bang = true, args = { cur_bufnr } })
 end
 
 return M
