@@ -56,3 +56,17 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank({ timeout = 100, })
   end,
 })
+
+-- check big file syntax off
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function(args)
+    local max_file_size = 1024 * 1024  -- 1MB in bytes
+
+    local stat, err = (vim.uv or vim.loop).fs_stat(args.match)
+    if err or not stat then return end
+
+    if stat.size > max_file_size then
+      vim.opt_local.syntax = "off"
+    end
+  end,
+})

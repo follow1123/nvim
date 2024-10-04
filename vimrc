@@ -1,4 +1,4 @@
-"################################# 最小化配置
+"################################# 最小化配置vi
 "
 " sudo ln -s ./vimrc /root/.config/nvim/init.vim
 
@@ -9,7 +9,6 @@ set number                " 行号
 set ruler                 " 右下角显示行号和列号
 set relativenumber        " 设置相对行号
 set clipboard=unnamedplus " 设置和剪贴板共用
-set expandtab             " 空格代替tab
 set tabstop=4             " tab键相关
 set shiftwidth=4          " shift宽度
 set smartindent           " 智能缩进
