@@ -47,8 +47,9 @@ return {
     end
   },
   {
+
     "follow1123/project_session.nvim",
-    cmd = { "ProjectOpen", "ProjectAdd", "ProjectDelete" },
+    cmd = { "ProjectOpen", "ProjectAdd", "ProjectDelete", "ProjectAddDir" },
     keys = {
       lazy_map("n", "<leader>pf", "<cmd>lua require('telescope').extensions.projects.recent_projects()<cr>", "project: List recent projects"),
       lazy_map("n", "<leader>pa", "<cmd>lua require('project_session').add()<cr>", "project: Add this project"),
