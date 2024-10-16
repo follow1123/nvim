@@ -33,3 +33,8 @@ vim.api.nvim_set_hl(0, "DiffAdd", { fg = "NONE", bg = colors.green_03 })
 vim.api.nvim_set_hl(0, "DiffChange", { fg = "NONE", bg = colors.blue_03 })
 vim.api.nvim_set_hl(0, "DiffDelete", { fg = "NONE", bg = colors.red_03 })
 vim.api.nvim_set_hl(0, "DiffText", { fg = "NONE", bg = colors.green_03})
+
+-- 禁用lsp的高亮
+for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+  vim.api.nvim_set_hl(0, group, {})
+end

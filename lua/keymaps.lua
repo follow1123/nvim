@@ -42,10 +42,6 @@ imap(",", ",<c-g>u", "base: Add undo break-points")
 imap(".", ".<c-g>u", "base: Add undo break-points")
 imap(";", ";<c-g>u", "base: Add undo break-points")
 
--- 上下移动选中的行
-vmap("<M-j>", function() return vim.bo.modifiable and ":m '>+1<cr>gv=gv" or "<Ignore>" end, { expr = true, desc = "base: Move down" })
-vmap("<M-k>", function() return vim.bo.modifiable and ":m '<-2<cr>gv=gv" or "<Ignore>" end, { expr = true, desc = "base: Move up" })
-
 -- 翻页时保持光标居中
 nmap("<C-d>", "<C-d>zz", "base: Scroll dowm and page center")
 nmap("<C-u>", "<C-u>zz", "base: Scroll up and page center")
@@ -68,8 +64,6 @@ keymap.map("c", "<M-f>", function() vim.api.nvim_input("<C-Right>") end, "emacs 
 keymap.map("c", "<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
 
 --############ 扩展功能keymap
-nmap("<M-q>", "<cmd>lua require('extensions').smart_quit()<cr>", "base: Close window or buffer")
-
 nmap("<M-1>", "<cmd>lua require('extensions.netrw-plus').toggle()<cr>", "netrw: Open Netrw file manager")
 
 -- 终端
