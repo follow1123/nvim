@@ -1,6 +1,14 @@
-"################################# 最小化配置vi
+"################################# 最小化配置
 "
+" root用户配置
+" sudo ln -s ./vimrc /root/.vimrc
 " sudo ln -s ./vimrc /root/.config/nvim/init.vim
+"
+" 用户配置
+" ln -s ./vimrc ~/.vimrc
+" ln -s ./vimrc ~/.config/nvim/init.vim
+"
+" 使用silent!防止某些版本的vim不兼容某个配置，导致报错
 
 "################################# 基础配置
 
@@ -19,13 +27,13 @@ set ignorecase            " 搜索忽略大小写
 set nowrap                " 禁止折行显示文本
 set scrolloff=4           " 光标移动时保持上下有4行的间隔
 set sidescrolloff=8       " 光标移动时保持左右有8个字符的间隔
-" syntax enable             " 语法检测
+silent! syntax enable     " 语法检测
 set splitbelow            " 分割水平新窗口默认在下边
 set splitright            " 分割垂直新窗口默认在右
 set fillchars+=eob:\      " 去掉没有文字的行左边会显示的～
 set pumheight=15          " 补全弹窗最大补全个数
 set colorcolumn=80        " 限制列宽
-set inccommand=nosplit    " 替换时底部显示所有匹配的列
+silent! set inccommand=nosplit    " 替换时底部显示所有匹配的列
 
 "################################# keymap
 
@@ -60,3 +68,4 @@ nnoremap N Nzz
 
 "################################# colorscheme
 highlight Visual ctermbg=Gray ctermfg=Black
+silent! colorscheme habamax
