@@ -23,7 +23,7 @@ if _G.IS_WINDOWS then
   vim.api.nvim_create_autocmd("InsertLeave", {
     pattern = "*",
     nested = true, -- 允许嵌套
-    callback = function() vim.fn.system("im_select.exe 1") end,
+    callback = function() vim.fn.system("ims.exe 1") end,
   })
 else
   vim.api.nvim_create_autocmd("InsertLeave", {
