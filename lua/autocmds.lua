@@ -70,3 +70,10 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "html", "javascriptreact", "typescriptreact" },
+  callback = function()
+    vim.opt.colorcolumn = "120"                       -- 限制列宽
+  end
+})

@@ -25,6 +25,7 @@ nmap("<C-left>", "<C-w><", "base: Decrease window width")
 nmap("<C-right>", "<C-w>>", "base: Increase window width")
 nmap("<C-up>", "<C-w>-", "base: Decrease window height")
 nmap("<C-down>", "<C-w>+", "base: Increase window height")
+nmap("<M-q>", "<C-w>c", "base: Close current window")
 
 -- 搜索历史
 nmap("n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
