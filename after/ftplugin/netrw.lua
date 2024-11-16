@@ -7,6 +7,10 @@ vim.keymap.set("n", "<c-l>", "<c-w>l", {
   noremap = true, silent = true, buffer = true,
   desc = "netrw: Move cursor to right window"
 })
+vim.keymap.set("n", "<c-[>", "<c-w>l", {
+  noremap = true, silent = true, buffer = true,
+  desc = "netrw: Move cursor to right window"
+})
 
 -- 文件浏览器切换到当前的工作目录
 vim.keymap.set("n", "gw", "<cmd>e .<cr>", {

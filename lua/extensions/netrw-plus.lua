@@ -102,7 +102,13 @@ function M.toggle()
 
   if not netrw_winnr then
     vim.g.netrw_browse_split = 4 -- 默认在上一个窗口打开文件(同一个窗口)
-    vim.cmd("Lexplore")
+    local filename = vim.fn.expand("%:t")
+    vim.cmd {
+      cmd = "Lexplore",
+      args = { vim.fn.expand("%:p:h") }
+    }
+    -- 打开netrw后直接定位到当前文件下
+    vim.schedule_wrap(vim.fn.search)(filename)
     return
   end
 
