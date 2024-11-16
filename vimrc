@@ -34,6 +34,8 @@ set fillchars+=eob:\      " 去掉没有文字的行左边会显示的～
 set pumheight=15          " 补全弹窗最大补全个数
 set colorcolumn=80        " 限制列宽
 silent! set inccommand=nosplit    " 替换时底部显示所有匹配的列
+silent! set guifont=Cascadia\ Code:h12
+silent! set guifontwide=Microsoft\ YaHei:h12
 
 "################################# keymap
 

@@ -34,6 +34,11 @@ vim.opt.timeout = true                           -- leaderkey按键延时
 vim.opt.timeoutlen = 700                         -- leaderkey按键延时间，毫秒
 vim.opt.shortmess:append({I = true})             -- 关闭intro
 
+vim.cmd([[
+silent! set guifont=Cascadia\ Code:h12
+silent! set guifontwide=Microsoft\ YaHei:h12
+]])
+
 -- 显示空白字符
 vim.opt.list = true
 -- vim.opt.listchars:append "space:⋅"
