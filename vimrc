@@ -43,6 +43,8 @@ silent! set guifontwide=Microsoft\ YaHei:h12
 nnoremap <C-f> <Nop>
 nnoremap <C-b> <Nop>
 
+nnoremap <esc> <cmd>noh<cr><esc>
+inoremap <esc> <cmd>noh<cr><esc>
 " 切换窗口
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
