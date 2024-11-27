@@ -1,30 +1,4 @@
---#############################################################################
---#                                                                           #
---#                                 command                                   #
---#                                                                           #
---#############################################################################
+-- command --------------------------------------------------------------------
 
--- 格式化
-vim.api.nvim_create_user_command("Format",
-  function(opts)
-    local clinets = vim.lsp.get_active_clients()
-    -- 有lsp服务，参数为空则使用lsp服务的格式化操作，否则使用自定义格式化操作
-    if #clinets ~= 0 and vim.fn.empty(opts.args) == 1 then
-      vim.lsp.buf.format()
-    else
-      require("extensions.formatter").format(opts.args)
-    end
-  end,
-  {
-    desc = "Format file use external command",
-    nargs = "?", -- 允许0或1个参数
-    complete = function ()
-      return { "json", "xml" }
-    end
-  }
-)
-
--- windows下保存管理员权限文件
-if _G.IS_WINDOWS then
-  vim.api.nvim_create_user_command("SudoSave", "lua require('extensions').sudo_save()", { desc = "save readonly file" })
-end
+vim.api.nvim_create_user_command("FormatJson", "1,$!jq", { desc = "Format json file" })
+vim.api.nvim_create_user_command("FormatXml", "1,$!xmllint --format %", { desc = "Format xml file" })
