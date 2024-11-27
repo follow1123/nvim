@@ -1,8 +1,7 @@
 -- local util = require("extensions.terminal.utils")
 local Term = require("extensions.terminal.term")
 
-local keymap_util = require("utils.keymap")
-local buf_map = keymap_util.buf_map
+local tmap = require("utils.keymap").tmap
 
 ---@class LazygitTerm table 全屏终端
 ---@field bufnr number buffer number
@@ -49,7 +48,7 @@ function LazygitTerm:on_open()
     end
   })
 
-  buf_map("t", "<M-6>", function() self:toggle() end, "Toggle lazygit", self.bufnr)
+  tmap("<M-6>", function() self:toggle() end, "Toggle lazygit", self.bufnr)
 end
 
 function LazygitTerm:show()

@@ -1,8 +1,7 @@
 local util = require("extensions.terminal.utils")
 local Term = require("extensions.terminal.term")
 
-local keymap_util = require("utils.keymap")
-local buf_map = keymap_util.buf_map
+local tmap = require("utils.keymap").tmap
 
 ---@class SplitTerm table 全屏终端
 ---@field bufnr number buffer number
@@ -220,12 +219,12 @@ function SplitTerm:on_open()
     end
   })
 
-  buf_map("t", "<Esc>", [[<C-\><C-n>]], "Enter normal mode in terminal", self.bufnr)
-  buf_map("t", "<C-k>", [[<C-\><C-n><C-w>k]], "Move cursor to up window", self.bufnr)
-  buf_map("t", "<M-4>", function() self:toggle() end, "Toggle split terminal", self.bufnr)
-  buf_map("t", "<C-h>", [[<C-\><C-n><C-w>h]], "Move cursor to left window", self.bufnr)
-  buf_map("t", "<C-up>", [[<C-\><C-n><C-w>+i]], "Increase window size", self.bufnr)
-  buf_map("t", "<C-down>", [[<C-\><C-n><C-w>-i]], "Decrease window size", self.bufnr)
+  tmap("<Esc>", [[<C-\><C-n>]], "Enter normal mode in terminal", self.bufnr)
+  tmap("<C-k>", [[<C-\><C-n><C-w>k]], "Move cursor to up window", self.bufnr)
+  tmap("<M-4>", function() self:toggle() end, "Toggle split terminal", self.bufnr)
+  tmap("<C-h>", [[<C-\><C-n><C-w>h]], "Move cursor to left window", self.bufnr)
+  tmap("<C-up>", [[<C-\><C-n><C-w>+i]], "Increase window size", self.bufnr)
+  tmap("<C-down>", [[<C-\><C-n><C-w>-i]], "Decrease window size", self.bufnr)
 end
 
 

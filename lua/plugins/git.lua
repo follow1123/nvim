@@ -12,30 +12,35 @@ return {
         untracked = { text = "┆" },
       },
       on_attach = function(bufnr)
-        local buf_map = require("utils.keymap").buf_map
+        local map = require("utils.keymap").map
         local gs = package.loaded.gitsigns
 
         -- hunk移动
-        buf_map("n", "]c", function()
+        map("n", "]c", function()
           if vim.wo.diff then return "]c" end
-          vim.schedule(function() gs.next_hunk{preview = true} end)
+          vim.schedule_wrap(gs.next_hunk){ preview = true }
           return "<Ignore>"
-        end, { expr = true, desc = "git(Gitsigns): Next hunk" }, bufnr)
-        buf_map("n", "[c", function()
+        end, "git(Gitsigns): Next hunk", bufnr, { expr = true })
+        map("n", "[c", function()
           if vim.wo.diff then return "[c" end
-          vim.schedule(function() gs.prev_hunk{preview = true} end)
+          vim.schedule_wrap(gs.prev_hunk){ preview = true }
           return "<Ignore>"
-        end, { expr = true, desc = "git(Gitsigns): Previous hunk" }, bufnr)
+        end, "git(Gitsigns): Previous hunk", bufnr, { expr = true })
         -- 重置
-        buf_map("n", "<leader>gr", gs.reset_hunk, "git(Gitsigns): Reset hunk", bufnr)
-        buf_map("v", "<leader>gr", function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end, "git(Gitsigns): Reset hunk", bufnr)
-        buf_map("n", "<leader>gp", gs.preview_hunk, "git(Gitsigns): Preview hunk", bufnr)
-        buf_map("n", "<leader>gb", function() gs.blame_line{full=true} end, "git(Gitsigns): Preview blame line", bufnr)
-        buf_map("n", "<leader>gd", function() gs.diffthis(nil, {
-          split = "belowright"
-        }) end, "git(Gitsigns): Diff this", bufnr)
+        map("n", "<leader>gr", gs.reset_hunk, "git(Gitsigns): Reset hunk", bufnr)
+        map("v", "<leader>gr", function()
+          gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") }
+        end, "git(Gitsigns): Reset hunk", bufnr)
+        map("n", "<leader>gp", gs.preview_hunk, "git(Gitsigns): Preview hunk", bufnr)
+        map("n", "<leader>gb", function()
+          gs.blame_line{full=true}
+        end, "git(Gitsigns): Preview blame line", bufnr)
+        map("n", "<leader>gd", function()
+          gs.diffthis(nil, { split = "belowright" })
+        end, "git(Gitsigns): Diff this", bufnr)
         -- 文本对象
-        buf_map({"o", "x"}, "ih", "<cmd><C-u>Gitsigns select_hunk<cr>", "git(Gitsigns): Text object select hunk", bufnr)
+        map({"o", "x"}, "ih", "<cmd><C-u>Gitsigns select_hunk<cr>",
+          "git(Gitsigns): Text object select hunk", bufnr)
       end
     }
 

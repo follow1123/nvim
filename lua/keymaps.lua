@@ -1,35 +1,31 @@
---#############################################################################
---#                                                                           #
---#                                   keymap                                  #
---#                                                                           #
---#############################################################################
-
+-- keymaps --------------------------------------------------------------------
 local keymap = require("utils.keymap")
 
 local nmap = keymap.nmap
 local vmap = keymap.vmap
 local imap = keymap.imap
+local cmap = keymap.cmap
 
 -- 禁用翻页键
 nmap("<C-f>", "<Nop>", "base: Disable pagedown key")
 nmap("<C-b>", "<Nop>", "base: Disable pageup key")
 
--- 切换窗口
+-- window ---------------------------------------------------------------------
+
 nmap("<C-h>", "<C-w>h", "base: Move cursor to left window")
 nmap("<C-l>", "<C-w>l", "base: Move cursor to right window")
 nmap("<C-j>", "<C-w>j", "base: Move cursor to above window")
 nmap("<C-k>", "<C-w>k", "base: Move cursor to below window")
-
--- 设置窗口大小
 nmap("<C-left>", "<C-w><", "base: Decrease window width")
 nmap("<C-right>", "<C-w>>", "base: Increase window width")
 nmap("<C-up>", "<C-w>-", "base: Decrease window height")
 nmap("<C-down>", "<C-w>+", "base: Increase window height")
 nmap("<M-q>", "<C-w>c", "base: Close current window")
 
+-- search ---------------------------------------------------------------------
 -- 搜索历史
-nmap("n", "'Nn'[v:searchforward]", { expr = true, desc = "base: Next search result" })
-nmap("N", "'nN'[v:searchforward]", { expr = true, desc = "base: Prev search result" })
+nmap("n", "'Nn'[v:searchforward]", "base: Next search result", nil, { expr = true })
+nmap("N", "'nN'[v:searchforward]", "base: Prev search result", nil, { expr = true })
 
 nmap("<M-n>", "<cmd>bnext<cr>", "base: next buffer")
 nmap("<M-p>", "<cmd>bprev<cr>", "base: previous buffer")
@@ -51,20 +47,36 @@ nmap("<C-u>", "<C-u>zz", "base: Scroll up and page center")
 nmap("n", "nzz", "base: Search next and page center")
 nmap("N", "Nzz", "base: Search previous and page center")
 
+local function quickfix_move(key, quickfix_cmd)
+  local wins = vim.api.nvim_list_wins()
+  for _, win_id in ipairs(wins) do
+    if "qf" == vim.api.nvim_get_option_value("filetype", { win = win_id }) then
+      return quickfix_cmd
+    end
+  end
+  return key
+end
+
 -- quickfix list
-nmap("[q", "<cmd>cprevious<cr>zz", "base: Prev quickfix")
-nmap("]q", "<cmd>cnext<cr>zz", "base: Next quickfix")
+nmap("<C-n>", function() return quickfix_move("<C-n>", "<cmd>cnext<cr>zz") end,
+  "base: Next quickfix item", nil, { expr = true })
+nmap("<C-p>", function() return quickfix_move("<C-p>", "<cmd>cprevious<cr>zz") end,
+  "base: Prev quickfix item", nil, { expr = true })
 
 nmap("<M-`>", "<C-^>", "base: Toggle switch buffer")
 
-keymap.map("c", "<C-a>", function() vim.api.nvim_input("<Home>") end, "emacs keymap")
-keymap.map("c", "<C-e>", function() vim.api.nvim_input("<End>") end, "emacs keymap")
-keymap.map("c", "<C-f>", function() vim.api.nvim_input("<Right>") end, "emacs keymap")
-keymap.map("c", "<C-b>", function() vim.api.nvim_input("<Left>") end, "emacs keymap")
-keymap.map("c", "<M-f>", function() vim.api.nvim_input("<C-Right>") end, "emacs keymap")
-keymap.map("c", "<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
+-- command mode emacs keymap --------------------------------------------------
 
---############ 扩展功能keymap
+cmap("<C-a>", function() vim.api.nvim_input("<Home>") end, "emacs keymap")
+cmap("<C-e>", function() vim.api.nvim_input("<End>") end, "emacs keymap")
+cmap("<C-f>", function() vim.api.nvim_input("<Right>") end, "emacs keymap")
+cmap("<C-b>", function() vim.api.nvim_input("<Left>") end, "emacs keymap")
+cmap("<C-d>", function() vim.api.nvim_input("<Delete>") end, "emacs keymap")
+cmap("<M-f>", function() vim.api.nvim_input("<C-Right>") end, "emacs keymap")
+cmap("<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
+
+-- custom extension ------------------------------------------------------------
+
 nmap("<M-1>", "<cmd>lua require('extensions.netrw-plus').toggle()<cr>", "netrw: Open Netrw file manager")
 
 -- 终端

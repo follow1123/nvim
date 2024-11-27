@@ -1,8 +1,7 @@
 -- local util = require("extensions.terminal.utils")
 local Term = require("extensions.terminal.term")
 
-local keymap_util = require("utils.keymap")
-local buf_map = keymap_util.buf_map
+local tmap = require("utils.keymap").tmap
 
 ---@class FullTerm table 全屏终端
 ---@field bufnr number buffer number
@@ -43,8 +42,8 @@ function FullTerm:on_open()
     end
   })
 
-  buf_map("t", "<Esc>", [[<C-\><C-n>]], "Quit terminal mode", self.bufnr)
-  buf_map("t", "<C-\\>", function () self:toggle() end, "Toggle terminal", self.bufnr)
+  tmap("<Esc>", [[<C-\><C-n>]], "Quit terminal mode", self.bufnr)
+  tmap("<C-\\>", function () self:toggle() end, "Toggle terminal", self.bufnr)
 end
 
 return FullTerm
