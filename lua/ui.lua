@@ -1,9 +1,4 @@
---#############################################################################
---#                                                                           #
---#                                 主题配置                                  #
---#                                                                           #
---#############################################################################
-
+-- theme ----------------------------------------------------------------------
 local colors = require("utils.colors")
 
 vim.cmd.colorscheme("habamax") -- 主题
@@ -20,19 +15,22 @@ vim.api.nvim_set_hl(0, "MatchParen", {
   bg = "NONE",
   fg = colors.yellow_01,
   sp = colors.yellow_01,
-  underline = true,
   bold = true,
 })
 
--- 补全相关颜色
+-- completion -----------------------------------------------------------------
+
 vim.api.nvim_set_hl(0, "PmenuSel", { fg = "NONE", bg = colors.gray_02 }) -- 选择栏颜色
 vim.api.nvim_set_hl(0, "PmenuSBar", { link = "Pmenu"}) -- 选择滚动条颜色
 
--- diff设置
+-- diff -----------------------------------------------------------------------
+
 vim.api.nvim_set_hl(0, "DiffAdd", { fg = "NONE", bg = colors.green_03 })
 vim.api.nvim_set_hl(0, "DiffChange", { fg = "NONE", bg = colors.blue_03 })
 vim.api.nvim_set_hl(0, "DiffDelete", { fg = "NONE", bg = colors.red_03 })
 vim.api.nvim_set_hl(0, "DiffText", { fg = "NONE", bg = colors.green_03})
+
+-- other ----------------------------------------------------------------------
 
 -- 禁用lsp的高亮
 for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
