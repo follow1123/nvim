@@ -46,6 +46,3 @@ vim.opt.listchars:append "trail: "               -- 行尾空白符合
 vim.wo.signcolumn = "yes"                        -- 显示左侧图标指示列
 
 vim.g.mapleader = " "                            -- leader 键
-
--- netrw相关
-vim.g.netrw_winsize = 20                         -- 设置文件管理器打开时默认的宽度

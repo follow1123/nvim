@@ -1,11 +1,3 @@
--- 去除回车后注释下一行
-vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = "*",
-  callback = function()
-    vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
-  end,
-})
-
 -- 使用:terminal命令打开终端时默认关闭行号，并直接进入insert模式
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
@@ -74,6 +66,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "html", "javascriptreact", "typescriptreact" },
   callback = function()
-    vim.opt.colorcolumn = "120"                       -- 限制列宽
+    vim.opt.colorcolumn = "120" -- 限制列宽
   end
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "netrw" },
+  callback = require("extensions.netrw-plus.netrw-filetype")
 })
