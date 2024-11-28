@@ -80,7 +80,7 @@ cmap("<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
 nmap("<M-1>", "<cmd>lua require('extensions.netrw-plus').toggle()<cr>", "netrw: Open Netrw file manager")
 
 -- 终端
-nmap("<C-\\>", "<cmd>lua require('extensions.terminal').full_term:toggle()<cr>", "base: Open full terminal")
+nmap("<C-\\>", "<cmd>lua require('extensions.terminal').scratch_term:toggle()<cr>", "base: Open full terminal")
 nmap("<M-4>", "<cmd>lua require('extensions.terminal').split_term:toggle()<cr>", "base: Open split terminal")
 nmap("<M-6>", "<cmd>lua require('extensions.terminal').lazygit_term:toggle()<cr>", "base: Open lazygit terminal")
 

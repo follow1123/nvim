@@ -1,58 +1,31 @@
--- local util = require("extensions.terminal.utils")
-local Term = require("extensions.terminal.term")
+local FloatTerminal = require("extensions.terminal.float_terminal")
 
-local tmap = require("utils.keymap").tmap
-
----@class LazygitTerm table 全屏终端
----@field bufnr number buffer number
----@field winid number window id
----@field chan_id number terminal job channel id
----@field cmd string command
----@field new function
----@field open function
----@field stop function
----@field hide function
----@field reset_terminal function
----@field is_visible function
----@field show function
----@field toggle function
----@field send_message function
----@field on_open function 
----@field on_exit function
-local LazygitTerm = {}
-
-LazygitTerm.__index = LazygitTerm
-
-setmetatable(LazygitTerm, Term)
-
-local cmd = "lazygit"
+---@class LazygitTerm:FloatTerminal
+local LazygitTerm = FloatTerminal:derive()
 
 function LazygitTerm:new()
-  if not vim.fn.executable(cmd) then
-    vim.notify("no lazygit command!", vim.log.levels.ERROR)
-    return nil
-  end
-  return Term.new(self, cmd)
+  return FloatTerminal.new(self, "lazygit")
 end
 
-function LazygitTerm:on_open()
-  Term.on_open(self)
-
+function LazygitTerm:on_buf_created()
   vim.api.nvim_create_autocmd("VimResized", {
-    buffer = self.bufnr,
+    buffer = self.buf,
     callback = function(e)
       local winid = vim.fn.bufwinid(e.buf)
-      vim.api.nvim_win_set_width(winid, vim.api.nvim_get_option("columns"))
-      vim.api.nvim_win_set_height(winid, vim.api.nvim_get_option("lines") - 1)
+      local default_config = self.def_win_conf()
+      vim.api.nvim_win_set_width(winid, default_config.width)
+      vim.api.nvim_win_set_height(winid, default_config.height)
       vim.api.nvim_input([[<C-\><C-n>^i]])
     end
   })
 
-  tmap("<M-6>", function() self:toggle() end, "Toggle lazygit", self.bufnr)
+  local tmap = require("utils.keymap").tmap
+  tmap("<M-6>", function() self:toggle() end, "terminal: Toggle lazygit", self.buf)
+  tmap([[<C-\><C-n>]], [[<C-\><C-n>^]], "terminal: enter nornal mode and align center", self.buf)
 end
 
-function LazygitTerm:show()
-  Term.show(self)
+function LazygitTerm:on_popup()
+  FloatTerminal.on_popup(self)
   -- 显示lazygit终端时内容会向左偏移，使用normal下^按键矫正
   vim.cmd.normal("^")
 end

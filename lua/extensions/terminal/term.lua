@@ -1,6 +1,5 @@
 local util = require("extensions.terminal.utils")
 
-
 ---@class Term table 全屏终端
 ---@field bufnr number buffer number
 ---@field winid number window id
