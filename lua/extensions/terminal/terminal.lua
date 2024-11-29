@@ -22,11 +22,7 @@ function Terminal:start()
   local chan_id = vim.fn.termopen(self.cmd, {
     on_exit = function() self:on_exit() end
   })
-  if chan_id <= 0 then
-    vim.notify("start terminal failed", vim.log.levels.WARN)
-    return
-  end
-
+  assert(chan_id > 0, "start terminal failed")
   ---@cast chan_id integer
   self.chan_id = chan_id
 end

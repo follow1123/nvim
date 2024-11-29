@@ -1,14 +1,3 @@
--- 使用:terminal命令打开终端时默认关闭行号，并直接进入insert模式
-vim.api.nvim_create_autocmd("TermOpen", {
-  pattern = "*",
-  callback = function()
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.opt_local.signcolumn = "no"
-    vim.cmd.startinsert({ bang = true })
-  end,
-})
-
 -- windows下离开insert模式后、进入vim时输入法切换为英文模式
 -- linux下离开insert模式数日发切换为英文模式
 if _G.IS_WINDOWS then

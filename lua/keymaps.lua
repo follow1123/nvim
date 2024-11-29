@@ -81,7 +81,7 @@ nmap("<M-1>", "<cmd>lua require('extensions.netrw-plus').toggle()<cr>", "netrw: 
 
 -- 终端
 nmap("<C-\\>", "<cmd>lua require('extensions.terminal').scratch_term:toggle()<cr>", "base: Open full terminal")
-nmap("<M-4>", "<cmd>lua require('extensions.terminal').split_term:toggle()<cr>", "base: Open split terminal")
+nmap("<M-4>", "<cmd>lua require('extensions.terminal').task_manager:toggle()<cr>", "base: Open split terminal")
 nmap("<M-6>", "<cmd>lua require('extensions.terminal').lazygit_term:toggle()<cr>", "base: Open lazygit terminal")
 
 -- 注释

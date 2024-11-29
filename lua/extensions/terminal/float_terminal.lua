@@ -1,4 +1,6 @@
 local Terminal = require("extensions.terminal.terminal")
+local util = require("extensions.util")
+local constant = require("extensions.terminal.constant")
 
 ---@class FloatTerminal:Terminal
 ---@field buf integer
@@ -22,20 +24,6 @@ function FloatTerminal.def_win_conf(win_conf)
   return vim.tbl_extend("force", win_conf, def_win_config)
 end
 
--- 校验 buffer 是否有效
----@param buf integer
----@return boolean
-local function check_buf(buf)
-  return buf and vim.api.nvim_buf_is_valid(buf)
-end
-
--- 校验 win_id 是否有效
----@param win_id integer
----@return boolean
-local function check_win(win_id)
-  return win_id and vim.api.nvim_win_is_valid(win_id)
-end
-
 -- 启动并显示浮动终端
 function FloatTerminal:start()
   self.buf = vim.api.nvim_create_buf(false, true)
@@ -44,7 +32,7 @@ function FloatTerminal:start()
     self.buf = nil
     return
   end
-  vim.api.nvim_buf_set_option(self.buf, "filetype", "customterm")
+  vim.api.nvim_buf_set_option(self.buf, "filetype", constant.term_filetype)
   self:on_buf_created()
   self:popup()
   Terminal.start(self)
@@ -73,7 +61,7 @@ function FloatTerminal:toggle()
     self:hide()
     return
   end
-  if check_buf(self.buf) and self:is_running() then
+  if util.check_buf(self.buf) and self:is_running() then
     self:popup()
     return
   end
@@ -109,12 +97,12 @@ function FloatTerminal:on_exit() self:reset() end
 -- 判断浮动终端是否显示
 ---@return boolean
 function FloatTerminal:visible()
-  return check_win(self.win_id) and vim.api.nvim_get_current_win() == self.win_id
+  return util.check_win(self.win_id) and vim.api.nvim_get_current_win() == self.win_id
 end
 
 -- 重置终端
 function FloatTerminal:reset()
-  if check_buf(self.buf) then
+  if util.check_buf(self.buf) then
     vim.api.nvim_buf_delete(self.buf, { force = true })
   end
   self:stop()

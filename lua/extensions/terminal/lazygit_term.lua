@@ -31,5 +31,3 @@ function LazygitTerm:on_popup()
 end
 
 return LazygitTerm
-
-
