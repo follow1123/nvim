@@ -77,7 +77,7 @@ cmap("<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
 
 -- custom extension ------------------------------------------------------------
 
-nmap("<M-1>", "<cmd>lua require('extensions.netrw-plus').toggle()<cr>", "netrw: Open Netrw file manager")
+nmap("<M-1>", "<cmd>lua require('extensions.netrw-plus'):toggle()<cr>", "netrw: Open Netrw file manager")
 
 -- 终端
 nmap("<C-\\>", "<cmd>lua require('extensions.terminal').scratch_term:toggle()<cr>", "base: Open full terminal")

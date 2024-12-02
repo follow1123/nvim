@@ -58,8 +58,3 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt.colorcolumn = "120" -- 限制列宽
   end
 })
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "netrw" },
-  callback = require("extensions.netrw-plus.netrw-filetype")
-})

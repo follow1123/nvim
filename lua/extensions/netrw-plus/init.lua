@@ -1,128 +1,82 @@
-local M = {}
+local nmap  = require("utils.keymap").nmap
+local netrw = require("extensions.netrw-plus.netrw"):new()
+local netrw_group = vim.api.nvim_create_augroup("NETRW_PLUS", { clear = true })
 
-local util = require("extensions.netrw-plus.util")
 
----@type integer|nil
-local prev_buf;
-
--- 打开 netrw
-local function open_netrw()
-  prev_buf = vim.api.nvim_get_current_buf()
-  local cur_full_path = vim.api.nvim_buf_get_name(prev_buf)
-  local cwd = vim.uv.cwd()
-  if cwd == nil then return end
-  local dir = vim.fn.fnamemodify(cur_full_path, ":h")
-  if not util.in_cwd(cwd, cur_full_path) then
-    dir = cwd
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  group = netrw_group,
+  desc = "set some options when enter netrw buffer",
+  callback = function(e)
+    -- 设置按键映射
+    -- 文件浏览器切换到当前的工作目录
+    nmap("gw", "<cmd>e .<cr>", "netrw: Go to current working directory", e.buf)
+    nmap("<C-h>", "<C-w>h", "netrw: Go to left window", e.buf)
+    nmap("<C-l>", "<C-w>l", "netrw: Go to right window", e.buf)
+    -- 复制光标下文件的绝对路径
+    nmap("yP", function ()
+      vim.fn.setreg("+", netrw:get_file_path())
+    end, "netrw: Copy absolute path", e.buf)
+    -- 复制光标下文件的相对路径
+    nmap("yp", function ()
+      vim.fn.setreg("+", vim.fn.fnamemodify(netrw:get_file_path(), ":."))
+    end, "netrw: Copy relative path", e.buf)
+    -- 搜索文件或目录
+    nmap("<M-f>", function()
+      local ok, tb = pcall(require, "telescope.builtin")
+      if ok then
+        tb.find_files({ find_command = { "fd" } })
+      else
+        vim.api.nvim_input(":find ")
+      end
+    end, "netrw: Find files and directories", e.buf)
+    local path = vim.api.nvim_buf_get_name(e.buf)
+    -- 添加 netrw buffer
+    netrw:put_netrw_buffer(path, e.buf)
   end
-  vim.cmd { cmd = "Explore", args = { dir } }
-  vim.schedule_wrap(vim.fn.search)(vim.fn.fnamemodify(cur_full_path, ":t"))
-end
+})
 
--- 关闭 netrw
-local function close_netrw()
-  -- 如果通过命令直接打开 prev_buf 就会为空
-  -- 为空则获取上次访问的 buffer
-  -- 还是没用则直接关闭 netrw
-  if prev_buf == nil or not vim.api.nvim_buf_is_valid(prev_buf) then
-    prev_buf = vim.fn.bufnr("#")
-    if prev_buf == -1 then
-      vim.cmd.bwipeout()
-      return
-    end
-  end
+-- 在netrw内定位当前文件
+nmap("<leader>fL", function()
+  -- netrw buffer 没用显示直接退出
+  local netrw_buf = netrw:get_visible_netrw()
+  if netrw_buf == nil then return end
+  local buf = vim.api.nvim_get_current_buf()
+  -- 当前就是 netrw buffer 直接退出
+  if buf == netrw_buf then return end
 
-  -- 如果有多个窗口，并且 prev_buf 对应的窗口就在其中，则直接跳转过去
-  local wins = vim.api.nvim_list_wins()
-  for _, win in ipairs(wins) do
-    if vim.fn.bufwinid(prev_buf) == win then
-      vim.fn.win_gotoid(win)
-      return
-    end
-  end
-  -- 否则打开 prev_buf
-  vim.cmd.buffer(prev_buf)
-end
+  local file_full_path = vim.api.nvim_buf_get_name(buf)
+  netrw:locate_file(file_full_path, netrw_buf)
+end, "netrw: Locate current file in netrw buffer")
 
--- 跳转到 netrw 对应的窗口
-local function goto_netrw_window(winid)
-  if winid == nil then return end
-  vim.fn.win_gotoid(winid)
-end
-
--- 显示或隐藏netrw buffer
-function M.toggle()
-  local netrw_win = util.get_visible_netrw_winid()
-  if netrw_win == nil then
-    open_netrw()
-    return
-  end
-
-  local cur_win = vim.api.nvim_get_current_win()
-  if cur_win == netrw_win then
-    close_netrw()
-    prev_buf = nil
-    return
-  end
-
-  goto_netrw_window(netrw_win)
-end
-
-local netrw_group = vim.api.nvim_create_augroup("netrw_locate_file", { clear = true })
 -- 切换窗口后netrw窗口自动定位当前文件
 vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
   pattern = vim.fs.normalize(vim.fn.getcwd()) .. "/*",
   group = netrw_group,
-  desc = "netrw: Locate file in netrw buffer",
-  callback = vim.schedule_wrap(function(e)
-    -- 进入 netrw 窗口直接定位之前窗口的文件
-    if "netrw" == vim.o.filetype then
-      local prev_path = vim.api.nvim_buf_get_name(vim.fn.winbufnr(vim.fn.winnr("#")))
-      vim.schedule_wrap(vim.fn.search)(vim.fn.fnamemodify(prev_path, ":t"))
+  desc = "netrw: Locate file in netrw buffer when other window enter",
+  callback = function(e)
+    local netrw_buf = netrw:get_visible_netrw()
+    if netrw_buf == nil then return end
+    local buf = e.buf
+
+    -- 进入 netrw buffer 时定位之前的buffer
+    if buf == netrw_buf then
+      -- 判断上次访问的 buffer 是不是就是当前 buffer
+      local prev_win_buf = vim.fn.winbufnr(vim.fn.winnr("#"))
+      if buf == prev_win_buf then return end
+      -- 获取上次访问 buffer 的文件路径信息
+      local file_full_path = vim.api.nvim_buf_get_name(prev_win_buf)
+      -- 判断是否是正常文件 buffer
+      if not netrw.is_file(file_full_path) then return end
+      -- 判断是否是当前工作目录内的文件
+      if not netrw.in_working_dir(file_full_path) then return end
+      vim.schedule_wrap(netrw.locate_file)(netrw, file_full_path)
       return
     end
-    local netrw_win = util.get_visible_netrw_winid()
-    -- 当前窗口内 netrw 没有打开也直接退出
-    if netrw_win == nil then return end
-    local cur_full_path = vim.fs.normalize(vim.api.nvim_buf_get_name(e.buf))
 
-    local stat = vim.uv.fs_stat(cur_full_path)
-    -- 当前文件是个目录直接退出
-    if stat == nil or stat.type ~= "file" then return end
-
-    local netrw_buf = vim.fn.winbufnr(netrw_win)
-    local dir = vim.fn.fnamemodify(cur_full_path, ":h")
-    local filename = vim.fn.fnamemodify(cur_full_path, ":t")
-    vim.api.nvim_buf_call(netrw_buf, function()
-      local buf_full_path = vim.fs.normalize(vim.api.nvim_buf_get_name(netrw_buf))
-      if buf_full_path ~= cur_full_path then
-        vim.cmd { cmd = "Explore", args = { dir } }
-      end
-      vim.fn.search(filename)
-    end)
-  end)
+    local file_full_path = vim.api.nvim_buf_get_name(buf)
+    netrw:locate_file(file_full_path, netrw_buf)
+  end
 })
 
--- 在netrw内定位当前文件
-require("utils.keymap").nmap("<leader>fL", function()
-  local netrw_win = util.get_visible_netrw_winid()
-  if not netrw_win then return end
-  local cur_full_path = vim.fs.normalize(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()))
-  local stat = vim.uv.fs_stat(cur_full_path)
-  -- 当前 buffer 内不是文件就直接退出
-  if stat == nil or stat.type ~= "file" then return end
-
-  local netrw_buf = vim.fn.winbufnr(netrw_win)
-  local dir = vim.fn.fnamemodify(cur_full_path, ":h")
-  local filename = vim.fn.fnamemodify(cur_full_path, ":t")
-
-  vim.api.nvim_buf_call(netrw_buf, function()
-    local buf_full_path = vim.fs.normalize(vim.api.nvim_buf_get_name(netrw_buf))
-    if buf_full_path ~= cur_full_path then
-      vim.cmd { cmd = "Explore", args = { dir } }
-    end
-    vim.fn.search(filename)
-  end)
-end, "netrw: Locate current file in netrw buffer")
-
-return M
+return netrw
