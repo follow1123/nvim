@@ -72,7 +72,6 @@ return {
       },
     }
 
-    require("telescope").load_extension("projects")
     vim.api.nvim_set_hl(0, "TelescopeSelection", { link = "PmenuSel"})
   end
 }

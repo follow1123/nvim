@@ -45,21 +45,6 @@ return {
     config = function()
       require("colorizer").setup { "*" }
     end
-  },
-  {
-
-    "follow1123/project_session.nvim",
-    cmd = { "ProjectOpen", "ProjectAdd", "ProjectDelete", "ProjectAddDir" },
-    keys = {
-      lazy_map("n", "<leader>pf", "<cmd>lua require('telescope').extensions.projects.recent_projects()<cr>", "project: List recent projects"),
-      lazy_map("n", "<leader>pa", "<cmd>lua require('project_session').add()<cr>", "project: Add this project"),
-      lazy_map("n", "<leader>po", "<cmd>lua require('project_session').open()<cr>", "project: Open project"),
-      lazy_map("n", "<leader>ps", "<cmd>lua require('project_session').save()<cr>", "project: Save project"),
-      lazy_map("n", "<leader>pr", "<cmd>lua require('project_session').load_last()<cr>", "project: Load last project"),
-    },
-    config = function()
-      require("project_session").setup()
-    end
   }
 }
 
