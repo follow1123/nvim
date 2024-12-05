@@ -3,9 +3,9 @@ local M = {}
 M.settings = {
   Lua = {
     completion = {
-      callSnippet = "Disable",
+      callSnippet = "Both",
       keywordSnippet = "Both",
-      postfix = ".",
+      postfix = "@",
     },
     workspace = {
       checkThirdParty = false,
@@ -13,6 +13,7 @@ M.settings = {
     telemetry = { enable = false },
   },
 }
+
 
 function M.on_init()
   local lib_load_ext_name = "LibLoadExt"

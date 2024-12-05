@@ -2,7 +2,6 @@ return {
   { "folke/neodev.nvim", lazy = true }, -- neovim开发提示
   {
     "neovim/nvim-lspconfig",
-    event = "VeryLazy",
     dependencies = {
       "williamboman/mason.nvim", -- lsp包管理器
       "williamboman/mason-lspconfig.nvim", -- 包管理器整合插件
@@ -58,10 +57,10 @@ return {
 
       -- 修改代码诊断默认提示符号
       local signs = {
-        { name = "DiagnosticSignError", text = "" },
-        { name = "DiagnosticSignWarn", text = "" },
-        { name = "DiagnosticSignHint", text = "" },
-        { name = "DiagnosticSignInfo", text = "" },
+        { name = "DiagnosticSignError", text = "E" },
+        { name = "DiagnosticSignWarn", text = "W" },
+        { name = "DiagnosticSignHint", text = "H" },
+        { name = "DiagnosticSignInfo", text = "I" },
       }
       for _, sign in ipairs(signs) do
         vim.fn.sign_define(
@@ -91,8 +90,6 @@ return {
         vim.lsp.handlers.signature_help,
         { border = "single", }
       )
-
-      vim.cmd("LspStart")
     end
   }
 }
