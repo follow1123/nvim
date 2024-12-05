@@ -8,6 +8,7 @@ return {
       "williamboman/mason-lspconfig.nvim", -- 包管理器整合插件
     },
     config = function()
+      require("plugins.lsp.lsp-status"):init()
 
       require("neodev").setup({
         override = function(root_dir, options)
