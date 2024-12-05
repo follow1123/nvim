@@ -54,7 +54,36 @@ vim.api.nvim_create_autocmd("BufEnter", {
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "html", "javascriptreact", "typescriptreact" },
+  desc = "set some options",
   callback = function()
     vim.opt.colorcolumn = "120" -- 限制列宽
+  end
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "query",
+  desc = "set some options in query filetype",
+  callback = function()
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    vim.opt_local.signcolumn = "no"
+  end
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "lua",
+  desc = "set some options in lua file",
+  callback = function(args)
+    vim.opt_local.tabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.expandtab = true
+
+    local nmap = require("utils.keymap").nmap
+    local vmap = require("utils.keymap").vmap
+
+    nmap("<M-r>", "<cmd>lua require('utils.lang.lua').run_code()<cr>", "lua: execute code", args.buf)
+
+    vmap("<M-r>", "<cmd>lua require('utils.lang.lua').run_selected_code()<cr>",
+      "lua: execute selected code", args.buf)
   end
 })
