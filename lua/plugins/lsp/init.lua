@@ -6,13 +6,8 @@ return {
     dependencies = {
       "williamboman/mason.nvim", -- lsp包管理器
       "williamboman/mason-lspconfig.nvim", -- 包管理器整合插件
-      { "j-hui/fidget.nvim", tag = "legacy", },  -- 右下角lsp服务提示
     },
     config = function()
-      -- 右下角lsp服务提示配置加载
-      require("fidget").setup({
-        window = { blend = 0 } -- 解决显示颜色问题
-      })
 
       require("neodev").setup({
         override = function(root_dir, options)

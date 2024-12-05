@@ -6,8 +6,6 @@ return {
   dependencies = {
     "hrsh7th/cmp-nvim-lsp", -- lsp
     "hrsh7th/cmp-nvim-lsp-signature-help", -- 参数
-    "hrsh7th/cmp-buffer", -- buffer
-    "hrsh7th/cmp-path", -- path
     {
       "saadparwaiz1/cmp_luasnip", -- 代码片段
       dependencies = {

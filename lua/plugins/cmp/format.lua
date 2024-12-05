@@ -44,14 +44,10 @@ local icon = true
 -- 补全提示
 local source_names = {
   nvim_lsp = "[LSP]",
-  path = "[Path]",
   luasnip = "[Snippet]",
-  buffer = "[Buffer]",
   nvim_lsp_signature_help = "[Param]",
 }
 local duplicates = {
-  buffer = 1,
-  path = 1,
   nvim_lsp = 0,
   luasnip = 1,
 }
