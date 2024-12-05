@@ -11,8 +11,6 @@ vim.opt.shiftwidth = 4                           -- 一次缩进占用几个空�
 vim.opt.smartindent = true                       -- 智能缩进
 vim.opt.syntax = "on"                            -- 启用语法高亮
 vim.opt.termguicolors = true                     -- 开启终端颜色
-vim.opt.fillchars = { eob = ' ' }                -- 去掉无内容行显示的～
-vim.opt.shortmess:append { I = true }            -- 关闭intro
 vim.opt.colorcolumn = "80"                       -- 限制列宽
 vim.opt.cursorline = true                        -- 高亮光标所在行
 vim.opt.incsearch = true                         -- 增量搜索
@@ -29,6 +27,8 @@ vim.opt.shell = _G.IS_WINDOWS and "cmd" or "zsh" -- 命令模式下 ! 操作默�
 vim.opt.undofile = true                          -- 启用保存undofile的功能
 vim.opt.timeout = true                           -- leaderkey按键延时 
 vim.opt.timeoutlen = 700                         -- leaderkey按键延时间，毫秒
+vim.opt.laststatus = 3                           -- 始终只显示一个状态栏
+vim.opt.statusline = "%y%m%=%<%F %r%=%-14.(%l,%c%V%) %P"
 
 -- 配置 gui 模式下默认的中英文字体，防止系统没有字体时报错
 vim.cmd([[
