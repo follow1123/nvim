@@ -46,10 +46,11 @@ return {
   end, {"i", "s"}),
   -- 确认补全或跳转代码片段
   ["<Tab>"] = cmp.mapping(function(fallback)
-    if cmp.visible() then -- 如果不是代码片段，并且正在选择补全的时候直接确认第一个
-      cmp.confirm(confirm_opts)
-    elseif luasnip.expand_or_jumpable() then
+    -- 优先跳转代码片段
+    if luasnip.expand_or_jumpable() then
       luasnip.expand_or_jump()
+    elseif cmp.visible() then
+      cmp.confirm(confirm_opts)
     else
       fallback()
     end

@@ -3,10 +3,7 @@ return {
   build = function() vim.fn["mkdp#util#install"]() end,
   ft = "markdown",
   init = function()
-    vim.g.mkdp_browser = "chrome"
-    if _G.IS_LINUX then
-      vim.g.mkdp_browser = "google-chrome"
-    end
+    vim.g.mkdp_browser = _G.IS_WINDOWS and "explorer" or "xdg-open"
     vim.g.mkdp_filetypes = { "markdown" }
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "markdown",
