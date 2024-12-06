@@ -34,7 +34,7 @@ return {
       require("lspconfig.ui.windows").default_options.border = "single"
 
       local lspconfig = require("lspconfig")
-      require("mason-lspconfig").setup({
+      require("mason-lspconfig").setup {
         ensure_installed = { "lua_ls", "rust_analyzer", "clangd" },
         handlers = {
           function(service_name)
@@ -42,18 +42,18 @@ return {
             local def_conf = { on_attach = require("plugins.lsp.keymap") }
             local cmp_ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
             if cmp_ok then
-              def_conf.capabilities = cmp_lsp.default_capabilities() -- lsp补全配置
+              -- lsp补全配置
+              def_conf.capabilities = cmp_lsp.default_capabilities()
             end
 
-            local ok, conf = pcall(
-              require, "plugins.lsp.services." .. service_name)
+            local ok, conf = pcall(require, "plugins.lsp.services." .. service_name)
             conf = ok and conf or {}
             conf = vim.tbl_deep_extend("keep", conf, def_conf)
 
             lspconfig[service_name].setup(conf)
           end,
         }
-      })
+      }
 
       -- 修改代码诊断默认提示符号
       local signs = {
@@ -63,8 +63,7 @@ return {
         { name = "DiagnosticSignInfo", text = "I" },
       }
       for _, sign in ipairs(signs) do
-        vim.fn.sign_define(
-          sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
       end
 
       -- 代码诊断ui相关
@@ -83,12 +82,10 @@ return {
       })
 
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-        vim.lsp.handlers.hover,
-        { border = "single", }
+        vim.lsp.handlers.hover, { border = "single", }
       )
       vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        { border = "single", }
+        vim.lsp.handlers.signature_help, { border = "single", }
       )
     end
   }
