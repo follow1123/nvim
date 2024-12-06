@@ -1,27 +1,22 @@
+local base_group = vim.api.nvim_create_augroup("base_auto_command", { clear = true })
 -- windows下离开insert模式后、进入vim时输入法切换为英文模式
 -- linux下离开insert模式数日发切换为英文模式
 if _G.IS_WINDOWS then
   vim.api.nvim_create_autocmd("InsertLeave", {
-    pattern = "*",
-    nested = true, -- 允许嵌套
-    callback = function() vim.fn.system("ims.exe 1") end,
+    group = base_group,
+    command = "call system('ims.exe 1')"
   })
 else
   vim.api.nvim_create_autocmd("InsertLeave", {
-    pattern = "*",
-    callback = function()
-      if tonumber(vim.fn.system("fcitx5-remote")) == 2 then
-        vim.fn.system("fcitx5-remote -c")
-      end
-    end,
+    group = base_group,
+    command = "if system('fcitx5-remote') == 2 | call system('fcitx5-remote -c') | endif"
   })
 end
 
 -- 在终端模式下，vim退出后还原光标样式
 if not _G.IS_GUI then
   vim.api.nvim_create_autocmd("VimLeave", {
-    pattern = "*",
-    nested = true,
+    group = base_group,
     callback = function()
       vim.opt.guicursor:append("a:ver25")
       vim.opt.guicursor:append("a:blinkon1")
@@ -32,7 +27,7 @@ end
 
 -- 复制时高亮
 vim.api.nvim_create_autocmd("TextYankPost", {
-  pattern = "*",
+  group = base_group,
   callback = function()
     vim.highlight.on_yank({ timeout = 100, })
   end,
@@ -40,6 +35,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- check big file syntax off
 vim.api.nvim_create_autocmd("BufEnter", {
+  group = base_group,
   callback = function(args)
     local max_file_size = 1024 * 1024  -- 1MB in bytes
 
@@ -53,6 +49,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+  group = base_group,
   pattern = { "html", "javascriptreact", "typescriptreact" },
   desc = "set some options",
   callback = function()
@@ -61,6 +58,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+  group = base_group,
   pattern = "query",
   desc = "set some options in query filetype",
   callback = function()
@@ -71,6 +69,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+  group = base_group,
   pattern = "lua",
   desc = "set some options in lua file",
   callback = function(args)
@@ -81,9 +80,7 @@ vim.api.nvim_create_autocmd("FileType", {
     local nmap = require("utils.keymap").nmap
     local vmap = require("utils.keymap").vmap
 
-    nmap("<M-r>", "<cmd>lua require('utils.lang.lua').run_code()<cr>", "lua: execute code", args.buf)
-
-    vmap("<M-r>", "<cmd>lua require('utils.lang.lua').run_selected_code()<cr>",
-      "lua: execute selected code", args.buf)
+    nmap("<space>x", ":execute 'lua ' . getline('.')<cr>", "lua: execute code", args.buf)
+    vmap("<space>x", [[<esc>:execute 'lua ' . join(getline("'<", "'>"), "\n")<cr>]], "lua: execute selected code", args.buf)
   end
 })
