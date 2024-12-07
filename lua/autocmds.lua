@@ -17,11 +17,7 @@ end
 if not _G.IS_GUI then
   vim.api.nvim_create_autocmd("VimLeave", {
     group = base_group,
-    callback = function()
-      vim.opt.guicursor:append("a:ver25")
-      vim.opt.guicursor:append("a:blinkon1")
-      vim.opt.guicursor:append("a:blinkoff1")
-    end,
+    command = "set guicursor+=n-v-c:blinkon500-blinkoff500"
   })
 end
 
@@ -80,7 +76,7 @@ vim.api.nvim_create_autocmd("FileType", {
     local nmap = require("utils.keymap").nmap
     local vmap = require("utils.keymap").vmap
 
-    nmap("<space>x", ":execute 'lua ' . getline('.')<cr>", "lua: execute code", args.buf)
-    vmap("<space>x", [[<esc>:execute 'lua ' . join(getline("'<", "'>"), "\n")<cr>]], "lua: execute selected code", args.buf)
+    nmap("<space>x", ":.lua<cr>", "lua: execute code", args.buf)
+    vmap("<space>x", ":lua<cr>", "lua: execute selected code", args.buf)
   end
 })
