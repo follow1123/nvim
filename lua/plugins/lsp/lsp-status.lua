@@ -1,6 +1,6 @@
 ---@class LspStatus
 ---@field clients table<string, string>
----@field timer uv_timer_t
+---@field timer uv.uv_timer_t
 ---@field default_statusline string
 local LspStatus = {}
 
@@ -68,7 +68,9 @@ end
 
 function LspStatus:loading()
   if self.timer == nil then
-    self.timer = vim.uv.new_timer()
+    local timer = vim.uv.new_timer()
+    assert(timer, "create timer error")
+    self.timer = timer
   end
   local frames_num = #self.spinner_frames
   local frame_idx = 0

@@ -1,23 +1,25 @@
--- rust lsp 配置
-local config = {
+-- 参考 `:h vim.lsp.ClientConfig`
+---@type vim.lsp.ClientConfig
+---@diagnostic disable-next-line
+return {
+  on_attach = require("plugins.lsp.keymap"),
+  capabilities = require("cmp_nvim_lsp").default_capabilities(),
   settings = {
     ['rust-analyzer'] = {
-      completion = {
-        autoimport = {
-          enable = true
+      imports = {
+        granularity = {
+          group = "module",
         },
-        callable = {
-          snippets = "fill_arguments"
-        },
-        postfix = {
-          enable = true
-        }
+        prefix = "self",
       },
-      diagnostics = {
-        enable = true;
-      }
+      cargo = {
+        buildScripts = {
+          enable = true,
+        },
+      },
+      procMacro = {
+        enable = true
+      },
     }
   }
 }
-
-return config
