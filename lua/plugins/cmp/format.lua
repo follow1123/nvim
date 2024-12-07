@@ -3,6 +3,7 @@ local source_names = {
   nvim_lsp = "[LSP]",
   luasnip = "[Snippet]",
   nvim_lsp_signature_help = "[Param]",
+  lazydev = "[NvimDev]"
 }
 local duplicates = {
   nvim_lsp = 0,

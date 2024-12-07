@@ -29,6 +29,7 @@ vim.opt.timeout = true                           -- leaderkey按键延时
 vim.opt.timeoutlen = 700                         -- leaderkey按键延时间，毫秒
 vim.opt.laststatus = 3                           -- 始终只显示一个状态栏
 vim.opt.statusline = "%y%m%=%<%F %r%=%-14.(%l,%c%V%) %P"
+vim.opt.pumheight = 15                           -- 补全弹窗最大补全个数
 
 -- 配置 gui 模式下默认的中英文字体，防止系统没有字体时报错
 vim.cmd([[

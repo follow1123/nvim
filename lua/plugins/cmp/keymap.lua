@@ -26,7 +26,11 @@ return {
   ["<CR>"] = cmp.mapping.confirm(confirm_opts), -- 完成补全
   ["<C-k>"] = cmp.mapping(function() -- 开启补全或开关文档窗口
     if not cmp.visible() then
-      cmp.complete()
+      cmp.complete({
+        config = {
+          sources = { { name = "nvim_lsp" } }
+        }
+      })
       return
     end
     if cmp.visible_docs() then
@@ -46,18 +50,17 @@ return {
   end, {"i", "s"}),
   -- 确认补全或跳转代码片段
   ["<Tab>"] = cmp.mapping(function(fallback)
-    -- 优先跳转代码片段
-    if luasnip.expand_or_jumpable() then
-      luasnip.expand_or_jump()
-    elseif cmp.visible() then
+    if cmp.visible() then
       cmp.confirm(confirm_opts)
+    elseif luasnip.locally_jumpable(1) then
+      luasnip.jump(1)
     else
       fallback()
     end
   end,
     {"i", "s"}),
   ["<S-Tab>"] = cmp.mapping(function(fallback)
-    if luasnip.jumpable(-1) then
+    if luasnip.locally_jumpable(-1) then
       luasnip.jump(-1)
     else
       fallback()
