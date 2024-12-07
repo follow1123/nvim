@@ -47,6 +47,7 @@ return {
             ["<M-u>"] = actions.preview_scrolling_up, -- 预览窗口向上滚动
             ["<M-d>"] = actions.preview_scrolling_down, -- 预览窗口向下滚动
             ["<M-a>"] = actions.toggle_all, -- 将全部结果标记为已选择
+            ["<C-s>"] = actions.select_horizontal, -- 水平分屏打开
 
             ["<C-c>"] = actions.close, -- 关闭
             ["<Esc>"] = actions.close, -- 关闭
@@ -58,17 +59,27 @@ return {
             ["<C-b>"] =  function() vim.api.nvim_input("<Left>") end,
             ["<M-f>"] =  function() vim.api.nvim_input("<C-Right>") end,
             ["<M-b>"] =  function() vim.api.nvim_input("<C-Left>") end,
-            ["<C-d>"] =  function () vim.api.nvim_input("<Delete>") end,
+            ["<C-d>"] =  function() vim.api.nvim_input("<Delete>") end,
           }
         }
       },
       pickers = {
-        -- 查找文件设置
+        -- 搜索文件时不显示预览窗口
         find_files = {
+          theme = "dropdown",
           previewer = false,
         },
       },
     }
+
+    -- 预览窗口默认较窄，设置折行
+    local group = vim.api.nvim_create_augroup("TELESCOPE_PREVIEWER_LOADED", { clear = true })
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "TelescopePreviewerLoaded",
+      group = group,
+      desc = "set telescope previewer window wrap text",
+      command = "setlocal wrap"
+    })
 
     vim.api.nvim_set_hl(0, "TelescopeSelection", { link = "PmenuSel"})
   end
