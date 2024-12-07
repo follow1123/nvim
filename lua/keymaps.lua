@@ -85,11 +85,10 @@ nmap("<M-4>", "<cmd>lua require('extensions.terminal').task_manager:toggle()<cr>
 nmap("<M-6>", "<cmd>lua require('extensions.terminal').lazygit_term:toggle()<cr>", "base: Open lazygit terminal")
 
 -- 注释
-nmap("<M-e>", "<cmd>lua require('extensions.comment').toggle_comment_line()<cr>", "base: Comment line")
-vmap("<M-e>", "<cmd>lua require('extensions.comment').toggle_comment_visual_mode()<cr>", "base: Comment line selected")
+nmap("<M-e>", function() vim.api.nvim_input("gcc") end, "base: Comment line")
+vmap("<M-e>", function() vim.api.nvim_input("gc") end, "base: Comment line selected")
 
 -- 项目管理
-
 nmap("<leader>pf", "<cmd>lua require('extensions.project-manager'):toggle()<cr>", "base: Open or close recent project list")
 nmap("<leader>pr", "<cmd>lua require('extensions.project-manager'):load_last_project()<cr>", "base: Load last project")
 nmap("<leader>ps", "<cmd>lua require('extensions.project-manager'):save_current_project()<cr>", "base: Load last project")
