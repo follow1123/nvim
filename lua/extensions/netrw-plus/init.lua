@@ -1,6 +1,7 @@
-local nmap  = require("utils.keymap").nmap
+local nmap = require("utils.keymap").nmap
 local netrw = require("extensions.netrw-plus.netrw"):new()
 local netrw_group = vim.api.nvim_create_augroup("NETRW_PLUS", { clear = true })
+local util = require("extensions.util")
 
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -67,7 +68,7 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
       -- 获取上次访问 buffer 的文件路径信息
       local file_full_path = vim.api.nvim_buf_get_name(prev_win_buf)
       -- 判断是否是正常文件 buffer
-      if not netrw.is_file(file_full_path) then return end
+      if not util.is_file(file_full_path) then return end
       -- 判断是否是当前工作目录内的文件
       if not netrw.in_working_dir(file_full_path) then return end
       vim.schedule_wrap(netrw.locate_file)(netrw, file_full_path)

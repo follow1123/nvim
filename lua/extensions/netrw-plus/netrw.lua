@@ -14,6 +14,10 @@ local netrw_filetype = "netrw"
 function Netrw.is_sub_folder(path, parent)
   path = vim.fs.normalize(path)
   parent = vim.fs.normalize(parent)
+  if _G.IS_WINDOWS then
+    path = path:lower()
+    parent = parent:lower()
+  end
   local parent_pattern = parent .. "/"
   return path:sub(1, #parent_pattern) == parent_pattern
 end
