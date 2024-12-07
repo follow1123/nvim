@@ -1,5 +1,5 @@
 ---@class LspStatus
----@field clients table<string>
+---@field clients table<string, string>
 ---@field timer uv_timer_t
 ---@field default_statusline string
 local LspStatus = {}
@@ -9,16 +9,33 @@ local group = vim.api.nvim_create_augroup("LSP_STATUS", { clear = true })
 LspStatus.spinner_frames = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" }
 
 function LspStatus:init()
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "LspProgressUpdate",
+  vim.api.nvim_create_autocmd("LspProgress", {
     group = group,
     callback = function()
-      local messages = vim.lsp.util.get_progress_messages()
-      for _, msg in ipairs(messages) do
-        if msg.done then
-          self:stop(msg.name)
+      -- 参考 vim.lsp.status() 方法源码实现
+      local percentage = nil
+      local percentage_map = {} --- @type table<string, integer>
+      for _, client in ipairs(vim.lsp.get_clients()) do
+        percentage_map[client.name] = -1
+        --- @diagnostic disable-next-line:no-unknown
+        for progress in client.progress do
+          --- @cast progress {token: lsp.ProgressToken, value: lsp.LSPAny}
+          local value = progress.value
+          if type(value) == 'table' and value.kind then
+            if value.percentage then
+              percentage = math.max(percentage or 0, value.percentage)
+              percentage_map[client.name] = percentage
+            end
+          end
+          -- else: Doesn't look like work done progress and can be in any format
+          -- Just ignore it as there is no sensible way to display it
+        end
+      end
+      for client_name, per in pairs(percentage_map) do
+        if per == -1 then
+          self:stop(client_name)
         else
-          self:start(msg.name)
+          self:start(client_name)
         end
       end
     end
@@ -42,9 +59,7 @@ function LspStatus:update_statusline(frame_idx)
 end
 
 function LspStatus:reset_statusline()
-  vim.schedule(function()
-    vim.o.statusline = self.default_statusline
-  end)
+  vim.o.statusline = self.default_statusline
 end
 
 function LspStatus:has_loading_clients()
@@ -65,7 +80,7 @@ function LspStatus:loading()
 end
 
 function LspStatus:done()
-  if self:has_loading_clients() then return end
+  if self.timer == nil then return end
   self.timer:stop()
   self:reset_statusline()
 end

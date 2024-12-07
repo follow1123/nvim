@@ -20,7 +20,7 @@ function M.on_init()
   if vim.fn.exists(":" .. lib_load_ext_name) == 2 then return end
   vim.api.nvim_create_user_command(lib_load_ext_name,
     function()
-      local clients = vim.lsp.get_active_clients({
+      local clients = vim.lsp.get_clients({
         bufnr = vim.api.nvim_get_current_buf(),
         name = "lua_ls"
       })

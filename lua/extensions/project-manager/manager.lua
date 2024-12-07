@@ -129,13 +129,13 @@ function ProjectManager:update_projects()
 end
 
 function ProjectManager:stop_lsp()
-  local ok = pcall(vim.lsp.stop_client, vim.lsp.get_active_clients())
+  local ok = pcall(vim.lsp.stop_client, vim.lsp.get_clients())
   if not ok then return end
 
   -- 等待所有 lsp 停止完成
   local mill = 0
   while mill < 300 do
-    local clients = vim.lsp.get_active_clients()
+    local clients = vim.lsp.get_clients()
     if not clients or #clients == 0 then break end
     vim.wait(1)
     mill = mill + 1

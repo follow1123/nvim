@@ -50,7 +50,9 @@ nmap("N", "Nzz", "base: Search previous and page center")
 local function quickfix_move(key, quickfix_cmd)
   local wins = vim.api.nvim_list_wins()
   for _, win_id in ipairs(wins) do
-    if "qf" == vim.api.nvim_get_option_value("filetype", { win = win_id }) then
+    if "qf" == vim.api.nvim_get_option_value("filetype", {
+      buf = vim.api.nvim_win_get_buf(win_id)
+    }) then
       return quickfix_cmd
     end
   end

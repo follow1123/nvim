@@ -54,18 +54,7 @@ return {
           end,
         }
       }
-
-      -- 修改代码诊断默认提示符号
-      local signs = {
-        { name = "DiagnosticSignError", text = "E" },
-        { name = "DiagnosticSignWarn", text = "W" },
-        { name = "DiagnosticSignHint", text = "H" },
-        { name = "DiagnosticSignInfo", text = "I" },
-      }
-      for _, sign in ipairs(signs) do
-        vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-      end
-
+      --
       -- 代码诊断ui相关
       vim.diagnostic.config({
         virtual_text = false,
@@ -75,7 +64,7 @@ return {
           focusable = true,
           style = "minimal",
           border = "single",
-          source = "always",
+          source = "if_many",
           header = "",
           prefix = "",
         },
