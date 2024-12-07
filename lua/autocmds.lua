@@ -41,6 +41,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
     if stat.size > max_file_size then
       vim.opt_local.syntax = "off"
     end
+    -- 关闭高亮
+    vim.treesitter.stop(args.buf)
   end,
 })
 
