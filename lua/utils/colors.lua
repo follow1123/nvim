@@ -26,6 +26,7 @@ local M = {
   blue_02 = "#1c7ca1",
   blue_03 = "#215e76",
   blue_04 = "#264f78",
+  blue_05 = "#578282",
 
   green_01 = "Green",
   green_02 = "#536232",
@@ -42,6 +43,8 @@ local M = {
 
   purple_01 = "Purple",
   purple_02 = "#a986c0",
+  purple_03 = "#d4bfd4"
+
 }
 
 return M

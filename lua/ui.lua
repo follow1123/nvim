@@ -36,3 +36,11 @@ vim.api.nvim_set_hl(0, "DiffText", { fg = "NONE", bg = colors.green_03})
 for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
   vim.api.nvim_set_hl(0, group, {})
 end
+
+vim.api.nvim_set_hl(0, "@punctuation.bracket", { fg = "none" })
+vim.api.nvim_set_hl(0, "@constructor", { fg = "none" })
+vim.api.nvim_set_hl(0, "@function.builtin", { fg = "none" })
+vim.api.nvim_set_hl(0, "@module.builtin", { fg = "none" })
+vim.api.nvim_set_hl(0, "@variable", { fg = "none" })
+vim.api.nvim_set_hl(0, "@variable.member", { fg = "none" })
+vim.api.nvim_set_hl(0, "@function.call", { fg = "none" })
