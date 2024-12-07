@@ -3,43 +3,44 @@ return {
   config = function()
     require("gitsigns").setup {
       signs = {
-        add = { text = "│" },
-        change = { text = "│" },
-        delete = { text = "_" },
-        topdelete = { text = "‾" },
-        changedelete = { text = "~" },
-        untracked = { text = "┆" },
+        add          = { text = '│' },
+        change       = { text = '│' },
+        delete       = { text = '_' },
+        topdelete    = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked    = { text = '┆' },
+      },
+      signs_staged = {
+        add          = { text = '│' },
+        change       = { text = '│' },
+        delete       = { text = '_' },
+        topdelete    = { text = '‾' },
+        changedelete = { text = '~' },
+        untracked    = { text = '┆' },
       },
       on_attach = function(bufnr)
         local map = require("utils.keymap").map
-        local gs = package.loaded.gitsigns
+        local gitsigns = require('gitsigns')
+
+        ---@param diff_mode_key string
+        ---@param direction "first"|"last"|"next"|"prev"
+        local function hunk_navigation(diff_mode_key, direction)
+           if vim.wo.diff then
+             vim.cmd.normal({diff_mode_key, bang = true})
+           else
+             gitsigns.nav_hunk(direction, { preview = true })
+           end
+        end
 
         -- hunk移动
-        map("n", "]c", function()
-          if vim.wo.diff then return "]c" end
-          vim.schedule_wrap(gs.next_hunk){ preview = true }
-          return "<Ignore>"
-        end, "git(Gitsigns): Next hunk", bufnr, { expr = true })
-        map("n", "[c", function()
-          if vim.wo.diff then return "[c" end
-          vim.schedule_wrap(gs.prev_hunk){ preview = true }
-          return "<Ignore>"
-        end, "git(Gitsigns): Previous hunk", bufnr, { expr = true })
+        map("n", "]c", function() hunk_navigation("]c", "next") end, "git(Gitsigns): Next hunk", bufnr)
+        map("n", "[c", function() hunk_navigation("[c", "prev") end, "git(Gitsigns): Previous hunk", bufnr)
         -- 重置
-        map("n", "<leader>gr", gs.reset_hunk, "git(Gitsigns): Reset hunk", bufnr)
-        map("v", "<leader>gr", function()
-          gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") }
-        end, "git(Gitsigns): Reset hunk", bufnr)
-        map("n", "<leader>gp", gs.preview_hunk, "git(Gitsigns): Preview hunk", bufnr)
-        map("n", "<leader>gb", function()
-          gs.blame_line{full=true}
-        end, "git(Gitsigns): Preview blame line", bufnr)
-        map("n", "<leader>gd", function()
-          gs.diffthis(nil, { split = "belowright" })
-        end, "git(Gitsigns): Diff this", bufnr)
-        -- 文本对象
-        map({"o", "x"}, "ih", "<cmd><C-u>Gitsigns select_hunk<cr>",
-          "git(Gitsigns): Text object select hunk", bufnr)
+        map("n", "<leader>gr", gitsigns.reset_hunk, "git(Gitsigns): Reset hunk", bufnr)
+        map("n", "<leader>gR", gitsigns.reset_buffer, "git(Gitsigns): Reset buffer", bufnr)
+        map("v", "<leader>gr", function() gitsigns.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end, "git(Gitsigns): Reset hunk", bufnr)
+        map("n", "<leader>gb", function() gitsigns.blame_line{full=true} end, "git(Gitsigns): Preview blame line", bufnr)
+        map("n", "<leader>gd", function() gitsigns.diffthis(nil, { split = "belowright" }) end, "git(Gitsigns): Diff this", bufnr)
       end
     }
 
