@@ -44,13 +44,17 @@ return {
         }
       }
 
-      -- lsp 函数签名信息的边框
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-        vim.lsp.handlers.hover, { border = "single", }
-      )
-      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help, { border = "single", }
-      )
+      -- 统一 lsp 相关弹窗背景颜色
+      local default_lsp_window_impl = vim.lsp.util.open_floating_preview
+      ---@diagnostic disable-next-line
+      vim.lsp.util.open_floating_preview = function(contents, syntax, opts)
+        local buf, win_id = default_lsp_window_impl(contents, syntax, opts)
+        vim.api.nvim_set_option_value("winhighlight", "Normal:Pmenu", {
+          win = win_id
+        })
+        return buf, win_id
+      end
+
       -- 代码诊断ui相关
       vim.diagnostic.config({
         virtual_text = false,
@@ -59,10 +63,20 @@ return {
         float = {
           focusable = true,
           style = "minimal",
-          border = "single",
           source = "if_many",
         },
       })
+
+      -- 统一诊断窗口背景颜色
+      local default_diagnostic_window_impl = vim.diagnostic.open_float
+      ---@diagnostic disable-next-line
+      vim.diagnostic.open_float = function(opts, ...)
+        local buf, win_id = default_diagnostic_window_impl(opts, ...)
+        vim.api.nvim_set_option_value("winhighlight", "Normal:Pmenu", {
+          win = win_id
+        })
+        return buf, win_id
+      end
     end
   }
 }

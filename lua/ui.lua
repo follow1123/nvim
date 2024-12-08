@@ -37,6 +37,7 @@ for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
   vim.api.nvim_set_hl(0, group, {})
 end
 
+vim.api.nvim_set_hl(0, "@punctuation.delimiter", { fg = "none" })
 vim.api.nvim_set_hl(0, "@punctuation.bracket", { fg = "none" })
 vim.api.nvim_set_hl(0, "@constructor", { fg = "none" })
 vim.api.nvim_set_hl(0, "@function.builtin", { fg = "none" })

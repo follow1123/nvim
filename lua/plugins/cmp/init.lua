@@ -47,7 +47,7 @@ return {
       -- 补全弹窗样式配置
       window = {
         completion = { col_offset = 0 }, -- 补全窗口左边距
-        documentation = { border = "single" } -- 文档窗口边框
+        documentation = { winhighlight = "Normal:Pmenu", max_height = 20 } -- 文档窗口边框
       },
       experimental = { ghost_text = true }, -- 虚拟文本
     })

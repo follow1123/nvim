@@ -18,6 +18,7 @@ return {
         changedelete = { text = '~' },
         untracked    = { text = '┆' },
       },
+      preview_config = { border = "none" },
       on_attach = function(bufnr)
         local map = require("utils.keymap").map
         local gitsigns = require('gitsigns')
@@ -51,6 +52,18 @@ return {
         vim.api.nvim_buf_set_option(e.buf, "modifiable", false)
       end
     })
+
+    -- 统一预览窗口的背景颜色
+    local popup = require("gitsigns.popup")
+    local defalut_impl = popup.create
+    ---@diagnostic disable-next-line
+    popup.create = function(lines_spec, opts, id)
+      local win_id, buf = defalut_impl(lines_spec, opts, id)
+      vim.api.nvim_set_option_value("winhighlight", "Normal:Pmenu", {
+        win = win_id
+      })
+      return win_id, buf
+    end
 
     local colors = require("utils.colors")
     -- gitsign内置颜色配置
