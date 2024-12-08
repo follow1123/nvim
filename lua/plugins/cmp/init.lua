@@ -22,6 +22,17 @@ return {
 
     -- 补全配置
     cmp.setup({
+      enabled = function()
+        -- disable completion in comments
+        local context = require 'cmp.config.context'
+        -- keep command mode completion enabled when cursor is in a comment
+        if vim.api.nvim_get_mode().mode == 'c' then
+          return true
+        else
+          return not context.in_treesitter_capture("comment")
+          and not context.in_syntax_group("Comment")
+        end
+      end,
       performancem = { max_view_entries = 60 }, -- 最大只显示60条补全数据
       mapping = require("plugins.cmp.keymap"), -- 补全按键
       snippet = {
@@ -35,21 +46,18 @@ return {
         completeopt = "menu,menuone,noinsert"
       },
       formatting = require("plugins.cmp.format"), -- 补全弹窗数据格式
-
       -- 补全来源
       sources = {
-        { name = "nvim_lsp_signature_help", group_index = 1, priority = 999},
-        { name = "nvim_lsp", group_index = 1, priority = 998 },
-        { name = "luasnip", group_index = 1, priority = 997, max_item_count = 3 },
+        { name = "nvim_lsp_signature_help", group_index = 1, priority = 99},
+        { name = "nvim_lsp", group_index = 1, priority = 98 },
+        { name = "luasnip", group_index = 1, priority = 97 },
         { name = "lazydev", group_index = 0 },
       },
       view = { docs = { auto_open = true } }, -- 自动开打补全文档弹窗
       -- 补全弹窗样式配置
       window = {
-        completion = { col_offset = 0 }, -- 补全窗口左边距
         documentation = { winhighlight = "Normal:Pmenu", max_height = 20 } -- 文档窗口边框
       },
-      experimental = { ghost_text = true }, -- 虚拟文本
     })
 
     -- Telescope搜索时禁用补全功能
