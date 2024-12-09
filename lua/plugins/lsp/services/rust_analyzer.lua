@@ -20,6 +20,14 @@ return {
       procMacro = {
         enable = true
       },
+      completion = {
+        callable = {
+          -- fill_arguments - 插入括号并显示方法的所有参数的代码片段
+          -- add_parentheses - 只插入括号
+          -- none - 禁用
+          snippets = "add_parentheses"
+        }
+      }
     }
   }
 }
