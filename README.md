@@ -114,8 +114,6 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 | `Normal` | <kbd>Alt</kbd>+<kbd>f</kbd> | 搜索当前项目内的文件 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>f</kbd>+<kbd>f</kbd> | 在当前项目内搜索 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>f</kbd>+<kbd>w</kbd> | 在当前项目内搜索当前光标下的单词 |
-| `Normal` | <kbd>Leader</kbd>+<kbd>f</kbd>+<kbd>W</kbd> | 在当前项目内搜索当前光标下的单词</br>包含左右空白 |
-| `Normal` | <kbd>Leader</kbd>+<kbd>f</kbd>+<kbd>t</kbd> | 根据指定的文件类型在当前项目内搜索 |
 
 ##### Git
 
@@ -126,12 +124,12 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 | `Normal` | <kbd>]</kbd>+<kbd>c</kbd> | 下一处变更 |
 | `Normal` | <kbd>[</kbd>+<kbd>c</kbd> | 上一处变更 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>g</kbd>+<kbd>r</kbd> | 重置光标所在位置的变更 |
+| `Normal` | <kbd>Leader</kbd>+<kbd>g</kbd>+<kbd>R</kbd> | 重置当前 buffer 内的所有变更 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>g</kbd>+<kbd>s</kbd> | 显示当前项目的git status信息 |
 | `Visual` | <kbd>Leader</kbd>+<kbd>g</kbd>+<kbd>r</kbd> | 重置选中的所有变更 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>g</kbd>+<kbd>p</kbd> | 弹出光标所在位置的变更的diff窗口 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>g</kbd>+<kbd>b</kbd> | 弹出光标所在位置的变更的blame窗口 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>g</kbd>+<kbd>d</kbd> | diff 当前 buffer |
-
 
 #### 开发
 
@@ -142,7 +140,7 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 * [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) - lsp 配置管理
 * [mason.nvim](https://github.com/williamboman/mason.nvim) - lsp 包管理器
 * [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim) - lsp 配置和包管理器整合
-* [neodev.nvim](https://github.com/folke/neodev.nvim) - neovim 开发提示
+* [lazydev.nvim](https://github.com/folke/lazydev.nvim) - neovim 开发提示
 
 | 模式    | 按键    | 说明    |
 |---------------- | --------------- | --------------- |
@@ -181,6 +179,7 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 |---------------- | --------------- | --------------- |
 | `Insert` | <kbd>Ctrl</kbd>+<kbd>n</kbd> | 下一个补全 |
 | `Insert` | <kbd>Ctrl</kbd>+<kbd>p</kbd> | 上一个补全 |
+| `Insert` | <kbd>Ctrl</kbd>+<kbd>k</kbd> | 开始补全 |
 | `Insert` | <kbd>Ctrl</kbd>+<kbd>u</kbd> | 文档弹窗内容向上滚动 |
 | `Insert` | <kbd>Ctrl</kbd>+<kbd>d</kbd> | 文档弹窗内容向下滚动 |
 | `Insert` | <kbd>Enter</kbd> | 完成补全 |
@@ -213,7 +212,7 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 
 * [harpoon](https://github.com/ThePrimeagen/harpoon)
 
-管理主要编辑的文件，防止 <kbd>Ctrl</kbd>+<kbd>i</kbd>，<kbd>Ctrl</kbd>+<kbd>o</kbd> 后找不到文件在哪里
+管理主要编辑的文件，防止多次 <kbd>Ctrl</kbd>+<kbd>i</kbd>，<kbd>Ctrl</kbd>+<kbd>o</kbd> 后找不到文件在哪里
 
 | 模式    | 按键    | 说明    |
 |---------------- | --------------- | --------------- |
@@ -245,14 +244,14 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 
 #### 其他
 
-* [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
-* [nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua)
-* [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-* [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - 依赖插件
+* [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) - markdown 文件预览
+* [nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua) - 颜色预览
+* [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - 代码语法解析，一般用于代码高亮等
+* [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - 依赖插件，telescope 和 Harpoon 插件的依赖库
+* [catppuccin](https://github.com/catppuccin/nvim) - 主题插件
 
 | 模式    | 按键    | 说明    |
 |---------------- | --------------- | --------------- |
-| `Normal` | <kbd>Leader</kbd>+<kbd>5</kbd> | 开关基于treesitter的代码高亮 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>m</kbd>+<kbd>p</kbd> | 开关markdown文件预览 |
 
 ### 参考
