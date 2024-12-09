@@ -147,7 +147,7 @@ function ProjectManager:check_unsaved_files()
   local bufs = vim.api.nvim_list_bufs()
   local unsaved_files = {}
   for _, buf in ipairs(bufs) do
-    if vim.api.nvim_buf_get_option(buf, "modified") then
+    if vim.api.nvim_get_option_value("modified", { buf = buf }) then
       local file_full_path = vim.api.nvim_buf_get_name(buf)
       if util.is_file(file_full_path) then
         table.insert(unsaved_files, file_full_path)

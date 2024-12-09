@@ -13,8 +13,8 @@ local FloatTerminal = Terminal:derive()
 function FloatTerminal.def_win_conf(win_conf)
   local def_win_config = {
     relative = "editor",
-    width = vim.api.nvim_get_option("columns"),
-    height = vim.api.nvim_get_option("lines") - vim.o.cmdheight,
+    width = vim.api.nvim_get_option_value("columns", {}),
+    height = vim.api.nvim_get_option_value("lines", {}) - vim.o.cmdheight,
     row = 0,
     col = 0,
     style = "minimal",
@@ -32,7 +32,7 @@ function FloatTerminal:start()
     self.buf = nil
     return
   end
-  vim.api.nvim_buf_set_option(self.buf, "filetype", constant.term_filetype)
+  vim.api.nvim_set_option_value("filetype", constant.term_filetype, { buf = self.buf })
   self:on_buf_created()
   self:popup()
   Terminal.start(self)

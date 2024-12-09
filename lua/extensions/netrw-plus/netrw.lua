@@ -60,7 +60,7 @@ end
 function Netrw:check_netrw_buffer(buf)
   local ok = util.check_buf(buf)
   if not ok then return false end
-  local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+  local ft = vim.api.nvim_get_option_value("filetype", { buf = buf })
   return ft == netrw_filetype
 end
 
@@ -126,7 +126,7 @@ function Netrw:get_visible_netrw()
   local wins = vim.api.nvim_list_wins()
   for _, win in ipairs(wins) do
     local buf = vim.fn.winbufnr(win)
-    local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+    local ft = vim.api.nvim_get_option_value("filetype", { buf = buf })
     if netrw_filetype == ft then return buf end
   end
   return nil

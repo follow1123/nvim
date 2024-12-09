@@ -11,8 +11,8 @@ local ManagementView = {}
 ManagementView.filetype =  "projectmgr"
 
 function ManagementView:get_window_config()
-  local height = vim.api.nvim_get_option("lines")
-  local width = vim.api.nvim_get_option("columns")
+  local height = vim.api.nvim_get_option_value("lines", {})
+  local width = vim.api.nvim_get_option_value("columns", {})
   local win_width = math.floor(width / 2)
   local win_height = math.floor(height / 3)
   -- 这里减去的5是包括两边边框和左边的行号的宽度
@@ -26,18 +26,18 @@ function ManagementView:get_window_config()
 end
 
 function ManagementView:set_window_options()
-  vim.api.nvim_win_set_option(self.win_id, "number", true)
-  vim.api.nvim_win_set_option(self.win_id, "cursorline", true)
-  vim.api.nvim_win_set_option(self.win_id, "wrap", true)
+  vim.api.nvim_set_option_value("number", true, { win = self.win_id })
+  vim.api.nvim_set_option_value("cursorline", true, { win = self.win_id })
+  vim.api.nvim_set_option_value("wrap", true, { win = self.win_id })
 end
 
 function ManagementView:create_buffer()
   local buf = vim.api.nvim_create_buf(false, true)
   assert(buf ~= nil, "create buffer failed!")
   self.buf = buf
-  vim.api.nvim_buf_set_option(self.buf, "filetype", self.filetype)
-  vim.api.nvim_buf_set_option(self.buf, "bufhidden", "wipe")
-  vim.api.nvim_buf_set_option(self.buf, "buftype", "acwrite")
+  vim.api.nvim_set_option_value("filetype", self.filetype, { buf = self.buf })
+  vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = self.buf })
+  vim.api.nvim_set_option_value("buftype", "acwrite", { buf = self.buf })
   vim.api.nvim_buf_set_name(self.buf, "recent-projects")
   self.on_buf_created()
 end

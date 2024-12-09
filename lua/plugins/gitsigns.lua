@@ -47,10 +47,7 @@ return {
 
     vim.api.nvim_create_autocmd("BufWinEnter", {
       pattern = "gitsigns://*",
-      callback = function(e)
-        -- 将gitsigns diff窗口设置为不可编辑
-        vim.api.nvim_buf_set_option(e.buf, "modifiable", false)
-      end
+      command = "setlocal nomodifiable"
     })
 
     -- 统一预览窗口的背景颜色

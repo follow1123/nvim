@@ -33,7 +33,7 @@ end
 function TaskTerminal:start()
   local buf = vim.api.nvim_create_buf(false, true)
   assert(buf ~= 0, "start split terminal failed")
-  vim.api.nvim_buf_set_option(buf, "filetype", constant.term_filetype)
+  vim.api.nvim_set_option_value("filetype", constant.term_filetype, { buf = buf })
   self.buf = buf
   self:on_buf_created()
   self.manager:open(self)
