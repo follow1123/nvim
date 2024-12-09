@@ -1,5 +1,4 @@
 local cmp = require("cmp")
-
 local luasnip = require("luasnip")
 
 -- 确认补全是的配置
@@ -9,39 +8,6 @@ local confirm_opts = {
 }
 -- 选择时默认不补全
 local select_item_opts = { behavior = cmp.SelectBehavior.Select }
-
-cmp.event:on("confirm_done", function (evt)
-  -- 这里是因为有时候在补全一些常量是，回车后补全弹框会再次弹出来的问题
-  -- 特别是在代码片段内，会导致无法跳转到下一处
-  if luasnip.locally_jumpable() then
-    vim.schedule_wrap(cmp.close)()
-  end
-
-  -- print(luasnip.locally_jumpable(), cmp.visible())
-  -- if luasnip.locally_jumpable() and cmp.visible() then
-  --   cmp.close()
-  --   return
-  -- end
-  -- if vim.o.filetype == "lua" then
-  --   if evt.commit_character then return end
-  --   local Kind = cmp.lsp.CompletionItemKind
-  --   local entry = evt.entry
-  --   local item = entry:get_completion_item()
-  --   if item.kind == Kind.Function or item.kind ==  Kind.Method then
-  --     local key = "("
-  --     local line = vim.fn.line(".")
-  --     local col = vim.fn.col(".")
-  --     line = line > 0 and line - 1 or line
-  --     local next_char = vim.api.nvim_buf_get_text(
-  --       0, line, col, line, col + 1, {})[1]
-  --     if not string.match(next_char, "^%S") then
-  --       key = string.format("%s)%s", key,
-  --         vim.api.nvim_replace_termcodes("<Left>", true, false, true))
-  --     end
-  --     vim.api.nvim_feedkeys(key, "i", true)
-  --   end
-  -- end
-end)
 
 return {
   ["<C-n>"] = cmp.mapping(function()
