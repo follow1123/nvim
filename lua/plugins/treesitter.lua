@@ -8,7 +8,7 @@ return {
         "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "rust", "cpp", "json", "yaml", "toml", "javascript", "typescript"
       },
       sync_install = false,
-      auto_install = true,
+      auto_install = false,
       modules = {},
       ignore_install = {},
       highlight = {

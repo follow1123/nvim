@@ -11,6 +11,7 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    event = "VeryLazy",
     dependencies = {
       "williamboman/mason.nvim", -- lsp包管理器
       "williamboman/mason-lspconfig.nvim", -- 包管理器整合插件

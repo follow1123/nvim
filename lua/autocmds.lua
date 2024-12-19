@@ -17,7 +17,7 @@ end
 if not _G.IS_GUI then
   vim.api.nvim_create_autocmd("VimLeave", {
     group = base_group,
-    command = "set guicursor+=n-v-c:blinkon500-blinkoff500"
+    command = "set guicursor+=n-v-c:blinkon500-blinkoff500,a:ver25"
   })
 end
 

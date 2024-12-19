@@ -31,13 +31,6 @@ vim.opt.laststatus = 3                           -- 始终只显示一个状态�
 vim.opt.statusline = "%y%m%=%<%F %r%=%-14.(%l,%c%V%) %P"
 vim.opt.pumheight = 15                           -- 补全弹窗最大补全个数
 
--- 配置 gui 模式下默认的中英文字体，防止系统没有字体时报错
-vim.cmd([[
-silent! set guifont=Cascadia\ Code:h12
-silent! set guifontwide=Microsoft\ YaHei:h12
-]])
-
-
 vim.opt.list = true                              -- 显示空白字符
 -- vim.opt.listchars:append "space:⋅"
 vim.opt.listchars:append "eol:↴"                 -- 换行符合
