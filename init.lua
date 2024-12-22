@@ -5,7 +5,6 @@ _G.IS_LINUX = not _G.IS_WINDOWS
 -- 判断是否为gui方式启动
 _G.IS_GUI = vim.fn.has("gui_running") == 1
 
-require("ui")
 require("options")
 require("keymaps")
 require("commands")

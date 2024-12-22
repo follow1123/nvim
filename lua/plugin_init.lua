@@ -1,4 +1,3 @@
-local colors = require("utils.colors")
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -23,7 +22,7 @@ require("lazy").setup({
     { import = "plugins" },
   },
   ui = {
-    border = "single"
+    border = "none"
   },
   change_detection = {
     notify = false,
@@ -31,5 +30,4 @@ require("lazy").setup({
   rocks = { enabled = false }
 })
 
-vim.api.nvim_set_hl(0, "LazyProp", { bg = colors.gray_04 })
 require("utils.keymap").nmap("<leader>1", "<cmd>Lazy<cr>", "Open Lazy Manager panel")

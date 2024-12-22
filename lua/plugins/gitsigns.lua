@@ -50,32 +50,5 @@ return {
       pattern = "gitsigns://*",
       command = "setlocal nomodifiable"
     })
-
-    -- 统一预览窗口的背景颜色
-    local popup = require("gitsigns.popup")
-    local defalut_impl = popup.create
-    ---@diagnostic disable-next-line
-    popup.create = function(lines_spec, opts, id)
-      local win_id, buf = defalut_impl(lines_spec, opts, id)
-      vim.api.nvim_set_option_value("winhighlight", "Normal:Pmenu", {
-        win = win_id
-      })
-      return win_id, buf
-    end
-
-    local colors = require("utils.colors")
-    -- gitsign内置颜色配置
-    -- 右侧git状态颜色
-    vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = colors.green_02, bg = "NONE" })
-    vim.api.nvim_set_hl(0, "GitSignsChange", { fg = colors.blue_02, bg = "NONE"})
-    vim.api.nvim_set_hl(0, "GitSignsDelete", { fg = colors.red_02, bg = "NONE"})
-    vim.api.nvim_set_hl(0, "GitSignsTopdelete", { fg = colors.red_02, bg = "NONE"})
-    vim.api.nvim_set_hl(0, "GitSignsChangedelete", { fg = colors.blue_02, bg = "NONE"})
-    vim.api.nvim_set_hl(0, "GitSignsUntracked", { fg = colors.green_02, bg = "NONE"})
-
-    -- diff预览框颜色
-    vim.api.nvim_set_hl(0, "GitSignsAddInline", { fg = "NONE", bg = colors.green_02 })
-    vim.api.nvim_set_hl(0, "GitSignsDeleteInline", { fg = "NONE", bg = colors.red_02 })
-    vim.api.nvim_set_hl(0, "GitSignsChangeInline", { fg = "NONE", bg = colors.blue_02 })
   end
 }

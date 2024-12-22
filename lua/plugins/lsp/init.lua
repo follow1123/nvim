@@ -24,7 +24,6 @@ return {
       -- mason 管理窗口图标配置
       require("mason").setup({
         ui = {
-          border = "single",
           height = 0.7,
           icons = {
             package_installed = "✓",
@@ -44,18 +43,6 @@ return {
           end,
         }
       }
-
-      -- 统一 lsp 相关弹窗背景颜色
-      local default_lsp_window_impl = vim.lsp.util.open_floating_preview
-      ---@diagnostic disable-next-line
-      vim.lsp.util.open_floating_preview = function(contents, syntax, opts)
-        local buf, win_id = default_lsp_window_impl(contents, syntax, opts)
-        vim.api.nvim_set_option_value("winhighlight", "Normal:Pmenu", {
-          win = win_id
-        })
-        return buf, win_id
-      end
-
       -- 代码诊断ui相关
       vim.diagnostic.config({
         virtual_text = false,
@@ -67,17 +54,6 @@ return {
           source = "if_many",
         },
       })
-
-      -- 统一诊断窗口背景颜色
-      local default_diagnostic_window_impl = vim.diagnostic.open_float
-      ---@diagnostic disable-next-line
-      vim.diagnostic.open_float = function(opts, ...)
-        local buf, win_id = default_diagnostic_window_impl(opts, ...)
-        vim.api.nvim_set_option_value("winhighlight", "Normal:Pmenu", {
-          win = win_id
-        })
-        return buf, win_id
-      end
     end
   }
 }

@@ -80,7 +80,5 @@ return {
       desc = "set telescope previewer window wrap text",
       command = "setlocal wrap"
     })
-
-    vim.api.nvim_set_hl(0, "TelescopeSelection", { link = "PmenuSel"})
   end
 }

@@ -104,7 +104,7 @@ function M.setup_config()
     view = { docs = { auto_open = true } }, -- 自动开打补全文档弹窗
     -- 补全弹窗样式配置
     window = {
-      documentation = { winhighlight = "Normal:Pmenu", max_height = 20 } -- 文档窗口边框
+      documentation = {  max_height = 20 } -- 文档窗口边框
     },
   })
 
