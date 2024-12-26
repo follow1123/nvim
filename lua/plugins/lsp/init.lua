@@ -38,7 +38,15 @@ return {
         handlers = {
           function(server_name)
             local success, client_config = pcall(require, "plugins.lsp.services." .. server_name)
-            if not success then return end
+            client_config = success and client_config or {}
+
+            if not client_config.on_attach then
+              client_config.on_attach = require("plugins.lsp.keymap")
+            end
+            if not client_config.capabilities then
+              client_config.capabilities = require("cmp_nvim_lsp").default_capabilities()
+            end
+
             lspconfig[server_name].setup(client_config)
           end,
         }
