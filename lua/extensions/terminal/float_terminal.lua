@@ -83,7 +83,7 @@ function FloatTerminal:on_buf_created()
   })
   local tmap = require("utils.keymap").tmap
   tmap("<Esc>", [[<C-\><C-n>]], "terminal: enter normal mode in terminal", self.buf)
-  tmap("<C-\\>", function() self:toggle() end, "terminal: Toggle terminal", self.buf)
+  tmap("<M-s>", function() self:toggle() end, "terminal: Toggle terminal", self.buf)
 end
 
 -- 终端对应的 window 创建完成时执行的操作
