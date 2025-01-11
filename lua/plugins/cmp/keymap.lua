@@ -26,24 +26,28 @@ return {
   ["<C-k>"] = cmp.mapping(function() -- 开启补全或开关文档窗口
     if not cmp.visible() then
       local sources = {}
-      local rows, cols = unpack(vim.api.nvim_win_get_cursor(0))
-      rows = rows == 0 and rows or rows - 1
-      cols = cols == 0 and cols or cols - 1
-      -- 指定方法调用块在不同语言的类型
-      local node_type = {}
-      if vim.o.filetype == "lua" then
-        table.insert(node_type, "function_call")
-      elseif vim.o.filetype == "rust" then
-        table.insert(node_type, "call_expression")
-      end
-      -- 如果在方法调用块内就显示方法参数签名补全信息，否则显示其他lsp的补全信息
-      local node = vim.treesitter.get_node({ pos = { rows, cols } })
-      if node and node:parent() and vim.tbl_contains(node_type, node:parent():type()) then
-        table.insert(sources, { name = "nvim_lsp_signature_help" })
+      local ok = pcall(vim.treesitter.get_parser);
+      if ok then
+        local rows, cols = unpack(vim.api.nvim_win_get_cursor(0))
+        rows = rows == 0 and rows or rows - 1
+        cols = cols == 0 and cols or cols - 1
+        -- 指定方法调用块在不同语言的类型
+        local node_type = {}
+        if vim.o.filetype == "lua" then
+          table.insert(node_type, "function_call")
+        else
+          table.insert(node_type, "call_expression")
+        end
+        -- 如果在方法调用块内就显示方法参数签名补全信息，否则显示其他lsp的补全信息
+        local node = vim.treesitter.get_node({ pos = { rows, cols } })
+        if node and node:parent() and vim.tbl_contains(node_type, node:parent():type()) then
+          table.insert(sources, { name = "nvim_lsp_signature_help" })
+        else
+          table.insert(sources, { name = "nvim_lsp" })
+        end
       else
         table.insert(sources, { name = "nvim_lsp" })
       end
-
       -- 只有当前行是空行的情况下才显示代码片段补全信息
       local text = vim.api.nvim_get_current_line()
       if text ~= nil and #vim.trim(text) == 0 then
