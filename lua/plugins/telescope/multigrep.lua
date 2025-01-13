@@ -1,12 +1,27 @@
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
+local themes = require("telescope.themes")
 local make_entry = require("telescope.make_entry")
 local conf = require("telescope.config").values
 
 local M = {}
 
 function M.multigrep()
-  local opts = { cwd = vim.uv.cwd() }
+  local opts = themes.get_dropdown({
+      layout_strategy = "vertical",
+      borderchars = {
+        prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+        results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+        preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+      },
+      layout_config = {
+        width = 0.8,
+        height = 0.9,
+        prompt_position = "bottom"
+      }
+  })
+  opts.cwd = vim.uv.cwd();
+  -- local opts = { cwd = vim.uv.cwd() }
   local finder = finders.new_async_job({
     command_generator = function(prompt)
       if prompt == nil or prompt == "" then return nil end
