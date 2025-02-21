@@ -16,6 +16,7 @@ return {
   dependencies = { "nvim-lua/plenary.nvim" },
   config = function()
     local actions = require("telescope.actions")
+    local themes = require("telescope.themes")
 
     require("telescope").setup {
       defaults = {
@@ -54,6 +55,19 @@ return {
           theme = "dropdown",
           previewer = false,
         },
+        lsp_definitions = themes.get_dropdown({
+          layout_strategy = "vertical",
+          borderchars = {
+            prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+            results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+            preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+          },
+          layout_config = {
+            width = 0.8,
+            height = 0.9,
+            prompt_position = "bottom"
+          }
+        })
       },
     }
 
