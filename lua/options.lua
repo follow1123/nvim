@@ -2,7 +2,6 @@
 
 vim.opt.clipboard = "unnamedplus"                -- selection 寄存器和系统剪切板共用
 vim.opt.number = true                            -- 显示行号
-vim.opt.relativenumber = true                    -- 显示相对行号
 vim.opt.wrap = false                             -- 禁止折行显示文本
 vim.opt.scrolloff = 4                            -- 上下移动光标时保持有4行间隔
 vim.opt.sidescrolloff = 8                        -- 左右移动光标时保持有8列间隔
