@@ -38,7 +38,7 @@ return {
       group = vim.api.nvim_create_augroup("catppuccin-change-color", { clear = true }),
       desc = "set background color when some filetype open",
       callback = vim.schedule_wrap(function()
-        if vim.bo.filetype == "harpoon" or vim.bo.filetype == "projectmgr" or vim.bo.filetype == "customterm" then
+        if vim.bo.filetype == "harpoon" or vim.bo.filetype == "projectmgr" then
           vim.api.nvim_set_option_value("winhighlight", "Normal:Normal", {
             win = vim.api.nvim_get_current_win()
           })

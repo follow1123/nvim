@@ -1,56 +1,47 @@
----@class Terminal
+local config = require("extensions.terminal.config")
+
+---@class ext.terminal.Terminal
 ---@field cmd string[]
 ---@field chan_id integer
+---@field on_exit function
 local Terminal = {}
 
--- 从当前类派生出一个子类
----@param clazz? table
----@return table obj
-function Terminal:derive(clazz)
-  self.__index = self
-  return setmetatable(clazz or {}, self)
-end
+Terminal.__index = Terminal
 
--- 创建一个当前类的实例
----@param cmd string|string[]
+---默认处理 Terminal 退出时的回调
+Terminal.on_exit = function() end
+
+---实例化 Terminal 对象
+---@param cmd? string
+---@return ext.terminal.Terminal
 function Terminal:new(cmd)
-  return self:derive({ cmd = type(cmd) == "string" and { cmd } or cmd })
+  return setmetatable({cmd = cmd and {cmd} or {config.defalut_shell}}, self)
 end
 
--- 打开终端
 function Terminal:start()
   local chan_id = vim.fn.termopen(self.cmd, {
-    on_exit = function() self:on_exit() end
+    on_exit = self.on_exit
   })
   assert(chan_id > 0, "start terminal failed")
   ---@cast chan_id integer
   self.chan_id = chan_id
 end
 
--- 停止终端
-function Terminal:stop()
-  if not self:is_running() then
-    self.chan_id = nil
-    return
-  end
-  if vim.fn.jobstop(self.chan_id) ~= 1 then
-    vim.notify("stop terminal failed", vim.log.levels.WARN)
-    return
-  end
-  self.chan_id = nil
-end
-
-function Terminal:on_exit()
-  vim.notify("terminal is exit, do nothing", vim.log.levels.WARN)
-end
-
--- 判断终端是否运行
 ---@return boolean
 function Terminal:is_running()
   return self.chan_id and vim.fn.jobwait({ self.chan_id }, 0)[1] == -1
 end
 
--- 发送消息到终端
+function Terminal:stop()
+  if self:is_running() then
+    if vim.fn.jobstop(self.chan_id) ~= 1 then
+      vim.notify("stop terminal failed", vim.log.levels.WARN)
+      return
+    end
+  end
+  self.chan_id = nil
+end
+
 ---@param msg string|string[]
 function Terminal:send_message(msg)
   msg = type(msg) == "string" and { msg } or msg
