@@ -111,7 +111,7 @@ function M.setup_config()
   -- Telescope搜索时禁用补全功能
   cmp.setup.filetype({ "TelescopePrompt" }, { enabled = false })
   -- 默认在注释内不开启补全，但是在在lua内有文档注释，需要开启补全
-  cmp.setup.filetype({ "lua" }, { enabled = true })
+  cmp.setup.filetype({ "lua", "javascript" }, { enabled = true })
   -- 补全完成后执行的操作
   cmp.event:on("confirm_done", function(evt)
     fix_complete_enmu_in_snippet_area()
