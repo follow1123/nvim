@@ -18,7 +18,7 @@ FloatTerminal.__index = FloatTerminal
 ---@param cmd? string
 ---@return ext.terminal.FloatTerminal
 function FloatTerminal:new(cmd)
-  local instance = setmetatable({terminal = Terminal:new(cmd)}, self)
+  local instance = setmetatable({ terminal = Terminal:new(cmd) }, self)
   instance.terminal.on_exit = function() instance:reset() end
   return instance
 end
@@ -50,7 +50,7 @@ function FloatTerminal:popup()
   vim.api.nvim_set_option_value("winhighlight", "Normal:Normal", {
     win = self.win_id
   })
-  vim.api.nvim_set_option_value("wrap", true, { win = self.win_id })
+  vim.schedule_wrap(vim.api.nvim_set_option_value)("wrap", true, { win = self.win_id })
   vim.cmd.startinsert({ bang = true })
 end
 
