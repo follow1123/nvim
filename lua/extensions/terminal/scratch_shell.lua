@@ -74,6 +74,16 @@ function ScratchShell:show()
 end
 
 function ScratchShell:hide()
+  if self.previous_buf == nil then
+    -- 使用内置api查找上次访问的buffer
+    local buf = vim.fn.bufnr("#")
+    if buf == -1 then
+      -- 还是找不到则直接打开一个空buffer
+      vim.cmd.enew()
+    else
+      self.previous_buf = buf
+    end
+  end
   vim.cmd.buffer(self.previous_buf)
   self.previous_buf = nil
 end
