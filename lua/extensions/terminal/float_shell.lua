@@ -31,7 +31,7 @@ function FloatShell:new(toggle_key)
     local window_height = vim.api.nvim_get_option_value("lines", {})
     local window_width = vim.api.nvim_get_option_value("columns", {})
     local height = math.floor(window_height * 0.8)
-    local width = math.floor(window_width * 0.8)
+    local width = math.floor(window_width * 0.9)
     local row = math.floor((window_height - height) / 2)
     local col = math.floor((window_width - width) / 2)
 

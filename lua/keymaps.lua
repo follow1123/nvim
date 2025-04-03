@@ -82,9 +82,9 @@ cmap("<M-b>", function() vim.api.nvim_input("<C-Left>") end, "emacs keymap")
 nmap("<M-1>", "<cmd>lua require('extensions.netrw-plus'):toggle()<cr>", "netrw: Open Netrw file manager")
 
 -- 终端
-nmap("<M-4>", function () require("extensions.terminal").toggle_float_shell("<M-4>") end, "base: Toggle float terminal")
+nmap("<M-s>", function () require("extensions.terminal").toggle_float_shell("<M-s>") end, "base: Toggle float terminal")
 nmap("<M-3>", function () require("extensions.terminal").toggle_float_lazygit("<M-3>") end, "base: Toggle lazygit terminal")
-nmap("<M-s>", function () require("extensions.terminal").toggle_scratch_shell("<M-s>") end, "base: Toggle scratch terminal")
+nmap("<M-4>", function () require("extensions.terminal").toggle_scratch_shell("<M-4>") end, "base: Toggle scratch terminal")
 
 -- 注释
 nmap("<M-e>", function() vim.api.nvim_input("gcc") end, "base: Comment line")
