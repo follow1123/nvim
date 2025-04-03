@@ -81,7 +81,10 @@ function M.setup_config()
         and not context.in_syntax_group("Comment")
       end
     end,
-    performancem = { max_view_entries = 60 }, -- 最大只显示60条补全数据
+    ---@diagnostic disable-next-line
+    performance = { max_view_entries = 60 }, -- 最大只显示60条补全数据
+    -- 禁用自动选择 item
+    preselect = cmp.PreselectMode.None,
     mapping = require("plugins.cmp.keymap"), -- 补全按键
     snippet = {
       expand = function(args) -- 代码片段引擎配置
