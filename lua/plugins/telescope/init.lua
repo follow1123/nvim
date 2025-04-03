@@ -5,7 +5,8 @@ return {
   cmd = "Telescope",
   keys = {
     lazy_map("n", "<M-f>", "<cmd>Telescope find_files<cr>", "file(Telescope): Find files"),
-    lazy_map("n", "<leader>ff", "<cmd>lua require 'plugins.telescope.multigrep'.multigrep()<cr>", "file(Telescope): Multi grep"),
+    lazy_map("n", "<leader>ff", "<cmd>lua require 'plugins.telescope.multigrep'.multigrep()<cr>",
+      "file(Telescope): Multi grep"),
     lazy_map("n", "<leader>fw", "<cmd>Telescope grep_string<cr>", "file(Telescope): Grep string"),
     lazy_map("n", "<leader>gs", "<cmd>Telescope git_status<cr>", "git(Telescope): Git status"),
     lazy_map("n", "<leader>hf", "<cmd>Telescope help_tags<cr>", "help(Telescope): Help tags"),
@@ -17,7 +18,19 @@ return {
   config = function()
     local actions = require("telescope.actions")
     local themes = require("telescope.themes")
-
+    local custom_dropdown_theme = themes.get_dropdown({
+      layout_strategy = "vertical",
+      borderchars = {
+        prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+        results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+        preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+      },
+      layout_config = {
+        width = 0.8,
+        height = 0.9,
+        prompt_position = "bottom"
+      }
+    })
     require("telescope").setup {
       defaults = {
         borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
@@ -55,19 +68,12 @@ return {
           theme = "dropdown",
           previewer = false,
         },
-        lsp_definitions = themes.get_dropdown({
-          layout_strategy = "vertical",
-          borderchars = {
-            prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-            results = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-            preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-          },
-          layout_config = {
-            width = 0.8,
-            height = 0.9,
-            prompt_position = "bottom"
-          }
-        })
+        lsp_definitions = custom_dropdown_theme,
+        lsp_document_symbols = custom_dropdown_theme,
+        lsp_workspace_symbols = custom_dropdown_theme,
+        lsp_implementations = custom_dropdown_theme,
+        lsp_type_definitions = custom_dropdown_theme,
+        lsp_references = custom_dropdown_theme,
       },
     }
 

@@ -33,6 +33,7 @@ return {
         }
       })
 
+      ---@diagnostic disable-next-line
       require("mason-lspconfig").setup {
         ensure_installed = { "lua_ls", "rust_analyzer", "clangd", "ts_ls" },
         handlers = {
