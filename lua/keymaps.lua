@@ -16,19 +16,12 @@ nmap("<C-h>", "<C-w>h", "base: Move cursor to left window")
 nmap("<C-l>", "<C-w>l", "base: Move cursor to right window")
 nmap("<C-j>", "<C-w>j", "base: Move cursor to above window")
 nmap("<C-k>", "<C-w>k", "base: Move cursor to below window")
-nmap("<C-left>", "<C-w><", "base: Decrease window width")
-nmap("<C-right>", "<C-w>>", "base: Increase window width")
-nmap("<C-up>", "<C-w>-", "base: Decrease window height")
-nmap("<C-down>", "<C-w>+", "base: Increase window height")
 nmap("<M-q>", "<C-w>c", "base: Close current window")
 
 -- search ---------------------------------------------------------------------
 -- 搜索历史
 nmap("n", "'Nn'[v:searchforward]", "base: Next search result", nil, { expr = true })
 nmap("N", "'nN'[v:searchforward]", "base: Prev search result", nil, { expr = true })
-
-nmap("<M-n>", "<cmd>bnext<cr>", "base: next buffer")
-nmap("<M-p>", "<cmd>bprev<cr>", "base: previous buffer")
 
 -- 清除搜索的高亮文本
 imap("<esc>", "<cmd>noh<cr><esc>", "base: Clear lighlight search")
@@ -64,8 +57,6 @@ nmap("<C-n>", function() return quickfix_move("<C-n>", "<cmd>cnext<cr>zz") end,
   "base: Next quickfix item", nil, { expr = true })
 nmap("<C-p>", function() return quickfix_move("<C-p>", "<cmd>cprevious<cr>zz") end,
   "base: Prev quickfix item", nil, { expr = true })
-
-nmap("<M-`>", "<C-^>", "base: Toggle switch buffer")
 
 -- command mode emacs keymap --------------------------------------------------
 
