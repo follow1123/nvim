@@ -31,6 +31,10 @@ return {
         prompt_position = "bottom"
       }
     })
+
+    local references_preview_opts = { fname_width = 50, trim_text = true }
+    local definitions_preview_opts = { show_line = false }
+
     require("telescope").setup {
       defaults = {
         borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
@@ -68,12 +72,15 @@ return {
           theme = "dropdown",
           previewer = false,
         },
-        lsp_definitions = custom_dropdown_theme,
-        lsp_document_symbols = custom_dropdown_theme,
-        lsp_workspace_symbols = custom_dropdown_theme,
-        lsp_implementations = custom_dropdown_theme,
-        lsp_type_definitions = custom_dropdown_theme,
-        lsp_references = custom_dropdown_theme,
+        lsp_definitions = vim.tbl_extend("force", custom_dropdown_theme, definitions_preview_opts),
+        lsp_document_symbols = vim.tbl_extend("force", custom_dropdown_theme, { symbol_width = references_preview_opts.fname_width }),
+        lsp_workspace_symbols = vim.tbl_extend("force", custom_dropdown_theme, references_preview_opts),
+        lsp_implementations = vim.tbl_extend("force", custom_dropdown_theme, definitions_preview_opts),
+        lsp_type_definitions = vim.tbl_extend("force", custom_dropdown_theme, definitions_preview_opts),
+        lsp_references = vim.tbl_extend("force", custom_dropdown_theme, references_preview_opts),
+        lsp_incoming_calls = vim.tbl_extend("force", custom_dropdown_theme, references_preview_opts),
+        lsp_outgoing_calls = vim.tbl_extend("force", custom_dropdown_theme, references_preview_opts),
+        diagnostics = custom_dropdown_theme,
       },
       extensions = {
         ["ui-select"] = {

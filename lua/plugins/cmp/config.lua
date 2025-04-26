@@ -98,11 +98,13 @@ function M.setup_config()
     },
     formatting = require("plugins.cmp.format"), -- 补全弹窗数据格式
     -- 补全来源
+    -- group_index 每次补全只显示相同组的 source
+    -- priority 相同组内不同 sources 优先级（受 group_index 影响，group_index 越小，越早匹配）
     sources = {
-      { name = "nvim_lsp_signature_help", group_index = 1, priority = 99},
-      { name = "nvim_lsp", group_index = 1, priority = 98 },
-      { name = "luasnip", group_index = 1, priority = 97 },
       { name = "lazydev", group_index = 0 },
+      { name = "nvim_lsp_signature_help", group_index = 1, priority = 99},
+      { name = "nvim_lsp", group_index = 2, priority = 98 },
+      { name = "luasnip", group_index = 2, priority = 97 },
     },
     view = { docs = { auto_open = true } }, -- 自动开打补全文档弹窗
     -- 补全弹窗样式配置
