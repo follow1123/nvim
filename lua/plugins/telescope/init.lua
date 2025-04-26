@@ -14,7 +14,7 @@ return {
     lazy_map("n", "<leader>hh", "<cmd>Telescope highlights<cr>", "help(Telescope): List highlights"),
   },
   -- 搜索依赖插件
-  dependencies = { "nvim-lua/plenary.nvim" },
+  dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope-ui-select.nvim" },
   config = function()
     local actions = require("telescope.actions")
     local themes = require("telescope.themes")
@@ -75,7 +75,22 @@ return {
         lsp_type_definitions = custom_dropdown_theme,
         lsp_references = custom_dropdown_theme,
       },
+      extensions = {
+        ["ui-select"] = {
+          require("telescope.themes").get_dropdown {
+            -- layout_strategy = "vertical",
+            borderchars = {
+              prompt = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+              results = { "─", "│", "─", "│", "├", "┤", "┘", "└" },
+              preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+            },
+            previewer = false,
+          }
+        }
+      }
     }
+
+    require("telescope").load_extension("ui-select")
 
     -- 预览窗口默认较窄，设置折行
     vim.api.nvim_create_autocmd("User", {
