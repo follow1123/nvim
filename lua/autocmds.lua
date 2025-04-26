@@ -33,7 +33,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.api.nvim_create_autocmd("BufEnter", {
   group = base_group,
   callback = function(args)
-    local max_file_size = 1024 * 1024  -- 1MB in bytes
+    local max_file_size = 1024 * 1024 -- 1MB in bytes
 
     local stat, err = (vim.uv or vim.loop).fs_stat(args.match)
     if err or not stat then return end
@@ -92,7 +92,7 @@ vim.api.nvim_create_autocmd("FileType", {
     nmap("<space>x", ":execute '!' . getline('.')<cr>", "shell: execute code", args.buf)
     vmap("<space>x", function()
       vim.api.nvim_input("<esc>")
-      vim.schedule(function ()
+      vim.schedule(function()
         -- 获取选区的起止行（注意 Lua 下标从 1 开始，get_lines 是从 0 开始）
         local start_pos = vim.api.nvim_buf_get_mark(0, "<")
         local end_pos = vim.api.nvim_buf_get_mark(0, ">")
@@ -112,5 +112,52 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.notify(result, vim.log.levels.INFO)
       end)
     end, "shell: execute selected code", args.buf)
+  end
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = base_group,
+  pattern = "go",
+  desc = "set some options in go file",
+  callback = function(ev)
+    local group_name = "golang_format_on_save:" .. ev.buf
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup(group_name, { clear = true }),
+      buffer = ev.buf,
+      callback = function()
+        local clients = vim.lsp.get_clients({ bufnr = ev.buf })
+        if #clients == 0 then
+          vim.schedule(function()
+            vim.cmd("silent !gofmt -w %")
+          end)
+          return
+        end
+
+        vim.lsp.buf.format({ bufnr = ev.buf, })
+
+        local params = vim.lsp.util.make_range_params()
+        params.context = { only = { "source.organizeImports" } }
+
+        vim.lsp.buf_request(ev.buf, "textDocument/codeAction", params, function(err, actions, _)
+          if err then
+            vim.notify("LSP error: " .. err.message, vim.log.levels.ERROR)
+            return
+          end
+
+          if actions == nil or vim.tbl_isempty(actions) then
+            return
+          end
+
+          -- 自动执行第一个可用的 organizeImports action
+          for _, action in ipairs(actions) do
+            if action.edit then
+              vim.lsp.util.apply_workspace_edit(action.edit, vim.lsp.util._get_offset_encoding(ev.buf))
+            else
+              vim.lsp.buf.execute_command(action.command)
+            end
+          end
+        end)
+      end
+    })
   end
 })
