@@ -17,6 +17,14 @@ return {
       "williamboman/mason-lspconfig.nvim", -- 包管理器整合插件
     },
     config = function()
+      -- 配置 CursorHold 触发时间，用于高亮光标下符号的引用
+      vim.o.updatetime = 500
+      -- 配合高亮光标下符号的引用使用
+      vim.api.nvim_set_hl(0, "LspReferenceWrite", {
+        bold = true,
+        bg = "#5c3f44",  -- 深红棕色
+      })
+
       local lspconfig = require("lspconfig")
 
       require("plugins.lsp.lsp-status"):init()
