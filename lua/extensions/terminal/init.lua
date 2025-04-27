@@ -1,24 +1,5 @@
 -- terminal --------------------------------------------------------------------
 
-local config = require("extensions.terminal.config")
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = config.filetype,
-  group = vim.api.nvim_create_augroup("set-terminal-buffer-options", { clear = true }),
-  desc = "terminal: set some options when enter custom terminal buffer",
-  callback = vim.schedule_wrap(function(e)
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.opt_local.signcolumn = "no"
-    vim.cmd.startinsert()
-
-    vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
-      buffer = e.buf,
-      desc = "terminal: enter terminal buffer and start insert",
-      command = "startinsert"
-    })
-  end)
-})
-
 local float_shell
 local float_lazygit
 local scratch_shell

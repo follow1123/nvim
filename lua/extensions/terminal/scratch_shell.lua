@@ -2,12 +2,14 @@ local Terminal = require("extensions.terminal.terminal")
 
 local config = require("extensions.terminal.config")
 local util = require("extensions.util")
+local tmap = require("utils.keymap").tmap
 
 ---@class ext.terminal.ScratchShell
 ---@field terminal ext.terminal.Terminal
 ---@field toggle_key string
 ---@field buf? integer
 ---@field win_id? integer
+---@field in_t_mode boolean
 ---@field previous_buf? integer
 local ScratchShell = {}
 
@@ -18,7 +20,8 @@ ScratchShell.__index = ScratchShell
 function ScratchShell:new(toggle_key)
   local instance = setmetatable({
     toggle_key = toggle_key,
-    terminal = Terminal:new()
+    terminal = Terminal:new(),
+    in_t_mode = true
   }, self)
   instance.terminal.on_exit = function() instance:stop() end
   return instance
@@ -109,7 +112,36 @@ function ScratchShell:stop()
 end
 
 function ScratchShell:on_buf_created()
-  local tmap = require("utils.keymap").tmap
+  local scratch_shell_group = vim.api.nvim_create_augroup("scratch_shell:" .. self.buf, { clear = true })
+
+  vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
+    group = scratch_shell_group,
+    buffer = self.buf,
+    desc = "ScratchShell: set same options when enter window",
+    callback = function()
+      local win_id = vim.fn.bufwinid(self.buf)
+      -- 这两个属性需要事件完成后执行才能正常设置
+      vim.schedule_wrap(vim.api.nvim_set_option_value)("wrap", true, { win = win_id })
+      vim.schedule_wrap(vim.api.nvim_set_option_value)("signcolumn", "no", { win = win_id })
+
+      vim.api.nvim_set_option_value("number", false, { win = win_id })
+      vim.api.nvim_set_option_value("relativenumber", false, { win = win_id })
+      vim.api.nvim_set_option_value("winhighlight", "Normal:Normal", { win = win_id })
+      if self.in_t_mode then
+        vim.cmd.startinsert()
+      end
+    end
+  })
+
+  vim.api.nvim_create_autocmd({ "BufLeave", "BufWinLeave" }, {
+    group = scratch_shell_group,
+    buffer = self.buf,
+    desc = "ScratchShell: store current mode",
+    callback = function()
+      self.in_t_mode = vim.fn.mode() == "t"
+    end
+  })
+
   tmap("<Esc>", [[<C-\><C-n>]], "terminal: enter normal mode in terminal", self.buf)
   tmap(self.toggle_key, function() self:toggle() end, "terminal: Toggle terminal", self.buf)
 end

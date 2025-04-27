@@ -8,6 +8,7 @@ local Terminal = require("extensions.terminal.terminal")
 ---@field terminal ext.terminal.Terminal
 ---@field buf? integer
 ---@field win_id? integer
+---@field in_t_mode boolean
 ---@field on_buf_created fun(buf: integer)
 ---@field get_win_config fun(): vim.api.keyset.win_config
 local FloatTerminal = {}
@@ -18,7 +19,7 @@ FloatTerminal.__index = FloatTerminal
 ---@param cmd? string
 ---@return ext.terminal.FloatTerminal
 function FloatTerminal:new(cmd)
-  local instance = setmetatable({ terminal = Terminal:new(cmd) }, self)
+  local instance = setmetatable({ terminal = Terminal:new(cmd), in_t_mode = true }, self)
   instance.terminal.on_exit = function() instance:reset() end
   return instance
 end
@@ -46,16 +47,11 @@ function FloatTerminal:popup()
     self.win_id = nil
     return
   end
-
-  vim.api.nvim_set_option_value("winhighlight", "Normal:Normal", {
-    win = self.win_id
-  })
-  vim.schedule_wrap(vim.api.nvim_set_option_value)("wrap", true, { win = self.win_id })
-  vim.cmd.startinsert({ bang = true })
 end
 
 ---隐藏浮动终端
 function FloatTerminal:hide()
+  self.in_t_mode = vim.fn.mode() == "t"
   vim.api.nvim_win_close(self.win_id, true)
   self.win_id = nil
 end
