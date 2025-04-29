@@ -1,42 +1,51 @@
-local base_group = vim.api.nvim_create_augroup("base_auto_command", { clear = true })
+local custom_group = vim.api.nvim_create_augroup("custom_auto_commands", { clear = true })
+local filetype_group = vim.api.nvim_create_augroup("custom_filetype_options", { clear = true })
+
 -- windows下离开insert模式后、进入vim时输入法切换为英文模式
 -- linux下离开insert模式数日发切换为英文模式
 if _G.IS_WINDOWS then
   vim.api.nvim_create_autocmd("InsertLeave", {
-    group = base_group,
-    command = "call system('ims.exe 1')"
+    desc = "switch to english input mode when insert mode leave",
+    group = custom_group,
+    command = "call system('ims.exe 1')",
   })
 else
   vim.api.nvim_create_autocmd("InsertLeave", {
-    group = base_group,
-    command = "if system('fcitx5-remote') == 2 | call system('fcitx5-remote -c') | endif"
+    desc = "switch to english input mode when insert mode leave",
+    group = custom_group,
+    command = "if system('fcitx5-remote') == 2 | call system('fcitx5-remote -c') | endif",
   })
 end
 
 -- 在终端模式下，vim退出后还原光标样式
 if not _G.IS_GUI then
   vim.api.nvim_create_autocmd("VimLeave", {
-    group = base_group,
-    command = "set guicursor+=n-v-c:blinkon500-blinkoff500,a:ver25"
+    desc = "set cursor sytle to bar when exit vim",
+    group = custom_group,
+    command = "set guicursor+=n-v-c:blinkon500-blinkoff500,a:ver25",
   })
 end
 
 -- 复制时高亮
 vim.api.nvim_create_autocmd("TextYankPost", {
-  group = base_group,
+  desc = "highlight yanked text",
+  group = custom_group,
   callback = function()
-    vim.highlight.on_yank({ timeout = 100, })
+    vim.highlight.on_yank({ timeout = 100 })
   end,
 })
 
 -- check big file syntax off
 vim.api.nvim_create_autocmd("BufEnter", {
-  group = base_group,
+  desc = "disable syntax highlighting when entering large files",
+  group = custom_group,
   callback = function(args)
     local max_file_size = 1024 * 1024 -- 1MB in bytes
 
     local stat, err = (vim.uv or vim.loop).fs_stat(args.match)
-    if err or not stat then return end
+    if err or not stat then
+      return
+    end
 
     if stat.size > max_file_size then
       vim.opt_local.syntax = "off"
@@ -45,44 +54,94 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = base_group,
-  pattern = { "html", "javascriptreact", "typescriptreact" },
-  desc = "set some options",
-  callback = function()
-    vim.opt.colorcolumn = "120" -- 限制列宽
-  end
+  desc = "set some options in help buffer",
+  group = filetype_group,
+  pattern = { "help" },
+  callback = vim.schedule_wrap(function(e)
+    local win_id = vim.fn.bufwinid(e.buf)
+    vim.api.nvim_set_option_value("wrap", true, { win = win_id })
+    vim.api.nvim_set_option_value("signcolumn", "no", { win = win_id })
+    vim.api.nvim_set_option_value("colorcolumn", "", { win = win_id })
+  end),
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = base_group,
+  desc = "set some options in fronted files",
+  group = filetype_group,
+  pattern = {
+    "css",
+    "graphql",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "less",
+    "markdown",
+    "scss",
+    "typescript",
+    "typescriptreact",
+  },
+  callback = function(e)
+    vim.opt.colorcolumn = "120" -- 限制列宽
+    local group_name = "frontend-files-format-on-save:" .. e.buf
+
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup(group_name, { clear = true }),
+      buffer = e.buf,
+      callback = vim.schedule_wrap(function()
+        local cmd = vim.fn.exepath("prettier")
+        if vim.fn.empty(cmd) == 1 then
+          return
+        end
+        vim.cmd("silent !" .. cmd .. " % -w")
+      end),
+    })
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  desc = "set some options in query type buffer",
+  group = filetype_group,
   pattern = "query",
-  desc = "set some options in query filetype",
   callback = function()
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
     vim.opt_local.signcolumn = "no"
-  end
+  end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = base_group,
-  pattern = "lua",
   desc = "set some options in lua file",
-  callback = function(args)
-    vim.opt_local.tabstop = 2
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.expandtab = true
-
+  group = filetype_group,
+  pattern = "lua",
+  callback = function(e)
     local nmap = require("utils.keymap").nmap
     local vmap = require("utils.keymap").vmap
+    local buf = e.buf
 
-    nmap("<space>x", ":.lua<cr>", "lua: execute code", args.buf)
-    vmap("<space>x", ":lua<cr>", "lua: execute selected code", args.buf)
-  end
+    vim.bo[buf].tabstop = 2
+    vim.bo[buf].shiftwidth = 2
+    vim.bo[buf].expandtab = true
+
+    local group_name = "lua_format_on_save:" .. buf
+    vim.api.nvim_create_autocmd("BufWritePost", {
+      group = vim.api.nvim_create_augroup(group_name, { clear = true }),
+      buffer = buf,
+      callback = function()
+        local clients = vim.lsp.get_clients({ bufnr = buf })
+        if #clients ~= 0 then
+          vim.lsp.buf.format({ bufnr = buf })
+          return
+        end
+      end
+    })
+
+    nmap("<space>x", ":.lua<cr>", "lua: execute code", buf)
+    vmap("<space>x", ":lua<cr>", "lua: execute selected code", buf)
+  end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = base_group,
+  group = filetype_group,
   pattern = "sh",
   desc = "set some options in shell file",
   callback = function(args)
@@ -112,11 +171,11 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.notify(result, vim.log.levels.INFO)
       end)
     end, "shell: execute selected code", args.buf)
-  end
+  end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = base_group,
+  group = filetype_group,
   pattern = "go",
   desc = "set some options in go file",
   callback = function(ev)
@@ -133,7 +192,7 @@ vim.api.nvim_create_autocmd("FileType", {
           return
         end
 
-        vim.lsp.buf.format({ bufnr = ev.buf, })
+        vim.lsp.buf.format({ bufnr = ev.buf })
 
         local params = vim.lsp.util.make_range_params()
         params.context = { only = { "source.organizeImports" } }
@@ -157,7 +216,7 @@ vim.api.nvim_create_autocmd("FileType", {
             end
           end
         end)
-      end
+      end,
     })
-  end
+  end,
 })
