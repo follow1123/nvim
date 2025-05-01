@@ -4,11 +4,51 @@ local config = require("extensions.terminal.config")
 local util = require("extensions.util")
 local tmap = require("utils.keymap").tmap
 
+---@class ext.terminal.ScratchShell.WindowOpts
+---@field win_id integer
+---@field wrap boolean
+---@field signcolumn string
+---@field number boolean
+---@field relativenumber boolean
+local WindowOpts = {}
+WindowOpts.__index = WindowOpts
+
+---@return ext.terminal.ScratchShell.WindowOpts
+---@param win_id integer
+function WindowOpts:new(win_id)
+  return setmetatable({
+    win_id = win_id,
+    wrap = vim.api.nvim_get_option_value("wrap", { win = win_id }),
+    signcolumn = vim.api.nvim_get_option_value("signcolumn", { win = win_id }),
+    number = vim.api.nvim_get_option_value("number", { win = win_id }),
+    relativenumber = vim.api.nvim_get_option_value("relativenumber", { win = win_id }),
+  }, self)
+end
+
+function WindowOpts:set()
+  local o = { win = self.win_id }
+  -- 这两个属性需要事件完成后执行才能正常设置
+  vim.schedule_wrap(vim.api.nvim_set_option_value)("wrap", true, o)
+  vim.schedule_wrap(vim.api.nvim_set_option_value)("signcolumn", "no", o)
+
+  vim.api.nvim_set_option_value("number", false, o)
+  vim.api.nvim_set_option_value("relativenumber", false, o)
+end
+
+function WindowOpts:restore()
+  local o = { win = self.win_id }
+  vim.api.nvim_set_option_value("wrap", self.wrap, o)
+  vim.api.nvim_set_option_value("signcolumn", self.signcolumn, o)
+  vim.api.nvim_set_option_value("number", self.number, o)
+  vim.api.nvim_set_option_value("relativenumber", self.relativenumber, o)
+end
+
 ---@class ext.terminal.ScratchShell
 ---@field terminal ext.terminal.Terminal
 ---@field toggle_key string
 ---@field buf? integer
 ---@field win_id? integer
+---@field win_opts? ext.terminal.ScratchShell.WindowOpts
 ---@field in_t_mode boolean
 ---@field previous_buf? integer
 local ScratchShell = {}
@@ -120,13 +160,8 @@ function ScratchShell:on_buf_created()
     desc = "ScratchShell: set same options when enter window",
     callback = function()
       local win_id = vim.fn.bufwinid(self.buf)
-      -- 这两个属性需要事件完成后执行才能正常设置
-      vim.schedule_wrap(vim.api.nvim_set_option_value)("wrap", true, { win = win_id })
-      vim.schedule_wrap(vim.api.nvim_set_option_value)("signcolumn", "no", { win = win_id })
-
-      vim.api.nvim_set_option_value("number", false, { win = win_id })
-      vim.api.nvim_set_option_value("relativenumber", false, { win = win_id })
-      vim.api.nvim_set_option_value("winhighlight", "Normal:Normal", { win = win_id })
+      self.win_opts = WindowOpts:new(win_id)
+      self.win_opts:set()
       if self.in_t_mode then
         vim.cmd.startinsert()
       end
@@ -139,6 +174,9 @@ function ScratchShell:on_buf_created()
     desc = "ScratchShell: store current mode",
     callback = function()
       self.in_t_mode = vim.fn.mode() == "t"
+      if self.win_opts then
+        self.win_opts:restore()
+      end
     end
   })
 
