@@ -76,9 +76,11 @@ vim.api.nvim_create_autocmd("FileType", {
     "javascriptreact",
     "less",
     "markdown",
+    "markdown.mdx",
     "scss",
     "typescript",
     "typescriptreact",
+    "astro"
   },
   callback = function(e)
     vim.opt.colorcolumn = "120" -- 限制列宽
@@ -219,4 +221,11 @@ vim.api.nvim_create_autocmd("FileType", {
       end,
     })
   end,
+})
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("set_mdx_file_type", { clear = true }),
+  pattern = "*.mdx",
+  desc = "set mdx file type",
+  command = "set filetype=markdown.mdx"
 })
