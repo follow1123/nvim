@@ -13,7 +13,7 @@ return {
     "neovim/nvim-lspconfig",
     event = "VeryLazy",
     dependencies = {
-      "williamboman/mason.nvim", -- lsp包管理器
+      "williamboman/mason.nvim",           -- lsp包管理器
       "williamboman/mason-lspconfig.nvim", -- 包管理器整合插件
     },
     config = function()
@@ -22,7 +22,7 @@ return {
       -- 配合高亮光标下符号的引用使用
       vim.api.nvim_set_hl(0, "LspReferenceWrite", {
         bold = true,
-        bg = "#5c3f44",  -- 深红棕色
+        bg = "#5c3f44", -- 深红棕色
       })
 
       local lspconfig = require("lspconfig")
