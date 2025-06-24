@@ -112,37 +112,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  desc = "set some options in lua file",
-  group = filetype_group,
-  pattern = "lua",
-  callback = function(e)
-    local nmap = require("utils.keymap").nmap
-    local vmap = require("utils.keymap").vmap
-    local buf = e.buf
-
-    vim.bo[buf].tabstop = 2
-    vim.bo[buf].shiftwidth = 2
-    vim.bo[buf].expandtab = true
-
-    local group_name = "lua_format_on_save:" .. buf
-    vim.api.nvim_create_autocmd("BufWritePost", {
-      group = vim.api.nvim_create_augroup(group_name, { clear = true }),
-      buffer = buf,
-      callback = function()
-        local clients = vim.lsp.get_clients({ bufnr = buf })
-        if #clients ~= 0 then
-          vim.lsp.buf.format({ bufnr = buf })
-          return
-        end
-      end
-    })
-
-    nmap("<space>x", ":.lua<cr>", "lua: execute code", buf)
-    vmap("<space>x", ":lua<cr>", "lua: execute selected code", buf)
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
   group = filetype_group,
   pattern = "sh",
   desc = "set some options in shell file",
