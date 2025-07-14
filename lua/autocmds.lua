@@ -54,18 +54,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  desc = "set some options in help buffer",
-  group = filetype_group,
-  pattern = { "help" },
-  callback = vim.schedule_wrap(function(e)
-    local win_id = vim.fn.bufwinid(e.buf)
-    vim.api.nvim_set_option_value("wrap", true, { win = win_id })
-    vim.api.nvim_set_option_value("signcolumn", "no", { win = win_id })
-    vim.api.nvim_set_option_value("colorcolumn", "", { win = win_id })
-  end),
-})
-
-vim.api.nvim_create_autocmd("FileType", {
   desc = "set some options in fronted files",
   group = filetype_group,
   pattern = {
@@ -97,17 +85,6 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.cmd("silent !" .. cmd .. " % -w")
       end),
     })
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  desc = "set some options in query type buffer",
-  group = filetype_group,
-  pattern = "query",
-  callback = function()
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.opt_local.signcolumn = "no"
   end,
 })
 
