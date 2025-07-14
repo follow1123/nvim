@@ -58,33 +58,35 @@ vim.api.nvim_create_autocmd("FileType", {
   group = filetype_group,
   pattern = {
     "css",
-    "graphql",
     "html",
     "javascript",
     "javascriptreact",
-    "less",
     "markdown",
     "markdown.mdx",
-    "scss",
     "typescript",
     "typescriptreact",
     "astro"
   },
   callback = function(e)
-    vim.opt.colorcolumn = "120" -- 限制列宽
-    local group_name = "frontend-files-format-on-save:" .. e.buf
+    local buf = e.buf
+    vim.wo[vim.fn.bufwinid(buf)].colorcolumn = "120"
+    local group_name = "frontend-files-format-on-save:" .. buf
 
-    vim.api.nvim_create_autocmd("BufWritePre", {
+    local flag = true
+
+    vim.api.nvim_create_autocmd("BufWritePost", {
       group = vim.api.nvim_create_augroup(group_name, { clear = true }),
-      buffer = e.buf,
-      callback = vim.schedule_wrap(function()
+      buffer = buf,
+      callback = function()
+        if not flag then return end
         local cmd = vim.fn.exepath("prettier")
-        if vim.fn.empty(cmd) == 1 then
-          return
-        end
+        if vim.fn.empty(cmd) == 1 then return end
         vim.cmd("silent !" .. cmd .. " % -w")
-      end),
+      end,
     })
+    vim.api.nvim_buf_create_user_command(buf, "ToggleExecFrontendActOnSave", function()
+      flag = not flag
+    end, { desc = "toggle execute frontend action on save", })
   end,
 })
 
