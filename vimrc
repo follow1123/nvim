@@ -15,7 +15,6 @@
 set nocompatible          " 无法删除问题
 set number                " 行号
 set ruler                 " 右下角显示行号和列号
-set relativenumber        " 设置相对行号
 set clipboard=unnamedplus " 设置和剪贴板共用
 set tabstop=4             " tab键相关
 set shiftwidth=4          " shift宽度
