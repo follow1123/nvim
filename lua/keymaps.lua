@@ -71,8 +71,12 @@ km("c", "<M-b>", "<C-Left>", { desc = "base: emacs keymap" })
 km("n", "<M-1>", function() require("extensions.netrw-plus"):toggle() end, { desc = "netrw: Open Netrw file manager" })
 
 -- terminal 终端
-nmap("<M-s>", function() require("extensions.terminal").toggle_tabbed_terminal("<M-s>") end,
-  "base: Toggle float terminal")
+km("n", "<M-s>", function()
+  require("extensions.terminal").toggle_tabbed_terminal({ keys = { toggle = "<M-s>", } })
+end, { desc = "base: Toggle float terminal" })
+
+-- nmap("<M-s>", function() require("extensions.terminal").toggle_tabbed_terminal("<M-s>") end,
+--   "base: Toggle float terminal")
 nmap("<M-3>", function() require("extensions.terminal").toggle_float_lazygit("<M-3>") end,
   "base: Toggle lazygit terminal")
 nmap("<M-4>", function() require("extensions.terminal").toggle_scratch_shell("<M-4>") end,

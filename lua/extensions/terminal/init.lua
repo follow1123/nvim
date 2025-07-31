@@ -3,8 +3,16 @@
 local float_shell
 local float_lazygit
 local scratch_shell
+local tabbed_terminal
 
 return {
+  ---@param config ext.terminal.tabbed.Config
+  toggle_tabbed_terminal = function(config)
+    if tabbed_terminal == nil then
+      tabbed_terminal = require("extensions.terminal.tabbed_terminal"):new(config)
+    end
+    tabbed_terminal:toggle()
+  end,
   toggle_float_shell = function(toggle_key)
     if float_shell == nil then
       float_shell = require("extensions.terminal.float_shell"):new(toggle_key)
