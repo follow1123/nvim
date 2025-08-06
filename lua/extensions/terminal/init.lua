@@ -3,7 +3,11 @@
 local float_shell
 local float_lazygit
 local scratch_shell
+
 local tabbed_terminal
+
+---@type table<string, ext.terminal.Executable>
+local executables = {}
 
 return {
   ---@param config ext.terminal.tabbed.Config
@@ -12,6 +16,17 @@ return {
       tabbed_terminal = require("extensions.terminal.tabbed_terminal"):new(config)
     end
     tabbed_terminal:toggle()
+  end,
+  ---@param config ext.terminal.ExeConfig
+  toggle_executable = function(config)
+    assert(config.exe_path, "exe_path not be nil")
+    local key = config.exe_path
+    local exe_terminal = executables[key]
+    if exe_terminal == nil then
+      exe_terminal = require("extensions.terminal.executable"):new(config)
+      executables[key] = exe_terminal
+    end
+    exe_terminal:toggle()
   end,
   toggle_float_shell = function(toggle_key)
     if float_shell == nil then
