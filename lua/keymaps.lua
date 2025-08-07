@@ -77,13 +77,16 @@ end, { desc = "base: Toggle float terminal" })
 km("n", "<M-3>", function()
   require("extensions.terminal").toggle_executable({ toggle_key = "<M-3>", exe_path = "lazygit", win_size = "full" })
 end, { desc = "base: Toggle lazygit terminal" })
+km("n", "<M-4>", function()
+  require("extensions.terminal").toggle_scratch_terminal({ toggle_key = "<M-4>" })
+end, { desc = "base: Toggle scratch terminal" })
 
 -- nmap("<M-s>", function() require("extensions.terminal").toggle_tabbed_terminal("<M-s>") end,
 --   "base: Toggle float terminal")
 -- nmap("<M-3>", function() require("extensions.terminal").toggle_float_lazygit("<M-3>") end,
 --   "base: Toggle lazygit terminal")
-nmap("<M-4>", function() require("extensions.terminal").toggle_scratch_shell("<M-4>") end,
-  "base: Toggle scratch terminal")
+-- nmap("<M-4>", function() require("extensions.terminal").toggle_scratch_shell("<M-4>") end,
+--   "base: Toggle scratch terminal")
 
 -- comment 注释
 km("n", "<M-e>", function() vim.api.nvim_input("gcc") end, { desc = "base: Comment line" })
