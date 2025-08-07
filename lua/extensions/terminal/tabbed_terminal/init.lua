@@ -2,6 +2,8 @@ local Window = require("extensions.terminal.tabbed_terminal.window")
 local Terminal = require("extensions.terminal.tabbed_terminal.terminal")
 local TerminalList = require("extensions.terminal.tabbed_terminal.terminal_list")
 
+local util = require("extensions.terminal.util")
+
 local km = vim.keymap.set
 
 ---@class ext.terminal.tabbed.Keys
@@ -12,6 +14,7 @@ local km = vim.keymap.set
 
 ---@class ext.terminal.tabbed.Config
 ---@field keys ext.terminal.tabbed.Keys
+---@field win_size? ext.terminal.WindowSize
 
 ---@class ext.terminal.tabbed.Manager
 ---@field private window ext.terminal.tabbed.Window
@@ -31,8 +34,9 @@ function TabbedTerminal:new(config)
   config.keys.new = config.keys.new or "<M-n>"
   config.keys.next = config.keys.next or "<M-l>"
   config.keys.previous = config.keys.previous or "<M-h>"
+  config.win_size = config.win_size or "auto"
   return setmetatable({
-    window = Window:new(),
+    window = Window:new(config.win_size),
     list = TerminalList:new(),
     config = config,
   }, self)
@@ -76,6 +80,16 @@ function TabbedTerminal:create_terminal()
       end
     end,
     on_buf_created = function(buf)
+      vim.api.nvim_create_autocmd("VimResized", {
+        desc = "exe_terminal: resize window when vim resized",
+        group = vim.api.nvim_create_augroup("resize terminal window:" .. buf, { clear = true }),
+        buffer = buf,
+        callback = function()
+          local win_id = vim.fn.bufwinid(buf)
+          vim.api.nvim_win_set_config(win_id, util.generate_win_config(self.config.win_size))
+        end
+      })
+
       km("t", "<Esc>", [[<C-\><C-n>]], { desc = "tabbed terminal: enter normal mode", buffer = buf })
       km("t", self.config.keys.toggle, function() self:toggle() end,
         { desc = "tabbed terminal: toggle terminal", buffer = buf })

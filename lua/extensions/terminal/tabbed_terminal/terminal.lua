@@ -1,3 +1,5 @@
+local util = require("extensions.terminal.util")
+
 local BUF_KEY = "tabbed_terminal_buffer"
 local BUF_VAL = "1"
 local shell = vim.fn.has("unix") == 1 and "zsh" or "pwsh"
@@ -29,7 +31,7 @@ function Terminal:new(opts)
   vim.api.nvim_set_option_value("filetype", "tabbedterminal", { buf = buf })
   tt.on_exit = function(b)
     opts.on_exit(b)
-    if tt.check_buf(b) then
+    if util.check_buf(b, BUF_KEY, BUF_VAL) then
       vim.api.nvim_buf_delete(buf, { force = true })
     end
   end
@@ -86,16 +88,9 @@ function Terminal:restore_status()
   end
 end
 
----@param buf integer
----@return boolean
-function Terminal.check_buf(buf)
-  return vim.api.nvim_buf_is_valid(buf)
-      and BUF_VAL == vim.api.nvim_buf_get_var(buf, BUF_KEY)
-end
-
 ---@return boolean
 function Terminal:is_valid()
-  return self.check_buf(self.buf) and self:is_running()
+  return util.check_buf(self.buf, BUF_KEY, BUF_VAL) and self:is_running()
 end
 
 return Terminal

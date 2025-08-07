@@ -1,20 +1,25 @@
+local util = require("extensions.terminal.util")
+
 local WIN_KEY = "tabbed_terminal_window"
 local WIN_VAL = "1"
 
 ---@class ext.terminal.tabbed.Window
 ---@field private id? integer
+---@field private size ext.terminal.WindowSize
 local Window = {}
 
 ---@private
 Window.__index = Window
 
-function Window:new()
-  return setmetatable({}, self)
+---@param size ext.terminal.WindowSize
+---@return ext.terminal.tabbed.Window
+function Window:new(size)
+  return setmetatable({ size = size }, self)
 end
 
 ---@param buf integer
 function Window:open(buf)
-  local win_id = vim.api.nvim_open_win(buf, true, self.generate_config())
+  local win_id = vim.api.nvim_open_win(buf, true, util.generate_win_config(self.size))
 
   vim.api.nvim_win_set_var(win_id, WIN_KEY, WIN_VAL)
 
@@ -35,7 +40,7 @@ end
 
 ---@return boolean
 function Window:is_focused()
-  return self.check_win(self.id) and vim.api.nvim_get_current_win() == self.id
+  return self:visible() and vim.api.nvim_get_current_win() == self.id
 end
 
 function Window:focus()
@@ -44,7 +49,7 @@ end
 
 ---@return boolean
 function Window:visible()
-  return self.check_win(self.id)
+  return util.check_win(self.id, WIN_KEY, WIN_VAL)
 end
 
 ---@param buf integer
@@ -59,39 +64,8 @@ end
 
 ---@return integer
 function Window:get_id()
-  assert(self.check_win(self.id), "invalid window")
+  assert(self:visible(), "invalid window")
   return self.id
-end
-
----@private
----@param win_id integer
----@return boolean
-function Window.check_win(win_id)
-  return win_id ~= nil
-      and vim.api.nvim_win_is_valid(win_id)
-      and WIN_VAL == vim.api.nvim_win_get_var(win_id, WIN_KEY)
-end
-
----@private
-function Window.generate_config(conf)
-  local window_height = vim.api.nvim_get_option_value("lines", {})
-  local window_width = vim.api.nvim_get_option_value("columns", {})
-  local height = math.floor(window_height * 0.8)
-  local width = math.floor(window_width * 0.9)
-  local row = math.floor((window_height - height) / 2)
-  local col = math.floor((window_width - width) / 2)
-
-  local default_win_conf = {
-    relative = "editor",
-    height = height,
-    width = width,
-    row = row,
-    col = col,
-    border = "single",
-    style = "minimal",
-  }
-  if conf == nil then return default_win_conf end
-  return vim.tbl_extend("keep", conf, default_win_conf)
 end
 
 return Window
