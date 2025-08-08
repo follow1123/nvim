@@ -64,7 +64,8 @@ km("c", "<M-f>", "<C-Right>", { desc = "base: emacs keymap" })
 km("c", "<M-b>", "<C-Left>", { desc = "base: emacs keymap" })
 
 -- custom extension ------------------------------------------------------------
-km("n", "<M-1>", function() require("extensions.netrw-plus"):toggle() end, { desc = "netrw: Open Netrw file manager" })
+km("n", "<M-1>", function() require("extensions.netrw_plus").toggle() end,
+  { desc = "netrw plus: Open Netrw file manager" })
 
 -- terminal 终端
 km("n", "<M-s>", function()
