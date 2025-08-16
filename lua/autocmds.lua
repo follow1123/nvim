@@ -3,22 +3,22 @@ local filetype_group = vim.api.nvim_create_augroup("custom_filetype_options", { 
 
 -- windows下离开insert模式后、进入vim时输入法切换为英文模式
 -- linux下离开insert模式数日发切换为英文模式
-if _G.IS_WINDOWS then
-  vim.api.nvim_create_autocmd("InsertLeave", {
-    desc = "switch to english input mode when insert mode leave",
-    group = custom_group,
-    command = "call system('ims.exe 1')",
-  })
-else
+if vim.fn.has("linux") then
   vim.api.nvim_create_autocmd("InsertLeave", {
     desc = "switch to english input mode when insert mode leave",
     group = custom_group,
     command = "if system('fcitx5-remote') == 2 | call system('fcitx5-remote -c') | endif",
   })
+else
+  vim.api.nvim_create_autocmd("InsertLeave", {
+    desc = "switch to english input mode when insert mode leave",
+    group = custom_group,
+    command = "call system('ims.exe 1')",
+  })
 end
 
 -- 在终端模式下，vim退出后还原光标样式
-if not _G.IS_GUI then
+if vim.fn.has("gui_running") ~= 1 then
   vim.api.nvim_create_autocmd("VimLeave", {
     desc = "set cursor sytle to bar when exit vim",
     group = custom_group,

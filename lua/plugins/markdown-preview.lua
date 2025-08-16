@@ -3,18 +3,23 @@ return {
   build = function() vim.fn["mkdp#util#install"]() end,
   ft = "markdown",
   init = function()
-    vim.g.mkdp_browser = _G.IS_WINDOWS and "explorer" or "xdg-open"
+    if vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1 then
+      vim.g.mkdp_browser = "explorer"
+    elseif vim.fn.has("linux") == 1 then
+      vim.g.mkdp_browser = "xdg-open"
+    else
+      error("Unsupported Platforms")
+    end
     vim.g.mkdp_filetypes = { "markdown" }
+    local group = vim.api.nvim_create_augroup("markdown_preview_keymap", { clear = true })
     vim.api.nvim_create_autocmd("FileType", {
-      pattern = "markdown",
-      group = vim.api.nvim_create_augroup("MARKDOWN_PREVIEW_KEYMAP", { clear = true }),
       desc = "set toggle markdown preview keymap",
-      callback = function(args)
-        require("utils.keymap").nmap("<leader>mp", function()
-          vim.cmd("MarkdownPreviewToggle")
-        end, "markdown: Markdown preview toggle", args.buf)
+      pattern = "markdown",
+      group = group,
+      callback = function(e)
+        vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>",
+          { desc = "markdown preview: Markdown preview toggle", buffer = e.buf })
       end
-
     })
   end
 }

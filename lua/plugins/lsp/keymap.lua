@@ -1,6 +1,3 @@
-local nmap = require("utils.keymap").nmap
-local vmap = require("utils.keymap").vmap
-
 local function telescope_code_action()
   require("telescope")
   vim.lsp.buf.code_action()
@@ -24,7 +21,6 @@ end
 ---@field times integer
 ---@field order boolean true: asc by index, false desc by index. default: true
 
----comment
 ---@generic T : any
 ---@param list T[]
 ---@param callback fun(T, integer): boolean
@@ -154,46 +150,51 @@ function DocumentHighlighter:init(bufnr)
   })
 end
 
-return function(_, bufnr)
+return function(_, buf)
+  local km = vim.keymap.set
   local doc_highlighter = DocumentHighlighter:new()
-  doc_highlighter:init(bufnr)
+  doc_highlighter:init(buf)
 
   -- 跳转
-  nmap("gD", vim.lsp.buf.declaration, "LSP(builtin): goto declaration", bufnr)
-  nmap("gd", "<cmd>Telescope lsp_definitions<cr>", "LSP(Telescope): goto definition", bufnr)
-  nmap("gi", "<cmd>Telescope lsp_implementations<cr>", "LSP(Telescope): goto implementation", bufnr)
-  nmap("gt", "<cmd>Telescope lsp_type_definitions<cr>", "LSP(Telescope): type definition", bufnr)
-  nmap("<leader>li", "<cmd>Telescope lsp_incoming_calls<cr>", "LSP(Telescope): list which methods call this method",
-    bufnr)
-  nmap("<leader>lo", "<cmd>Telescope lsp_outgoing_calls<cr>",
-    "LSP(Telescope): list which methods are called in this method", bufnr)
-  nmap("gr", "<cmd>Telescope lsp_references<cr>", "LSP(builtin): show references", bufnr)
+  km("n", "gD", vim.lsp.buf.declaration, { desc = "LSP(builtin): goto declaration", buffer = buf })
+  km("n", "gd", "<cmd>Telescope lsp_definitions<cr>", { desc = "LSP(Telescope): goto definition", buffer = buf })
+  km("n", "gi", "<cmd>Telescope lsp_implementations<cr>", { desc = "LSP(Telescope): goto implementation", buffer = buf })
+  km("n", "gt", "<cmd>Telescope lsp_type_definitions<cr>", { desc = "LSP(Telescope): type definition", buffer = buf })
+  km("n", "<leader>li", "<cmd>Telescope lsp_incoming_calls<cr>",
+    { desc = "LSP(Telescope): list which methods call this method", buffer = buf })
+  km("n", "<leader>lo", "<cmd>Telescope lsp_outgoing_calls<cr>",
+    { desc = "LSP(Telescope): list which methods are called in this method", buffer = buf })
+  km("n", "gr", "<cmd>Telescope lsp_references<cr>", { desc = "LSP(builtin): show references", buffer = buf })
 
-  nmap("]r", function() goto_reference() end, "LSP(custom): goto next reference", bufnr)
-  nmap("[r", function() goto_reference(true) end, "LSP(custom): goto previous reference", bufnr)
+  km("n", "]r", function() goto_reference() end, { desc = "LSP(custom): goto next reference", buffer = buf })
+  km("n", "[r", function() goto_reference(true) end, { desc = "LSP(custom): goto previous reference", buffer = buf })
 
-  nmap("]f", function() goto_function() end, "LSP(custom): goto next function or method", bufnr)
-  nmap("[f", function() goto_function(true) end, "LSP(custom): goto previous function or method", bufnr)
-  vmap("]f", function() goto_function() end, "LSP(custom): goto next function or method", bufnr)
-  vmap("[f", function() goto_function(true) end, "LSP(custom): goto previous function or method", bufnr)
+  km({ "n", "v" }, "]f", function() goto_function() end,
+    { desc = "LSP(custom): goto next function or method", buffer = buf })
+  km({ "n", "v" }, "[f", function() goto_function(true) end,
+    { desc = "LSP(custom): goto previous function or method", buffer = buf })
 
   -- 符号列表
-  nmap("<M-2>", "<cmd>Telescope lsp_document_symbols<cr>", "LSP(custom): toggle document symbols", bufnr)
-  nmap("<leader>ls", "<cmd>Telescope lsp_workspace_symbols<cr>", "LSP(Telescope): list workspace symbols", bufnr)
+  km("n", "<M-2>", "<cmd>Telescope lsp_document_symbols<cr>",
+    { desc = "LSP(custom): toggle document symbols", buffer = buf })
+  km("n", "<leader>ls", "<cmd>Telescope lsp_workspace_symbols<cr>",
+    { desc = "LSP(Telescope): list workspace symbols", buffer = buf })
 
   -- 函数签名 打开函数签名文档并直接调转到文档窗口上
-  nmap("K", lsp_hover_and_focus, "LSP(builtin): hover documentation", bufnr)
+  km("n", "K", lsp_hover_and_focus, { desc = "LSP(builtin): hover documentation", buffer = buf })
   -- 代码重构
-  nmap("<F2>", vim.lsp.buf.rename, "LSP(builtin): rename", bufnr)
-  nmap("<leader>lr", vim.lsp.buf.rename, "LSP(builtin): rename", bufnr)
-  nmap("<M-Enter>", telescope_code_action, "LSP(builtin): code action", bufnr)
-  nmap("<leader>la", telescope_code_action, "LSP(builtin): code action", bufnr)
-  nmap("<leader>lf", lsp_async_format, "LSP(builtin): format code", bufnr)
+  km("n", "<F2>", vim.lsp.buf.rename, { desc = "LSP(builtin): rename", buffer = buf })
+  km("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP(builtin): rename", buffer = buf })
+  km("n", "<M-Enter>", telescope_code_action, { desc = "LSP(builtin): code action", buffer = buf })
+  km("n", "<leader>la", telescope_code_action, { desc = "LSP(builtin): code action", buffer = buf })
+  km("n", "<leader>lf", lsp_async_format, { desc = "LSP(builtin): format code", buffer = buf })
 
   -- 代码诊断 显示代码诊断时，光标焦点在弹窗上
-  nmap("<leader>lp", diagnostic_open_and_focus, "LSP(builtin): open diagnostic float window", bufnr)
-  nmap("]d", vim.diagnostic.goto_next, "LSP(builtin): goto next diagnostic", bufnr)
-  nmap("[d", vim.diagnostic.goto_prev, "LSP(builtin): goto previous diagnostic", bufnr)
-  nmap("<leader>ld", "<cmd>Telescope diagnostics bufnr=0<cr>", "LSP(Telescope): list current buffer diagnostics", bufnr)
-  nmap("<leader>lD", "<cmd>Telescope diagnostics<cr>", "LSP(Telescope): list workspace diagnostics ", bufnr)
+  km("n", "<leader>lp", diagnostic_open_and_focus, { desc = "LSP(builtin): open diagnostic float window", buffer = buf })
+  km("n", "]d", vim.diagnostic.goto_next, { desc = "LSP(builtin): goto next diagnostic", buffer = buf })
+  km("n", "[d", vim.diagnostic.goto_prev, { desc = "LSP(builtin): goto previous diagnostic", buffer = buf })
+  km("n", "<leader>ld", "<cmd>Telescope diagnostics bufnr=0<cr>",
+    { desc = "LSP(Telescope): list current buffer diagnostics", buffer = buf })
+  km("n", "<leader>lD", "<cmd>Telescope diagnostics<cr>",
+    { desc = "LSP(Telescope): list workspace diagnostics", buffer = buf })
 end

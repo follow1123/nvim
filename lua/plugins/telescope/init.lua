@@ -1,17 +1,15 @@
-local lazy_map = require("utils.keymap").lazy_map
 return {
   "nvim-telescope/telescope.nvim",
   version = "0.1.x",
   cmd = "Telescope",
   keys = {
-    lazy_map("n", "<M-f>", "<cmd>Telescope find_files<cr>", "file(Telescope): Find files"),
-    lazy_map("n", "<leader>ff", "<cmd>lua require 'plugins.telescope.multigrep'.multigrep()<cr>",
-      "file(Telescope): Multi grep"),
-    lazy_map("n", "<leader>fw", "<cmd>Telescope grep_string<cr>", "file(Telescope): Grep string"),
-    lazy_map("n", "<leader>gs", "<cmd>Telescope git_status<cr>", "git(Telescope): Git status"),
-    lazy_map("n", "<leader>hf", "<cmd>Telescope help_tags<cr>", "help(Telescope): Help tags"),
-    lazy_map("n", "<leader>hk", "<cmd>Telescope keymaps<cr>", "help(Telescope): List keymaps"),
-    lazy_map("n", "<leader>hh", "<cmd>Telescope highlights<cr>", "help(Telescope): List highlights"),
+    { "<M-f>",      "<cmd>Telescope find_files<cr>",                                  desc = "file(Telescope): Find files" },
+    { "<leader>ff", "<cmd>lua require 'plugins.telescope.multigrep'.multigrep()<cr>", desc = "file(Telescope): Multi grep" },
+    { "<leader>fw", "<cmd>Telescope grep_string<cr>",                                 desc = "file(Telescope): Grep string" },
+    { "<leader>gs", "<cmd>Telescope git_status<cr>",                                  desc = "git(Telescope): Git status" },
+    { "<leader>hf", "<cmd>Telescope help_tags<cr>",                                   desc = "help(Telescope): Help tags" },
+    { "<leader>hk", "<cmd>Telescope keymaps<cr>",                                     desc = "help(Telescope): List keymaps" },
+    { "<leader>hh", "<cmd>Telescope highlights<cr>",                                  desc = "help(Telescope): List highlights" },
   },
   -- 搜索依赖插件
   dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope-ui-select.nvim" },
@@ -102,7 +100,7 @@ return {
     -- 预览窗口默认较窄，设置折行
     vim.api.nvim_create_autocmd("User", {
       pattern = "TelescopePreviewerLoaded",
-      group = vim.api.nvim_create_augroup("TELESCOPE_PREVIEWER_LOADED", { clear = true }),
+      group = vim.api.nvim_create_augroup("telescope_previewer_loaded", { clear = true }),
       desc = "set telescope previewer window wrap text",
       command = "setlocal wrap"
     })

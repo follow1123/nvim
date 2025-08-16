@@ -1,7 +1,7 @@
 local util = require("vim.lsp.util")
 local ms = require("vim.lsp.protocol").Methods
 
-local key = require("utils.keymap")
+local km = vim.keymap.set
 
 local buf = vim.api.nvim_get_current_buf()
 local auto_format_group = vim.api.nvim_create_augroup("go_auto_format_on_save:" .. buf, { clear = true })
@@ -12,8 +12,8 @@ vim.bo[buf].shiftwidth = 2
 vim.bo[buf].expandtab = true
 
 -- 设置直接运行代码快捷键
-key.nmap("<space>x", ":.lua<cr>", "lua: execute code", buf)
-key.vmap("<space>x", ":lua<cr>", "lua: execute selected code", buf)
+km("n", "<space>x", "<cmd>.lua<cr>", { desc = "lua: execute code", buffer = buf })
+km("v", "<space>x", "<cmd>lua<cr>", { desc = "lua: execute selected code", buffer = buf })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = auto_format_group,
