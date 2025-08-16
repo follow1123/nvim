@@ -5,7 +5,7 @@ return {
   settings = {
     Lua = {
       completion = {
-        callSnippet = "Disable",
+        callSnippet = "Both",
         keywordSnippet = "Both",
         postfix = "@",
       },
