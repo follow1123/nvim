@@ -3,7 +3,7 @@ local filetype_group = vim.api.nvim_create_augroup("custom_filetype_options", { 
 
 -- windows下离开insert模式后、进入vim时输入法切换为英文模式
 -- linux下离开insert模式数日发切换为英文模式
-if vim.fn.has("linux") then
+if vim.fn.has("linux") == 1 then
   vim.api.nvim_create_autocmd("InsertLeave", {
     desc = "switch to english input mode when insert mode leave",
     group = custom_group,

@@ -22,7 +22,7 @@ vim.opt.foldenable = true -- 进入文件时自动将所有折叠块打开，默
 vim.opt.foldlevel = 99 -- 最大折叠深度
 vim.opt.splitbelow = true -- 水平分屏在下面打开
 vim.opt.splitright = true -- 垂直分屏的右边打开
-vim.opt.shell = vim.fn.has("linux") and "zsh" or "cmd" -- 命令模式下 ! 操作默认的 shell
+vim.opt.shell = vim.fn.has("linux") == 1 and "zsh" or "cmd" -- 命令模式下 ! 操作默认的 shell
 vim.opt.undofile = true -- 启用保存undofile的功能
 vim.opt.timeout = true -- leaderkey按键延时
 vim.opt.timeoutlen = 700 -- leaderkey按键延时间，毫秒
