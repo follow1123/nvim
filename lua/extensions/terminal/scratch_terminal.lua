@@ -57,7 +57,8 @@ function Scratch:start()
   self.buf = buf
 
   self:show()
-  local chan_id = vim.fn.termopen({ shell }, {
+  local chan_id = vim.fn.jobstart({ shell }, {
+    term = true,
     on_exit = function()
       if self:check_buf() then
         vim.api.nvim_buf_delete(self.buf, { force = true })

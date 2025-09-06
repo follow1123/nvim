@@ -9,9 +9,9 @@ local auto_organize_group = vim.api.nvim_create_augroup("go_auto_organize_on_sav
 ---@param client vim.lsp.Client
 local function do_organize_imports(client)
   local method = ms.textDocument_codeAction
-  local params = vim.lsp.util.make_range_params()
+  local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
   params.context = { only = { "source.organizeImports" } }
-  client.request(method, params, function(err, actions)
+  client:request(method, params, function(err, actions)
     if err then
       vim.notify("LSP code actions organizeImports error: " .. err.message, vim.log.levels.ERROR)
       return
@@ -23,11 +23,15 @@ local function do_organize_imports(client)
         if action.edit then
           util.apply_workspace_edit(action.edit, util._get_offset_encoding(buf))
         else
-          vim.lsp.buf.execute_command(action.command)
+          client:exec_cmd(action.command)
         end
       end
     end
-    vim.cmd("noautocmd w")
+    -- 这个操作是异步执行的，切换buffer太快如果切换到不可以修改的buffer会报错
+    -- 执行 buf 执行操作
+    vim.api.nvim_buf_call(buf, function()
+      vim.cmd("noautocmd w!")
+    end)
   end, buf)
 end
 
@@ -35,7 +39,7 @@ end
 ---@param client vim.lsp.Client
 local function do_format(client)
   local method = ms.textDocument_formatting
-  client.request(method, util.make_formatting_params(), function(...)
+  client:request(method, util.make_formatting_params(), function(...)
     local handler = client.handlers[method] or vim.lsp.handlers[method]
     handler(...)
     do_organize_imports(client)

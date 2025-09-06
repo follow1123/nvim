@@ -8,6 +8,10 @@ return {
     local panel = "#2b2d30"
 
     require("catppuccin").setup {
+      float = {
+        transparent = false,
+        solid = false,
+      },
       color_overrides = {
         mocha = {
           base = "#1e1f22",
@@ -29,17 +33,18 @@ return {
         end
       }
     }
-    -- 禁用lsp的高亮
-    for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
-      vim.api.nvim_set_hl(0, group, {})
-    end
     vim.cmd.colorscheme("catppuccin-mocha")
+
+    -- 设置浮动窗口颜色
     vim.api.nvim_create_autocmd("WinNew", {
       group = vim.api.nvim_create_augroup("catppuccin-change-color", { clear = true }),
       desc = "set background color when some filetype open",
       callback = vim.schedule_wrap(function()
-        if vim.bo.filetype == "harpoon" or vim.bo.filetype == "projectmgr" then
-          vim.api.nvim_set_option_value("winhighlight", "Normal:Normal", {
+        if vim.bo.filetype == "harpoon" or
+            vim.bo.filetype == "projectmanager" or
+            vim.bo.filetype == "tabbedterminal"
+        then
+          vim.api.nvim_set_option_value("winhighlight", "Normal:Normal,FloatBorder:Normal,FloatTitle:Normal", {
             win = vim.api.nvim_get_current_win()
           })
         end

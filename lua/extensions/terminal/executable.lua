@@ -70,7 +70,8 @@ function Executable:start()
 
   self.buf = buf
   self:open_window()
-  local chan_id = vim.fn.termopen({ self.config.exe_path }, {
+  local chan_id = vim.fn.jobstart({ self.config.exe_path }, {
+    term = true,
     on_exit = function()
       if util.check_buf(self.buf, FLAG_KEY, FLAG_VAL) then
         vim.api.nvim_buf_delete(self.buf, { force = true })

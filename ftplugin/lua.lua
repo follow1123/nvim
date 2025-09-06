@@ -4,7 +4,7 @@ local ms = require("vim.lsp.protocol").Methods
 local km = vim.keymap.set
 
 local buf = vim.api.nvim_get_current_buf()
-local auto_format_group = vim.api.nvim_create_augroup("go_auto_format_on_save:" .. buf, { clear = true })
+local auto_format_group = vim.api.nvim_create_augroup("lua_auto_format_on_save:" .. buf, { clear = true })
 
 -- 设置缩进样式
 vim.bo[buf].tabstop = 2
@@ -25,7 +25,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     if #clients == 0 then return end
     local lua_ls = clients[1]
     local method = ms.textDocument_formatting
-    lua_ls.request(method, util.make_formatting_params(), function(...)
+    lua_ls:request(method, util.make_formatting_params(), function(...)
       local handler = lua_ls.handlers[method] or vim.lsp.handlers[method]
       handler(...)
       vim.cmd("silent! noautocmd w")

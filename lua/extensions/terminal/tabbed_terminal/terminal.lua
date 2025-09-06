@@ -42,7 +42,8 @@ function Terminal:new(opts)
 end
 
 function Terminal:start()
-  local chan_id = vim.fn.termopen({ shell }, {
+  local chan_id = vim.fn.jobstart({ shell }, {
+    term = true,
     on_exit = function() self.on_exit(self.buf) end
   })
   assert(chan_id > 0, "start terminal failed")

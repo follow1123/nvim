@@ -97,6 +97,20 @@ return {
 
     require("telescope").load_extension("ui-select")
 
+    -- 设置搜索框部分颜色
+    vim.api.nvim_set_hl(0, "TelescopeBorder", {
+      link = "Normal"
+    })
+    vim.api.nvim_set_hl(0, "TelescopeNormal", {
+      link = "Normal"
+    })
+    vim.api.nvim_set_hl(0, "TelescopeTitle", {
+      link = "Normal"
+    })
+    vim.api.nvim_set_hl(0, "TelescopeMatching", {
+      link = "Constant"
+    })
+
     -- 预览窗口默认较窄，设置折行
     vim.api.nvim_create_autocmd("User", {
       pattern = "TelescopePreviewerLoaded",
@@ -105,4 +119,5 @@ return {
       command = "setlocal wrap"
     })
   end
+
 }

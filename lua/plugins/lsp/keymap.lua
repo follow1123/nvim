@@ -12,9 +12,18 @@ local function lsp_async_format()
   vim.lsp.buf.format({ async = true })
 end
 
-local function diagnostic_open_and_focus()
-  vim.diagnostic.open_float()
-  vim.diagnostic.open_float()
+---@param next boolean
+---@return fun()
+local function lsp_diagnostic_nav(next)
+  if next then
+    return function()
+      vim.diagnostic.jump({ count = 1, float = true })
+    end
+  else
+    return function()
+      vim.diagnostic.jump({ count = -1, float = true })
+    end
+  end
 end
 
 ---@class custom.OrderedForeachOptions
@@ -46,37 +55,6 @@ local function ordered_foreach(list, callback, opts)
       return
     end
   end
-end
-
----@param prev? boolean
-local function goto_reference(prev)
-  ---@param opts vim.lsp.LocationOpts.OnList
-  local function on_list(opts)
-    local position = opts.context.params.position
-    local uri = opts.context.params.textDocument.uri
-    local items = opts.items
-
-    local found = false
-
-    ordered_foreach(items, function(item)
-      local item_uri = item.user_data.uri
-
-      if item_uri == uri then
-        local range = item.user_data.range
-        if found then
-          vim.api.nvim_win_set_cursor(0, { range.start.line + 1, range.start.character })
-          return false
-        end
-        if position.line >= range.start.line and position.line <= range["end"].line and
-            position.character >= range.start.character and position.character <= range["end"].character
-        then
-          found = true
-        end
-      end
-      return true
-    end, { times = 2, order = not prev })
-  end
-  vim.lsp.buf.references(nil, { on_list = on_list })
 end
 
 ---@param prev? boolean
@@ -155,6 +133,7 @@ return function(_, buf)
   local doc_highlighter = DocumentHighlighter:new()
   doc_highlighter:init(buf)
 
+
   -- 跳转
   km("n", "gD", vim.lsp.buf.declaration, { desc = "LSP(builtin): goto declaration", buffer = buf })
   km("n", "gd", "<cmd>Telescope lsp_definitions<cr>", { desc = "LSP(Telescope): goto definition", buffer = buf })
@@ -165,9 +144,6 @@ return function(_, buf)
   km("n", "<leader>lo", "<cmd>Telescope lsp_outgoing_calls<cr>",
     { desc = "LSP(Telescope): list which methods are called in this method", buffer = buf })
   km("n", "gr", "<cmd>Telescope lsp_references<cr>", { desc = "LSP(builtin): show references", buffer = buf })
-
-  km("n", "]r", function() goto_reference() end, { desc = "LSP(custom): goto next reference", buffer = buf })
-  km("n", "[r", function() goto_reference(true) end, { desc = "LSP(custom): goto previous reference", buffer = buf })
 
   km({ "n", "v" }, "]f", function() goto_function() end,
     { desc = "LSP(custom): goto next function or method", buffer = buf })
@@ -184,15 +160,12 @@ return function(_, buf)
   km("n", "K", lsp_hover_and_focus, { desc = "LSP(builtin): hover documentation", buffer = buf })
   -- 代码重构
   km("n", "<F2>", vim.lsp.buf.rename, { desc = "LSP(builtin): rename", buffer = buf })
-  km("n", "<leader>lr", vim.lsp.buf.rename, { desc = "LSP(builtin): rename", buffer = buf })
   km("n", "<M-Enter>", telescope_code_action, { desc = "LSP(builtin): code action", buffer = buf })
-  km("n", "<leader>la", telescope_code_action, { desc = "LSP(builtin): code action", buffer = buf })
   km("n", "<leader>lf", lsp_async_format, { desc = "LSP(builtin): format code", buffer = buf })
 
   -- 代码诊断 显示代码诊断时，光标焦点在弹窗上
-  km("n", "<leader>lp", diagnostic_open_and_focus, { desc = "LSP(builtin): open diagnostic float window", buffer = buf })
-  km("n", "]d", vim.diagnostic.goto_next, { desc = "LSP(builtin): goto next diagnostic", buffer = buf })
-  km("n", "[d", vim.diagnostic.goto_prev, { desc = "LSP(builtin): goto previous diagnostic", buffer = buf })
+  km("n", "]d", lsp_diagnostic_nav(true), { desc = "LSP(builtin): goto next diagnostic", buffer = buf })
+  km("n", "[d", lsp_diagnostic_nav(false), { desc = "LSP(builtin): goto previous diagnostic", buffer = buf })
   km("n", "<leader>ld", "<cmd>Telescope diagnostics bufnr=0<cr>",
     { desc = "LSP(Telescope): list current buffer diagnostics", buffer = buf })
   km("n", "<leader>lD", "<cmd>Telescope diagnostics<cr>",
