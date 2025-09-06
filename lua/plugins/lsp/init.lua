@@ -26,6 +26,7 @@ return {
         }
       }, -- lsp包管理器
       "neovim/nvim-lspconfig",
+      { "j-hui/fidget.nvim", version = "v1.6.x", opts = {} }
     },
     init = require("plugins.lsp.config").setup,
     opts = {
