@@ -210,7 +210,17 @@ function Manager:find_parent_path(path)
   return vim.fn.fnamemodify(path, ":h")
 end
 
-function Manager:add_current_project() self:add_project(vim.fs.normalize(vim.fn.getcwd())) end
+function Manager:add_current_project()
+  local project_path = vim.fs.normalize(vim.fn.getcwd())
+  vim.notify(string.format("add project %s", project_path), vim.log.levels.INFO)
+  for _, project in ipairs(self.project_list) do
+    if project.root_path == project_path then
+      vim.notify(string.format("project %s already added", project_path), vim.log.levels.INFO)
+      return
+    end
+  end
+  self:add_project(project_path)
+end
 
 function Manager:load_project_list()
   local session_root = self.config.session_root
