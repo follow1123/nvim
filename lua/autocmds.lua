@@ -1,5 +1,4 @@
 local custom_group = vim.api.nvim_create_augroup("custom_auto_commands", { clear = true })
-local filetype_group = vim.api.nvim_create_augroup("custom_filetype_options", { clear = true })
 
 -- windows下离开insert模式后、进入vim时输入法切换为英文模式
 -- linux下离开insert模式数日发切换为英文模式
@@ -50,43 +49,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
     if stat.size > max_file_size then
       vim.opt_local.syntax = "off"
     end
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  desc = "set some options in fronted files",
-  group = filetype_group,
-  pattern = {
-    "css",
-    "html",
-    "javascript",
-    "javascriptreact",
-    "markdown",
-    "markdown.mdx",
-    "typescript",
-    "typescriptreact",
-    "astro"
-  },
-  callback = function(e)
-    local buf = e.buf
-    vim.wo[vim.fn.bufwinid(buf)].colorcolumn = "120"
-    local group_name = "frontend-files-format-on-save:" .. buf
-
-    local flag = true
-
-    vim.api.nvim_create_autocmd("BufWritePost", {
-      group = vim.api.nvim_create_augroup(group_name, { clear = true }),
-      buffer = buf,
-      callback = function()
-        if not flag then return end
-        local cmd = vim.fn.exepath("prettier")
-        if vim.fn.empty(cmd) == 1 then return end
-        vim.cmd("silent !" .. cmd .. " % -w")
-      end,
-    })
-    vim.api.nvim_buf_create_user_command(buf, "ToggleExecFrontendActOnSave", function()
-      flag = not flag
-    end, { desc = "toggle execute frontend action on save", })
   end,
 })
 
