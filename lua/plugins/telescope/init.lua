@@ -12,7 +12,15 @@ return {
     { "<leader>hh", "<cmd>Telescope highlights<cr>",                                  desc = "help(Telescope): List highlights" },
   },
   -- 搜索依赖插件
-  dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope-ui-select.nvim" },
+  dependencies = {
+    {
+      "nvim-lua/plenary.nvim",
+      keys = {
+        { "<leader>t", "<cmd>PlenaryBustedFile %<cr>", desc = "run current test file" }
+      },
+    },
+    "nvim-telescope/telescope-ui-select.nvim"
+  },
   config = function()
     local actions = require("telescope.actions")
     local themes = require("telescope.themes")
