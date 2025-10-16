@@ -66,7 +66,3 @@ nnoremap <C-u> <C-u>zz
 " 搜索时保持光标居中
 nnoremap n nzz
 nnoremap N Nzz
-
-"################################# colorscheme
-highlight Visual ctermbg=Gray ctermfg=Black
-silent! colorscheme habamax
