@@ -178,7 +178,7 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 
 基于自带的 session 功能开发的扩展
 
-添加或删除项目的方式就像 [Harpoon](https://github.com/ThePrimeagen/harpoon) 或 [oil.nvim](https://github.com/stevearc/oil.nvim) 一样，直接操作 buffer 里面的路径即可
+添加或删除项目的方式就像 [oil.nvim](https://github.com/stevearc/oil.nvim) 一样，直接操作 buffer 里面的路径即可
 
 | 模式     | 作用域（文件类型） | 按键                                                    | 说明                             |
 | -------- | ------------------ | ------------------------------------------------------- | -------------------------------- |
@@ -188,19 +188,6 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 | `Normal` | `*`                | <kbd>Leader</kbd>+<kbd>p</kbd>+<kbd>a</kbd>             | 将当前项目添加进管理列表         |
 | `Normal` | `projectmanager`   | <kbd>Enter</kbd>                                        | 打开选中的项目                   |
 | `Normal` | `projectmanager`   | <kbd>q</kbd>/<kbd>Alt</kbd>+<kbd>q</kbd>/<kbd>Esc</kbd> | 退出项目管理窗口                 |
-
-##### Harpoon
-
-[harpoon](https://github.com/ThePrimeagen/harpoon) 插件，管理主要编辑的文件，防止多次 <kbd>Ctrl</kbd>+<kbd>i</kbd>，<kbd>Ctrl</kbd>+<kbd>o</kbd> 后找不到文件在哪里
-
-| 模式     | 按键                                        | 说明                          |
-| -------- | ------------------------------------------- | ----------------------------- |
-| `Normal` | <kbd>Leader</kbd>+<kbd>f</kbd>+<kbd>a</kbd> | 添加当前文件到harpoon list    |
-| `Normal` | <kbd>Leader</kbd>+<kbd>f</kbd>+<kbd>l</kbd> | 弹窗显示harpoon list          |
-| `Normal` | <kbd>Alt</kbd>+<kbd>j</kbd>                 | 打开harpoon list内的第1个文件 |
-| `Normal` | <kbd>Alt</kbd>+<kbd>k</kbd>                 | 打开harpoon list内的第2个文件 |
-| `Normal` | <kbd>Alt</kbd>+<kbd>l</kbd>                 | 打开harpoon list内的第3个文件 |
-| `Normal` | <kbd>Alt</kbd>+<kbd>;</kbd>                 | 打开harpoon list内的第4个文件 |
 
 #### 终端
 
