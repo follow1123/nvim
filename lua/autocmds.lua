@@ -52,9 +52,10 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
+-- 将 mdx 文件类型设置为 markdown 适配 markdown 的语法高亮和代码片段
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   group = vim.api.nvim_create_augroup("set_mdx_file_type", { clear = true }),
   pattern = "*.mdx",
   desc = "set mdx file type",
-  command = "set filetype=markdown.mdx"
+  command = "set filetype=markdown"
 })
