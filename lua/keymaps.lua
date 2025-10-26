@@ -83,11 +83,11 @@ km("n", "<M-e>", function() vim.api.nvim_input("gcc") end, { desc = "base: Comme
 km("v", "<M-e>", function() vim.api.nvim_input("gc") end, { desc = "base: Comment selected line" })
 
 -- project management 项目管理
-km("n", "<leader>pf", function() require("extensions.project_manager"):toggle() end,
+km("n", "<leader>pf", function() require("extensions.project_manager").toggle() end,
   { desc = "base: Open or close recent project list" })
-km("n", "<leader>pr", function() require("extensions.project_manager"):load_last_project() end,
+km("n", "<leader>pr", function() require("extensions.project_manager").load_last_project() end,
   { desc = "base: Load last project" })
-km("n", "<leader>ps", function() require("extensions.project_manager"):save_current_project() end,
+km("n", "<leader>ps", function() require("extensions.project_manager").save_current_project() end,
   { desc = "base: Save current project" })
-km("n", "<leader>pa", function() require("extensions.project_manager"):add_current_project() end,
+km("n", "<leader>pa", function() require("extensions.project_manager").add_current_project() end,
   { desc = "base: Add current project" })

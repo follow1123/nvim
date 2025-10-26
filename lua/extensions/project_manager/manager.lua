@@ -1,15 +1,18 @@
-local UI = require("extensions.project_manager.ui")
 local Project = require("extensions.project_manager.project")
+
+---@class ext.projectmanager.Pattern
+---@field name string
+---@field dir boolean|nil
 
 ---@class ext.projectmanager.ManagerConfig
 ---@field session_options string[]
 ---@field session_root string
----@field project_root_patterns string[]
+---@field project_root_patterns ext.projectmanager.Pattern[]
 
 ---@class ext.projectmanager.Manager
 ---@field config ext.projectmanager.ManagerConfig
----@field project_list ext.projectmanager.Project[]
----@field ui ext.projectmanager.UI
+---@field projects ext.projectmanager.Project[]
+---@field data_path string
 local Manager = {}
 
 ---@private
@@ -22,6 +25,7 @@ function Manager:new(config)
   assert(config.session_options, "session_options not be nil")
   assert(config.session_root, "session_root not be nil")
   assert(config.project_root_patterns, "project_root_patterns not be nil")
+  config.session_root = vim.fs.normalize(config.session_root)
 
   -- 初始化 session root 路径
   local stat, stat_err = vim.uv.fs_stat(config.session_root)
@@ -34,93 +38,53 @@ function Manager:new(config)
       string.format("init session root %s error: %s", config.session_root, mkdir_err))
   end
 
-  local m = setmetatable({ config = config }, self)
+  local data_path = vim.fs.joinpath(config.session_root, "sessions.json")
 
-  m:load_project_list()
-
-  m.ui = UI:new({
-    on_select = function(project_root)
-      local project = m:find(project_root)
-      if project == nil then
-        vim.notify("invalid path: " .. project_root, vim.log.levels.WARN)
-        return
-      end
-      if vim.fs.normalize(vim.fn.getcwd()) == project.root_path then
-        vim.notify("already in this project: " .. project_root, vim.log.levels.INFO)
-        return
-      end
-      if m:save_current_project() then
-        m:load(project)
-      end
-    end,
-    on_save = function(root_paths) m:update_projects(root_paths) end,
-    get_contents = function()
-      return vim.iter(m.project_list):map(function(v)
-        ---@cast v ext.projectmanager.Project
-        return v.root_path
-      end):totable()
-    end
-  })
-
-  -- 退出 vim 时保存当前项目
-  vim.api.nvim_create_autocmd("VimLeavePre", {
-    group = vim.api.nvim_create_augroup("project_manager", { clear = true }),
-    desc = "save current project when vim leave",
-    callback = function()
-      assert(m:save_current_project(), "save current project error")
-    end
-  })
-
-  return m
+  return setmetatable({
+    data_path = data_path,
+    config = config,
+    projects = Manager.load_projects(data_path)
+  }, self)
 end
 
-function Manager:toggle() self.ui:toggle() end
-
----@param root_path string
+---@param path string
 ---@return ext.projectmanager.Project|nil
-function Manager:find(root_path)
-  return vim.iter(self.project_list):find(function(v)
+function Manager:find(path)
+  return vim.iter(self.projects):find(function(v)
     ---@type ext.projectmanager.Project
     local project = v
-    return project.root_path == root_path
+    return project.path == path
   end)
 end
 
----@return boolean
 function Manager:save_current_project()
   local cwd = vim.fs.normalize(vim.fn.getcwd())
   ---@type ext.projectmanager.Project
-  local current_project = vim.iter(self.project_list):find(function(p)
+  local current_project = vim.iter(self.projects):find(function(p)
     ---@cast p ext.projectmanager.Project
-    return p.root_path == cwd
+    return p.path == cwd
   end)
+  if current_project == nil then return end
 
-  if current_project ~= nil then
-    local unsaved_files = {}
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-      if vim.api.nvim_get_option_value("buflisted", { buf = buf })
-          and vim.api.nvim_get_option_value("modified", { buf = buf }) then
-        table.insert(unsaved_files, vim.api.nvim_buf_get_name(buf))
-      end
-    end
-    if #unsaved_files > 0 then
-      table.insert(unsaved_files, "these files not saved yet")
-      local choice = vim.fn.confirm(table.concat(unsaved_files, "\n"), "&Cancel\n&Save all\n&Discard all")
-      if choice == 2 then
-        vim.cmd.wa { mods = { silent = true } }
-      elseif choice == 3 then
-        vim.notify(string.format("Discard project %s all files", current_project.root_path), vim.log.levels.WARN)
-      else
-        return false
-      end
-    end
-
-    local ok, err = current_project:save(self.config.session_options)
-    if not ok then
-      error(string.format("save project: '%s' error: %s", current_project.root_path, err))
+  local unsaved_files = {}
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_get_option_value("buflisted", { buf = buf })
+        and vim.api.nvim_get_option_value("modified", { buf = buf }) then
+      table.insert(unsaved_files, vim.api.nvim_buf_get_name(buf))
     end
   end
-  return true
+  if #unsaved_files > 0 then
+    table.insert(unsaved_files, "these files not saved yet")
+    local choice = vim.fn.confirm(table.concat(unsaved_files, "\n"), "&Save all\n&Discard all")
+    if choice == 1 then
+      vim.cmd.wa { mods = { silent = true } }
+    elseif choice == 2 then
+      vim.notify(string.format("Discard project %s all files", current_project.path), vim.log.levels.WARN)
+    end
+  end
+
+  current_project:save(self.config.session_root, self.config.session_options)
+  Manager.save_projects(self.data_path, self.projects)
 end
 
 ---@param project ext.projectmanager.Project
@@ -149,97 +113,183 @@ function Manager:load(project)
     end
   end
 
-  local ok, err = project:load()
-  assert(ok, string.format("load project '%s' error: %s", project.root_path, err))
-  vim.api.nvim_set_current_dir(project.root_path)
+  project:load()
+  vim.api.nvim_set_current_dir(project.path)
 end
 
 function Manager:load_last_project()
-  assert(#self.project_list > 0, "no project")
-  self:load(self.project_list[1])
+  if #self.projects == 0 then
+    vim.notify("no project sessions", vim.log.levels.WARN)
+    return
+  end
+  self:load(self.projects[1])
 end
 
 ---@param root_paths string[]
 function Manager:update_projects(root_paths)
+  -- 去除空行
+  root_paths = vim.iter(root_paths):filter(function(p)
+    return #vim.trim(p) > 0
+  end):totable()
+
   ---@type table<string, ext.projectmanager.Project>
-  local project_map = vim.iter(self.project_list):fold({}, function(acc, p)
+  local project_map = vim.iter(self.projects):fold({}, function(acc, p)
     ---@cast p ext.projectmanager.Project
-    acc[p.root_path] = p
+    acc[p.path] = p
     return acc
   end)
 
-  ---@type table<string, boolean>
-  local paths = {}
-  for _, path in ipairs(root_paths) do
-    local stat, err = vim.uv.fs_stat(path)
-    assert(stat, string.format("check project root '%s' error: %s", root_paths, err))
-    assert(stat.type == "directory", string.format("path '%s' must be a directory", root_paths))
-    paths[path] = true
-  end
-  paths = vim.iter(paths):map(function(k) return k end):totable()
+  ---@type table<string, ext.projectmanager.Project>
+  local new_project_map = {}
 
-  for _, path in ipairs(paths) do
-    if project_map[path] == nil then
-      self:add_project(self:find_parent_path(path))
+  for _, path in ipairs(root_paths) do
+    path = vim.fs.normalize(path)
+    -- 没有已保存的就直接初始化
+    if not project_map[path] then
+      -- 没有添加过才添加
+      if not new_project_map[path] then
+        -- 判断路径是否合法
+        local project = Project:new(path)
+        project:init(self.config.session_root)
+        new_project_map[path] = project
+      end
     else
+      new_project_map[path] = project_map[path]
+      -- 有就删除
       project_map[path] = nil
     end
   end
 
-  for _, p in pairs(project_map) do
-    local ok, err = p:delete()
-    assert(ok, string.format("delete project error: %s", err))
-  end
-  self:load_project_list()
+  -- 删除多出的项目
+  for _, p in pairs(project_map) do p:delete() end
+
+  local projects = vim.iter(new_project_map):map(function(_, v) return v end):totable()
+
+  -- 排序，保存
+  Manager.sort_projects(projects)
+  Manager.save_projects(self.data_path, projects)
+  self.projects = projects
 end
 
 function Manager:add_project(path)
-  local newProject = Project:new(self.config.session_root, path)
-  assert(newProject:init(), string.format("init project '%s' error", newProject.root_path))
-  table.insert(self.project_list, newProject)
+  path = vim.fs.normalize(path)
+  for _, project in ipairs(self.projects) do
+    if project.path == path then
+      error(string.format("project %s already added", path))
+    end
+  end
+  local newProject = Project:new(path)
+  newProject:init(self.config.session_root)
+  table.insert(self.projects, 1, newProject)
+  Manager.save_projects(self.data_path, self.projects)
+end
+
+---@param dir string
+---@param patterns ext.projectmanager.Pattern[]
+---@return boolean
+function Manager.dir_match_patterns(dir, patterns)
+  local found = false
+  for _, p in ipairs(patterns) do
+    if found then break end
+
+    local path = vim.fs.joinpath(dir, p.name)
+    local stat = vim.uv.fs_stat(path)
+    if p.dir then
+      found = stat ~= nil and stat.type == "directory"
+    else
+      found = stat ~= nil
+    end
+  end
+  return found
 end
 
 ---@param path string
----@return string
-function Manager:find_parent_path(path)
-  local results = vim.fs.find(self.config.project_root_patterns, {
-    path = path,
-    upward = true
-  })
-  path = (results and #results == 1) and results[1] or path
-  return vim.fn.fnamemodify(path, ":h")
+---@return string|nil
+function Manager:find_project_root(path)
+  local stat = assert(vim.uv.fs_stat(path))
+  -- 当前是文件夹的情况下，先判断当前目录
+  if stat.type == "directory" then
+    if Manager.dir_match_patterns(path, self.config.project_root_patterns) then
+      return path
+    end
+  end
+
+  for dir in vim.fs.parents(path) do
+    if Manager.dir_match_patterns(dir, self.config.project_root_patterns) then
+      return dir
+    end
+  end
+  return nil
 end
 
 function Manager:add_current_project()
-  local project_path = vim.fs.normalize(vim.fn.getcwd())
-  vim.notify(string.format("add project %s", project_path), vim.log.levels.INFO)
-  for _, project in ipairs(self.project_list) do
-    if project.root_path == project_path then
-      vim.notify(string.format("project %s already added", project_path), vim.log.levels.INFO)
-      return
-    end
+  local root_dir = self:find_project_root(vim.api.nvim_buf_get_name(0))
+  if not root_dir then
+    root_dir = vim.fs.normalize(assert(vim.uv.cwd()))
   end
-  self:add_project(project_path)
+
+  vim.notify(string.format("add project '%s'", root_dir), vim.log.levels.INFO)
+  self:add_project(root_dir)
 end
 
-function Manager:load_project_list()
-  local session_root = self.config.session_root
-  local fs, scandir_err = vim.uv.fs_scandir(session_root)
-  assert(fs,
-    string.format("scan session root %s error: %s", session_root, scandir_err))
+---@param data_path string
+---@return any
+function Manager.load_json_data(data_path)
+  local fd = assert(vim.uv.fs_open(data_path, "r", tonumber("660", 8)))
+  local stat = assert(vim.uv.fs_fstat(fd))
+  local data = assert(vim.uv.fs_read(fd, stat.size, 0))
+  assert(vim.uv.fs_close(fd))
+  return vim.json.decode(data)
+end
 
+---@param data_path string
+---@param data any
+function Manager.save_json_data(data_path, data)
+  local content = vim.json.encode(data)
+  local fd = assert(vim.uv.fs_open(data_path, "w", tonumber("660", 8)))
+  assert(vim.uv.fs_write(fd, content, 0))
+  assert(vim.uv.fs_close(fd))
+end
+
+---@param data_path string
+---@return ext.projectmanager.Project[]
+function Manager.load_projects(data_path)
   ---@type ext.projectmanager.Project[]
-  local project_list = {}
+  local projects = {}
 
-  for file, type in vim.uv.fs_scandir_next, fs do
-    if type == "file" and vim.fn.fnamemodify(file, ":e") == "vim" then
-      local project = Project:from_session(session_root, file)
-      table.insert(project_list, project)
+  local success, json_data = pcall(Manager.load_json_data, data_path)
+  if not success then return projects end
+
+  assert(json_data.projects and type(json_data.projects) == "table",
+    "sessions data '%s' must has array properties projects")
+
+  for _, obj in ipairs(json_data.projects) do
+    local createSuccess, result = pcall(Project.from_json_obj, Project, obj)
+    if not createSuccess then
+      vim.notify(tostring(result), vim.log.levels.WARN)
+    else
+      table.insert(projects, result)
     end
   end
 
-  table.sort(project_list, function(a, b) return a.mod_time > b.mod_time end)
-  self.project_list = project_list
+  Manager.sort_projects(projects)
+  return projects
+end
+
+---@param data_path string
+---@param projects ext.projectmanager.Project[]
+function Manager.save_projects(data_path, projects)
+  local data = { projects = {} }
+  for _, project in ipairs(projects) do
+    table.insert(data.projects, project:to_json_obj())
+  end
+
+  Manager.save_json_data(data_path, data)
+end
+
+---@param projects ext.projectmanager.Project[]
+function Manager.sort_projects(projects)
+  table.sort(projects, function(a, b) return a.mod_time > b.mod_time end)
 end
 
 return Manager
