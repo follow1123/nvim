@@ -4,7 +4,7 @@
 
 ### 依赖
 
-- Neovim >= **0.10.0**
+- Neovim >= **0.11.0**
 - [Git](https://git-scm.com/)
 - [Nerd Font](https://www.nerdfonts.com/) 字体 **_(可选)_**
 - C 编译工具(用于编译 nvim-treesitter)
@@ -126,6 +126,7 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 - [mason.nvim](https://github.com/williamboman/mason.nvim) - lsp 包管理器
 - [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim) - lsp 配置和包管理器整合
 - [lazydev.nvim](https://github.com/folke/lazydev.nvim) - neovim 开发提示
+- [fidget.nvim](https://github.com/j-hui/fidget.nvim) - lsp 加载提示
 
 | 模式     | 按键                                        | 说明                           |
 | -------- | ------------------------------------------- | ------------------------------ |
@@ -133,9 +134,6 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 | `Normal` | <kbd>Leader</kbd>+<kbd>l</kbd>+<kbd>D</kbd> | 显示当前项目的所有的诊断信息   |
 | `Normal` | <kbd>Leader</kbd>+<kbd>l</kbd>+<kbd>s</kbd> | 显示当前buffer的所有的符号信息 |
 | `Normal` | <kbd>Leader</kbd>+<kbd>l</kbd>+<kbd>S</kbd> | 显示当前项目的所有的符号信息   |
-| `Normal` | <kbd>Leader</kbd>+<kbd>l</kbd>+<kbd>r</kbd> | 重命名光标下的符号             |
-| `Normal` | <kbd>Leader</kbd>+<kbd>l</kbd>+<kbd>p</kbd> | 弹窗显示当前光标下的诊断信息   |
-| `Normal` | <kbd>Leader</kbd>+<kbd>c</kbd>+<kbd>a</kbd> | 显示code action                |
 | `Normal` | <kbd>Leader</kbd>+<kbd>c</kbd>+<kbd>f</kbd> | 格式化代码                     |
 | `Normal` | <kbd>g</kbd>+<kbd>i</kbd>                   | 跳转到实现                     |
 | `Normal` | <kbd>g</kbd>+<kbd>d</kbd>                   | 跳转到定义                     |
@@ -152,18 +150,15 @@ git clone https://github.com/follow1123/nvim ~/.config/nvim
 
 相关插件：
 
-- [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - neovim 补全框架
-- [LuaSnip](https://github.com/L3MON4D3/LuaSnip) - 使用 lua 编写的代码片段引擎
-- [cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip) - 补全框架的代码片段源，整合 LuaSnip
-- [cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp) - 补全框架的 lsp 语法补全源
-- [cmp-nvim-lsp-signature-help](https://github.com/hrsh7th/cmp-nvim-lsp-signature-help) - 补全框架的 lsp 方法参数补全源
+- [blink.cmp](https://github.com/saghen/blink.cmp) - neovim 补全框架
 - [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) - 一堆代码片段
 
 | 模式              | 按键                            | 说明                       |
 | ----------------- | ------------------------------- | -------------------------- |
 | `Insert`          | <kbd>Ctrl</kbd>+<kbd>n</kbd>    | 下一个补全                 |
 | `Insert`          | <kbd>Ctrl</kbd>+<kbd>p</kbd>    | 上一个补全                 |
-| `Insert`          | <kbd>Ctrl</kbd>+<kbd>k</kbd>    | 开始补全                   |
+| `Insert`          | <kbd>Alt</kbd>+<kbd>k</kbd>     | 开始补全                   |
+| `Insert`          | <kbd>Ctrl</kbd>+<kbd>k</kbd>    | 函数签名提示               |
 | `Insert`          | <kbd>Ctrl</kbd>+<kbd>u</kbd>    | 文档弹窗内容向上滚动       |
 | `Insert`          | <kbd>Ctrl</kbd>+<kbd>d</kbd>    | 文档弹窗内容向下滚动       |
 | `Insert`          | <kbd>Enter</kbd>                | 完成补全                   |
