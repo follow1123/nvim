@@ -18,8 +18,17 @@ return {
     },
     completion = {
       documentation = { auto_show = true },
+      accept = { auto_brackets = { enabled = false } },
       list = { selection = { preselect = true, auto_insert = false } },
     },
+    sources = {
+      default = { "lsp", "snippets", "path" }
+    },
     signature = { enabled = true },
+    cmdline = {
+      keymap = {
+        ["<C-space>"] = false,
+      },
+    }
   },
 }
