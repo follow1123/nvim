@@ -101,7 +101,7 @@ function Manager:load(project)
     vim.api.nvim_buf_delete(buf, { force = true })
   end
 
-  local stop_clients_ok = pcall(vim.lsp.stop_client, vim.lsp.get_clients())
+  local stop_clients_ok = pcall(Manager.stop_all_lsp_clients)
   if stop_clients_ok then
     -- 等待所有 lsp 停止完成
     local mill = 0
@@ -290,6 +290,12 @@ end
 ---@param projects ext.projectmanager.Project[]
 function Manager.sort_projects(projects)
   table.sort(projects, function(a, b) return a.mod_time > b.mod_time end)
+end
+
+function Manager.stop_all_lsp_clients()
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    client:stop()
+  end
 end
 
 return Manager

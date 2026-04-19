@@ -16,15 +16,6 @@ else
   })
 end
 
--- 在终端模式下，vim退出后还原光标样式
-if vim.fn.has("gui_running") ~= 1 then
-  vim.api.nvim_create_autocmd("VimLeave", {
-    desc = "set cursor sytle to bar when exit vim",
-    group = custom_group,
-    command = "set guicursor+=n-v-c:blinkon500-blinkoff500,a:ver25",
-  })
-end
-
 -- 复制时高亮
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "highlight yanked text",
