@@ -3,11 +3,6 @@ local function telescope_code_action()
   vim.lsp.buf.code_action()
 end
 
-local function lsp_hover_and_focus()
-  vim.lsp.buf.hover()
-  vim.lsp.buf.hover()
-end
-
 local function lsp_async_format()
   vim.lsp.buf.format({ async = true })
 end
@@ -156,8 +151,6 @@ return function(_, buf)
   km("n", "<leader>ls", "<cmd>Telescope lsp_workspace_symbols<cr>",
     { desc = "LSP(Telescope): list workspace symbols", buffer = buf })
 
-  -- 函数签名 打开函数签名文档并直接调转到文档窗口上
-  km("n", "K", lsp_hover_and_focus, { desc = "LSP(builtin): hover documentation", buffer = buf })
   -- 代码重构
   km("n", "<F2>", vim.lsp.buf.rename, { desc = "LSP(builtin): rename", buffer = buf })
   km("n", "<M-Enter>", telescope_code_action, { desc = "LSP(builtin): code action", buffer = buf })
