@@ -25,14 +25,6 @@ km("i", ",", ",<c-g>u", { desc = "base: Add undo break points" })
 km("i", ".", ".<c-g>u", { desc = "base: Add undo break points" })
 km("i", ";", ";<c-g>u", { desc = "base: Add undo break points" })
 
--- 翻页时保持光标居中
-km("n", "<C-d>", "<C-d>zz", { desc = "base: Scroll down and center cursor" })
-km("n", "<C-u>", "<C-u>zz", { desc = "base: Scroll up and center cursor" })
-
--- 搜索时保持光标居中
-km("n", "n", "nzz", { desc = "base: Search next and center cursor" })
-km("n", "N", "Nzz", { desc = "base: Search previous and center cursor" })
-
 ---@param key string
 ---@param nav_key string
 ---@param desc string

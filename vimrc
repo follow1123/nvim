@@ -48,21 +48,7 @@ nnoremap <C-l> <C-w>l
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 
-" 设置窗口大小
-nnoremap <C-left> <C-w><
-nnoremap <C-right> <C-w>>
-nnoremap <C-up> <C-w>-
-nnoremap <C-down> <C-w>+
-
 " 添加保存存档点
 inoremap , ,<c-g>u
 inoremap . .<c-g>u
 inoremap ; ;<c-g>u
-
-" 翻页时保持光标居中
-nnoremap <C-d> <C-d>zz
-nnoremap <C-u> <C-u>zz
-
-" 搜索时保持光标居中
-nnoremap n nzz
-nnoremap N Nzz
